@@ -95,15 +95,11 @@ export default function DraftBoardPage() {
                 <th className="sticky left-0 z-[5] bg-card p-2 text-center font-mono text-xs text-muted-foreground border-b border-r border-primary/20 w-12">
                   RND
                 </th>
-                {data.draftOrder.map((team, idx) => {
-                  const colors = TEAM_COLORS[team]
-                  return (
-                    <th key={team} className="p-2 text-center border-b border-primary/20 min-w-[75px]">
-                      <div className="text-[10px] font-mono text-muted-foreground">#{idx + 1}</div>
-                      <div className={`text-xs font-bold ${colors?.text ?? 'text-foreground'}`}>{team}</div>
-                    </th>
-                  )
-                })}
+                {Array.from({ length: 12 }, (_, idx) => (
+                  <th key={idx} className="p-2 text-center border-b border-primary/20 min-w-[75px]">
+                    <div className="text-xs font-mono font-bold text-foreground">#{idx + 1}</div>
+                  </th>
+                ))}
               </tr>
             </thead>
             <tbody>
