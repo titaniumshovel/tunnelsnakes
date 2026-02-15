@@ -38,7 +38,7 @@ const TEAM_COLORS: Record<string, { bg: string; border: string; text: string; do
 
 export default function DraftBoardPage() {
   const [showTrades, setShowTrades] = useState(false)
-  const [viewMode, setViewMode] = useState<'board' | 'owner'>('board')
+  const [viewMode, setViewMode] = useState<'board' | 'owner' | 'clicky'>('board')
   const [fontSize, setFontSize] = useState(0.75)
   const data = draftBoardData as DraftBoard
 
@@ -108,6 +108,16 @@ export default function DraftBoardPage() {
                 }`}
               >
                 👥 OWNERS
+              </button>
+              <button
+                onClick={() => setViewMode('clicky')}
+                className={`px-3 py-1.5 rounded text-xs font-mono font-bold transition-colors ${
+                  viewMode === 'clicky'
+                    ? 'bg-primary/20 text-primary vault-glow'
+                    : 'text-muted-foreground hover:text-foreground'
+                }`}
+              >
+                📋 PICKS
               </button>
             </div>
 
@@ -360,6 +370,139 @@ export default function DraftBoardPage() {
                               {picks.some(p => p.traded && p.originalOwner !== owner) && (
                                 <div className="text-accent leading-tight" style={{ fontSize: `${Math.max(fontSize * 0.6, 0.45)}rem` }}>↔</div>
                               )}
+                            </div>
+                          </td>
+                        )
+                      })}
+                    </tr>
+                  )
+                })}
+              </tbody>
+            </table>
+          </div>
+        )}
+
+        {/* Clicky/Picks View — ClickyDraft style: columns=owners, rows=rounds */}
+        {viewMode === 'clicky' && (
+          <div className="overflow-x-auto rounded-lg border border-primary/20">
+            <table className="border-collapse" style={{ minWidth: '960px', fontSize: `${fontSize}rem` }}>
+              <thead>
+                <tr className="bg-card">
+                  <th className="sticky left-0 z-[5] bg-card p-2 text-center font-mono text-xs text-muted-foreground border-b border-r border-primary/20 w-12">
+                    RND
+                  </th>
+                  {data.draftOrder.map((owner) => {
+                    const colors = TEAM_COLORS[owner]
+                    return (
+                      <th key={owner} className={`p-2 text-center border-b border-primary/20 min-w-[80px] ${colors?.bg}`}>
+                        <div className="flex flex-col items-center gap-0.5">
+                          <div className={`h-2 w-2 rounded-full ${colors?.dot}`} />
+                          <div className={`text-xs font-mono font-bold ${colors?.text}`}>{owner}</div>
+                        </div>
+                      </th>
+                    )
+                  })}
+                </tr>
+              </thead>
+              <tbody>
+                {Array.from({ length: data.rounds }, (_, i) => i + 1).map((round) => {
+                  const isNA = data.naRounds.includes(round)
+                  const isEven = round % 2 === 0
+
+                  return (
+                    <tr key={round} className={`${isNA ? 'bg-amber-950/20' : round % 2 === 0 ? 'bg-card/50' : ''} hover:bg-primary/5 transition-colors`}>
+                      <td className={`sticky left-0 z-[5] p-2 text-center font-mono font-bold text-sm border-r border-primary/20 ${
+                        isNA ? 'bg-amber-950/40 text-amber-400' : round % 2 === 0 ? 'bg-card/90' : 'bg-background'
+                      }`}>
+                        {isNA ? (
+                          <div>
+                            <div>{round}</div>
+                            <div className="text-[9px] text-amber-500">NA</div>
+                          </div>
+                        ) : (
+                          <>
+                            {round}
+                            {isEven && <span className="text-[9px] text-muted-foreground ml-0.5">←</span>}
+                          </>
+                        )}
+                      </td>
+                      {data.draftOrder.map((owner) => {
+                        const colors = TEAM_COLORS[owner]
+                        const roundMap = ownerRoundMap.get(owner) ?? new Map<number, DraftPick[]>()
+                        const picks = roundMap.get(round) ?? []
+                        const pickCount = picks.length
+
+                        if (pickCount === 0) {
+                          return (
+                            <td
+                              key={owner}
+                              className={`p-0.5 text-center border border-border/10 ${isNA ? 'bg-amber-950/10' : ''}`}
+                              title={`${owner} — No pick in round ${round}`}
+                            >
+                              <div className={`rounded min-h-[36px] border border-dashed ${
+                                isNA ? 'border-amber-800/30 bg-amber-950/5' : 'border-muted-foreground/15 bg-muted/10'
+                              }`} style={{
+                                backgroundImage: isNA
+                                  ? 'repeating-linear-gradient(135deg, transparent, transparent 3px, rgba(180,83,9,0.06) 3px, rgba(180,83,9,0.06) 4px)'
+                                  : 'repeating-linear-gradient(135deg, transparent, transparent 3px, rgba(100,100,100,0.05) 3px, rgba(100,100,100,0.05) 4px)'
+                              }} />
+                            </td>
+                          )
+                        }
+
+                        if (pickCount === 1) {
+                          const pick = picks[0]
+                          const isTraded = pick.traded && pick.originalOwner !== owner
+                          return (
+                            <td
+                              key={owner}
+                              className={`p-0.5 text-center border border-border/10 ${isNA ? 'bg-amber-950/10' : ''}`}
+                              title={`Pick ${round}.${pick.slot} — ${owner}${isTraded ? ` (from ${pick.originalOwner})` : ''}`}
+                            >
+                              <div className={`rounded px-1 py-2 border ${colors?.bg} ${colors?.border} ${isTraded ? 'ring-1 ring-accent/30' : ''}`}>
+                                <div className={`font-mono font-bold leading-tight ${colors?.text}`} style={{ fontSize: `${Math.max(fontSize * 1, 0.65)}rem` }}>
+                                  {round}.{pick.slot}
+                                </div>
+                                {isTraded && (
+                                  <div className="text-accent leading-tight mt-0.5" style={{ fontSize: `${Math.max(fontSize * 0.7, 0.45)}rem` }}>
+                                    ↔ {pick.originalOwner}
+                                  </div>
+                                )}
+                              </div>
+                            </td>
+                          )
+                        }
+
+                        // Multiple picks
+                        return (
+                          <td
+                            key={owner}
+                            className={`p-0.5 text-center border border-border/10 ${isNA ? 'bg-amber-950/10' : ''}`}
+                            title={`${owner} — Round ${round}: ${pickCount} picks (${picks.map(p => `${round}.${p.slot}`).join(', ')})`}
+                          >
+                            <div className={`rounded px-1 py-1 border relative ${colors?.bg} ${colors?.border}`}
+                              style={{
+                                boxShadow: '0 0 8px rgba(234,179,8,0.25), inset 0 0 6px rgba(234,179,8,0.1)',
+                              }}
+                            >
+                              <div className="space-y-0.5">
+                                {picks.map((pick, pi) => {
+                                  const isTraded = pick.traded && pick.originalOwner !== owner
+                                  return (
+                                    <div key={pi}>
+                                      <div className={`font-mono font-bold leading-tight ${colors?.text}`} style={{ fontSize: `${Math.max(fontSize * 0.9, 0.55)}rem` }}>
+                                        {round}.{pick.slot}
+                                        {isTraded && <span className="text-accent ml-0.5" style={{ fontSize: `${Math.max(fontSize * 0.6, 0.4)}rem` }}>↔</span>}
+                                      </div>
+                                    </div>
+                                  )
+                                })}
+                              </div>
+                              <div className="absolute -top-1.5 -right-1.5 bg-yellow-500 text-black rounded-full flex items-center justify-center font-mono font-bold"
+                                style={{ fontSize: '0.5rem', width: '14px', height: '14px' }}
+                              >
+                                ×{pickCount}
+                              </div>
                             </div>
                           </td>
                         )
