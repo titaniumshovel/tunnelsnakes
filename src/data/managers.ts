@@ -11,6 +11,7 @@ export type Manager = {
   role: 'owner' | 'commissioner'
   draftPosition: number
   colorKey: string // maps to TEAM_COLORS
+  email?: string   // for auth lookup — populate as managers sign up
 }
 
 export const MANAGERS: Manager[] = [
@@ -46,6 +47,11 @@ export const TEAM_COLORS: Record<string, { bg: string; border: string; text: str
 
 export function getManagerBySlug(slug: string): Manager | undefined {
   return MANAGERS.find(m => m.teamSlug === slug)
+}
+
+export function getManagerByEmail(email: string): Manager | undefined {
+  const lower = email.toLowerCase()
+  return MANAGERS.find(m => m.email?.toLowerCase() === lower)
 }
 
 export function getTeamColors(colorKey: string) {
