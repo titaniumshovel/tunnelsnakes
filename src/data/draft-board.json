@@ -61,10 +61,11 @@
       {
         "slot": 5,
         "originalOwner": "Tyler",
-        "currentOwner": "Tyler",
-        "traded": false,
+        "currentOwner": "Thomas",
+        "traded": true,
         "path": [
-          "Tyler"
+          "Tyler",
+          "Thomas"
         ]
       },
       {
@@ -400,10 +401,11 @@
       {
         "slot": 6,
         "originalOwner": "Thomas",
-        "currentOwner": "Thomas",
-        "traded": false,
+        "currentOwner": "Tyler",
+        "traded": true,
         "path": [
-          "Thomas"
+          "Thomas",
+          "Tyler"
         ]
       },
       {
@@ -621,10 +623,11 @@
       {
         "slot": 6,
         "originalOwner": "Thomas",
-        "currentOwner": "Thomas",
-        "traded": false,
+        "currentOwner": "Tyler",
+        "traded": true,
         "path": [
-          "Thomas"
+          "Thomas",
+          "Tyler"
         ]
       },
       {
@@ -852,10 +855,11 @@
       {
         "slot": 6,
         "originalOwner": "Thomas",
-        "currentOwner": "Thomas",
-        "traded": false,
+        "currentOwner": "Tyler",
+        "traded": true,
         "path": [
-          "Thomas"
+          "Thomas",
+          "Tyler"
         ]
       },
       {
@@ -1189,10 +1193,11 @@
       {
         "slot": 5,
         "originalOwner": "Tyler",
-        "currentOwner": "Tyler",
-        "traded": false,
+        "currentOwner": "Thomas",
+        "traded": true,
         "path": [
-          "Tyler"
+          "Tyler",
+          "Thomas"
         ]
       },
       {
@@ -1305,10 +1310,11 @@
       {
         "slot": 5,
         "originalOwner": "Tyler",
-        "currentOwner": "Tyler",
-        "traded": false,
+        "currentOwner": "Thomas",
+        "traded": true,
         "path": [
-          "Tyler"
+          "Tyler",
+          "Thomas"
         ]
       },
       {
@@ -1531,10 +1537,11 @@
       {
         "slot": 5,
         "originalOwner": "Tyler",
-        "currentOwner": "Tyler",
-        "traded": false,
+        "currentOwner": "Thomas",
+        "traded": true,
         "path": [
-          "Tyler"
+          "Tyler",
+          "Thomas"
         ]
       },
       {
@@ -2565,10 +2572,11 @@
       {
         "slot": 6,
         "originalOwner": "Thomas",
-        "currentOwner": "Thomas",
-        "traded": false,
+        "currentOwner": "Tyler",
+        "traded": true,
         "path": [
-          "Thomas"
+          "Thomas",
+          "Tyler"
         ]
       },
       {
@@ -3161,6 +3169,10 @@
     },
     {
       "description": "Chris trades Austin Riley + Rd 11 to Bob for Bob Rd 7",
+      "source": "offseason"
+    },
+    {
+      "description": "Thomas trades Rd 4/6/8/23 to Tyler for Tyler Rd 1/11/12/14",
       "source": "offseason"
     }
   ]
