@@ -1,0 +1,238 @@
+@config "../../tailwind.config.ts";
+
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;500;600;700;800;900&family=Share+Tech+Mono&display=swap');
+@import "tailwindcss";
+
+/* ============================================
+   TUNNEL SNAKES — VAULT 101 TRADE TERMINAL
+   Fallout / Pip-Boy aesthetic
+   Dark vault-industrial with neon green + amber
+   "Tunnel Snakes rule!"
+   ============================================ */
+
+@layer base {
+  :root {
+    /* Vault-Tec dark backgrounds */
+    --background: 140 10% 5%;
+    --foreground: 120 20% 85%;
+
+    --card: 140 12% 8%;
+    --card-foreground: 120 20% 85%;
+    --card-elevated: 140 10% 12%;
+
+    --popover: 140 12% 8%;
+    --popover-foreground: 120 20% 85%;
+
+    /* Primary - Pip-Boy Green (#14fe17) */
+    --primary: 121 99% 54%;
+    --primary-foreground: 140 10% 5%;
+
+    /* Secondary - Vault steel */
+    --secondary: 160 8% 14%;
+    --secondary-foreground: 120 20% 85%;
+
+    /* Muted - dim vault interior */
+    --muted: 150 8% 12%;
+    --muted-foreground: 140 10% 45%;
+
+    /* Accent - Amber/Warning (Pip-Boy amber mode) */
+    --accent: 42 95% 55%;
+    --accent-foreground: 140 10% 5%;
+
+    --destructive: 0 72% 50%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 140 10% 16%;
+    --input: 150 8% 12%;
+    --ring: 121 99% 54%;
+
+    --radius: 0.5rem;
+
+    /* Pip-Boy status colors */
+    --success: 121 80% 45%;
+    --success-foreground: 0 0% 100%;
+    --warning: 42 95% 55%;
+    --info: 190 70% 50%;
+
+    /* Sidebar (vault terminal panel) */
+    --sidebar-background: 140 12% 4%;
+    --sidebar-foreground: 120 20% 80%;
+    --sidebar-primary: 121 99% 54%;
+    --sidebar-primary-foreground: 140 10% 5%;
+    --sidebar-accent: 160 8% 14%;
+    --sidebar-accent-foreground: 120 20% 85%;
+    --sidebar-border: 140 10% 14%;
+    --sidebar-ring: 121 99% 54%;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: 'Roboto Condensed', system-ui, sans-serif;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Roboto Condensed', system-ui, sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  /* Pip-Boy CRT scanline overlay (subtle) */
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 9999;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0, 0, 0, 0.03) 2px,
+      rgba(0, 0, 0, 0.03) 4px
+    );
+  }
+
+  /* Custom scrollbar — vault terminal style */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: hsl(var(--background));
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: hsl(var(--primary) / 0.3);
+    border-radius: 3px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--primary) / 0.5);
+  }
+
+  /* Selection color */
+  ::selection {
+    background: hsl(var(--primary) / 0.3);
+    color: hsl(var(--primary));
+  }
+}
+
+@layer components {
+  .font-mono {
+    font-family: 'Share Tech Mono', 'JetBrains Mono', monospace;
+  }
+
+  .dashboard-card {
+    @apply bg-card rounded-lg p-4;
+    border: 1px solid hsl(var(--primary) / 0.15);
+    box-shadow: 0 0 15px hsl(var(--primary) / 0.05), inset 0 1px 0 hsl(var(--primary) / 0.08);
+    @apply transition-all duration-200;
+  }
+
+  .dashboard-card:hover {
+    border-color: hsl(var(--primary) / 0.3);
+    box-shadow: 0 0 20px hsl(var(--primary) / 0.1), inset 0 1px 0 hsl(var(--primary) / 0.12);
+  }
+
+  .player-row {
+    @apply flex items-center gap-3 p-3 rounded-md cursor-pointer;
+    @apply transition-all duration-150;
+    border: 1px solid transparent;
+  }
+
+  .player-row:hover {
+    @apply bg-secondary;
+    border-color: hsl(var(--primary) / 0.2);
+    box-shadow: 0 0 8px hsl(var(--primary) / 0.08);
+  }
+
+  .player-row:active {
+    @apply scale-[0.99];
+  }
+
+  .player-row.selected {
+    background: hsl(var(--primary) / 0.1);
+    border-color: hsl(var(--primary) / 0.4);
+    box-shadow: 0 0 12px hsl(var(--primary) / 0.15);
+  }
+
+  .stat-badge {
+    @apply inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-semibold;
+    letter-spacing: 0.03em;
+  }
+
+  .btn-trade {
+    @apply font-bold uppercase tracking-wider;
+    @apply rounded-md px-6 py-3;
+    background: hsl(var(--primary));
+    color: hsl(var(--primary-foreground));
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+    @apply transition-all duration-200;
+  }
+
+  .btn-trade:hover {
+    background: hsl(var(--primary) / 0.85);
+    box-shadow: 0 0 25px hsl(var(--primary) / 0.4), 0 0 50px hsl(var(--primary) / 0.15);
+  }
+
+  .btn-trade:active {
+    @apply scale-[0.97];
+  }
+
+  .btn-trade:disabled {
+    @apply opacity-40 cursor-not-allowed;
+    box-shadow: none;
+  }
+
+  /* Vault-Tec terminal glow effect for headings */
+  .vault-glow {
+    text-shadow: 0 0 10px hsl(var(--primary) / 0.6), 0 0 20px hsl(var(--primary) / 0.3);
+  }
+
+  /* Pip-Boy screen flicker (very subtle, only on title) */
+  .pip-flicker {
+    animation: pip-flicker 4s ease-in-out infinite alternate;
+  }
+
+  /* Terminal cursor blink */
+  .terminal-cursor::after {
+    content: '█';
+    animation: blink 1s step-end infinite;
+    color: hsl(var(--primary));
+  }
+}
+
+@keyframes fade-in-up {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.4s ease-out forwards;
+}
+
+@keyframes pip-flicker {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.97; }
+  52% { opacity: 1; }
+  80% { opacity: 0.98; }
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+@keyframes glow-pulse {
+  0%, 100% { box-shadow: 0 0 5px hsl(var(--primary) / 0.3); }
+  50% { box-shadow: 0 0 15px hsl(var(--primary) / 0.5), 0 0 30px hsl(var(--primary) / 0.2); }
+}
