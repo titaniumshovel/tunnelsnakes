@@ -50,12 +50,12 @@ const STATUS_STYLES: Record<string, { border: string; bg: string; badge: string;
     icon: '🔒',
   },
   'trade-target': {
-    border: 'border-amber-500/40',
-    bg: 'bg-amber-500/8',
+    border: '',
+    bg: '',
     badge: 'bg-amber-500/20 text-amber-400',
     badgeText: 'HIGH VALUE',
-    label: '🎯 TRADE TARGET',
-    icon: '🎯',
+    label: '⭐ HIGH VALUE',
+    icon: '⭐',
   },
   'keeping-na': {
     border: 'border-blue-500/40',
@@ -157,7 +157,7 @@ export function TradeDashboard({ players }: { players: TradePlayer[] }) {
       const matchStatus =
         statusFilter === 'ALL' ||
         (statusFilter === 'keeping' ? (p.keeperStatus === 'keeping' || p.keeperStatus === 'keeping-na') :
-         statusFilter === 'available' ? !STATUS_STYLES[p.keeperStatus] :
+         statusFilter === 'available' ? (p.keeperStatus !== 'keeping' && p.keeperStatus !== 'keeping-na') :
          p.keeperStatus === statusFilter)
       return matchSearch && matchPos && matchStatus
     })
@@ -463,7 +463,7 @@ export function TradeDashboard({ players }: { players: TradePlayer[] }) {
               {/* Status filters */}
               <div className="flex gap-1.5 mb-3 items-center flex-wrap">
                 <span className="text-[10px] text-muted-foreground font-mono uppercase tracking-widest mr-1">Status:</span>
-                {([['ALL', 'All'], ['keeping', '🔒 Keepers'], ['trade-target', '🎯 Trade Targets'], ['available', 'Available']] as const).map(([key, label]) => (
+                {([['ALL', 'All'], ['keeping', '🔒 Keepers'], ['trade-target', '⭐ High Value'], ['available', 'Available']] as const).map(([key, label]) => (
                   <button
                     key={key}
                     onClick={() => setStatusFilter(key as typeof statusFilter)}
@@ -584,11 +584,6 @@ export function TradeDashboard({ players }: { players: TradePlayer[] }) {
                           <span className="stat-badge bg-blue-500/15 text-blue-400 uppercase tracking-wider">
                             <Shield className="w-3 h-3" />
                             NA SLOT
-                          </span>
-                        ) : p.keeperStatus === 'trade-target' ? (
-                          <span className="stat-badge bg-amber-500/15 text-amber-400 uppercase tracking-wider">
-                            <Radiation className="w-3 h-3" />
-                            AVAILABLE
                           </span>
                         ) : (
                           <span className="font-mono">{p.keeperStatus}</span>
