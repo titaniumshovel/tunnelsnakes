@@ -170,12 +170,12 @@ export default function DraftBoardPage() {
             <table className="w-full border-collapse" style={{ minWidth: '960px', fontSize: `${fontSize}rem` }}>
               <thead>
                 <tr className="bg-card">
-                  <th className="sticky left-0 z-[5] bg-card p-2 text-center font-mono text-xs text-muted-foreground border-b border-r border-primary/20 w-12">
+                  <th className="sticky left-0 z-[5] bg-card p-2 text-center font-mono text-muted-foreground border-b border-r border-primary/20 w-12" style={{ fontSize: `${fontSize}rem` }}>
                     RND
                   </th>
                   {Array.from({ length: 12 }, (_, idx) => (
                     <th key={idx} className="p-2 text-center border-b border-primary/20 min-w-[75px]">
-                      <div className="text-xs font-mono font-bold text-foreground">#{idx + 1}</div>
+                      <div className="font-mono font-bold text-foreground" style={{ fontSize: `${fontSize}rem` }}>#{idx + 1}</div>
                     </th>
                   ))}
                 </tr>
@@ -199,25 +199,25 @@ export default function DraftBoardPage() {
 
                   return (
                     <tr key={round} className={`${isNA ? 'bg-amber-950/20' : round % 2 === 0 ? 'bg-card/50' : ''} hover:bg-primary/5 transition-colors`}>
-                      <td className={`sticky left-0 z-[5] p-2 text-center font-mono font-bold text-sm border-r border-primary/20 ${
+                      <td className={`sticky left-0 z-[5] p-2 text-center font-mono font-bold border-r border-primary/20 ${
                         isNA ? 'bg-amber-950/40 text-amber-400' : round % 2 === 0 ? 'bg-card/90' : 'bg-background'
-                      }`}>
+                      }`} style={{ fontSize: `${fontSize * 1.1}rem` }}>
                         {isNA ? (
                           <div>
                             <div>{round}</div>
-                            <div className="text-[9px] text-amber-500">NA</div>
+                            <div className="text-amber-500" style={{ fontSize: `${fontSize * 0.65}rem` }}>NA</div>
                           </div>
                         ) : (
                           <>
                             {round}
-                            {isEven && <span className="text-[9px] text-muted-foreground ml-0.5">←</span>}
+                            {isEven && <span className="text-muted-foreground ml-0.5" style={{ fontSize: `${fontSize * 0.65}rem` }}>←</span>}
                           </>
                         )}
                       </td>
                       {displaySlots.map((slot) => {
                         const pick = slotMap.get(slot)
                         if (!pick) {
-                          return <td key={slot} className="p-1 text-center border border-border/10"><span className="text-xs text-muted-foreground">—</span></td>
+                          return <td key={slot} className="p-1 text-center border border-border/10"><span className="text-muted-foreground" style={{ fontSize: `${fontSize}rem` }}>—</span></td>
                         }
 
                         const colors = TEAM_COLORS[pick.currentOwner]
@@ -237,11 +237,11 @@ export default function DraftBoardPage() {
                             <div className={`rounded px-1 py-1.5 border ${
                               colors ? `${colors.bg} ${colors.border}` : 'bg-muted border-border'
                             } ${isTraded ? 'ring-1 ring-accent/30' : ''}`}>
-                              <div className={`text-[11px] font-mono font-bold leading-tight ${colors?.text ?? 'text-foreground'}`}>
+                              <div className={`font-mono font-bold leading-tight ${colors?.text ?? 'text-foreground'}`} style={{ fontSize: `${fontSize}rem` }}>
                                 {pick.currentOwner}
                               </div>
                               {isTraded && (
-                                <div className={`text-[9px] font-mono leading-tight ${isMultiHop ? 'text-yellow-400' : 'text-accent'}`}>
+                                <div className={`font-mono leading-tight ${isMultiHop ? 'text-yellow-400' : 'text-accent'}`} style={{ fontSize: `${fontSize * 0.75}rem` }}>
                                   {isMultiHop
                                     ? path.slice(0, -1).map((p, i) => (
                                         <span key={i}>
