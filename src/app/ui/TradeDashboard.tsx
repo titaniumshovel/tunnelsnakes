@@ -57,6 +57,14 @@ const STATUS_STYLES: Record<string, { border: string; bg: string; badge: string;
     label: '🎯 TRADE TARGET',
     icon: '🎯',
   },
+  'keeping-na': {
+    border: 'border-blue-500/40',
+    bg: 'bg-blue-500/8',
+    badge: 'bg-blue-500/20 text-blue-400',
+    badgeText: 'KEEPER (NA)',
+    label: '🔷 MINOR LEAGUER',
+    icon: '🔷',
+  },
 }
 
 /* Fallout flavor text that rotates in the empty trade panel */
@@ -148,7 +156,9 @@ export function TradeDashboard({ players }: { players: TradePlayer[] }) {
       const matchPos = posFilter === 'ALL' || p.position === posFilter
       const matchStatus =
         statusFilter === 'ALL' ||
-        (statusFilter === 'available' ? !STATUS_STYLES[p.keeperStatus] : p.keeperStatus === statusFilter)
+        (statusFilter === 'keeping' ? (p.keeperStatus === 'keeping' || p.keeperStatus === 'keeping-na') :
+         statusFilter === 'available' ? !STATUS_STYLES[p.keeperStatus] :
+         p.keeperStatus === statusFilter)
       return matchSearch && matchPos && matchStatus
     })
     if (sortBy === 'ecr') {
@@ -494,7 +504,7 @@ export function TradeDashboard({ players }: { players: TradePlayer[] }) {
               <div className="flex-1 overflow-y-auto space-y-1 -mx-1 px-1">
                 {filtered.map((p) => {
                   const style = STATUS_STYLES[p.keeperStatus]
-                  const isKeeper = p.keeperStatus === 'keeping'
+                  const isKeeper = p.keeperStatus === 'keeping' || p.keeperStatus === 'keeping-na'
                   return (
                     <div
                       key={p.rosterRowId}
@@ -565,10 +575,15 @@ export function TradeDashboard({ players }: { players: TradePlayer[] }) {
 
                       {/* Status badge (right side) */}
                       <div className="text-xs text-muted-foreground shrink-0">
-                        {isKeeper ? (
+                        {p.keeperStatus === 'keeping' ? (
                           <span className="stat-badge bg-green-500/15 text-green-400 uppercase tracking-wider">
                             <Shield className="w-3 h-3" />
                             LOCKED
+                          </span>
+                        ) : p.keeperStatus === 'keeping-na' ? (
+                          <span className="stat-badge bg-blue-500/15 text-blue-400 uppercase tracking-wider">
+                            <Shield className="w-3 h-3" />
+                            NA SLOT
                           </span>
                         ) : p.keeperStatus === 'trade-target' ? (
                           <span className="stat-badge bg-amber-500/15 text-amber-400 uppercase tracking-wider">
