@@ -55,6 +55,7 @@ export function TradeDashboard({ players }: { players: TradePlayer[] }) {
   const [selected, setSelected] = useState<TradePlayer | null>(null)
   const [search, setSearch] = useState('')
   const [posFilter, setPosFilter] = useState('ALL')
+  const [sortBy, setSortBy] = useState<'name' | 'ecr' | 'cost'>('name')
 
   const [selectedPicks, setSelectedPicks] = useState<number[]>([])
   const [fromTeam, setFromTeam] = useState('')
@@ -122,13 +123,26 @@ export function TradeDashboard({ players }: { players: TradePlayer[] }) {
 
   const filtered = useMemo(() => {
     const q = search.toLowerCase().trim()
-    return players.filter((p) => {
+    const result = players.filter((p) => {
       const matchSearch =
         !q || p.fullName.toLowerCase().includes(q) || (p.mlbTeam ?? '').toLowerCase().includes(q)
       const matchPos = posFilter === 'ALL' || p.position === posFilter
       return matchSearch && matchPos
     })
-  }, [players, search, posFilter])
+    if (sortBy === 'ecr') {
+      result.sort((a, b) => (a.ecr ?? 999) - (b.ecr ?? 999))
+    } else if (sortBy === 'cost') {
+      // Lower round = more valuable keeper. ECR/NA players at top (null round = best value)
+      result.sort((a, b) => {
+        const aCost = a.keeperCostRound ?? 0
+        const bCost = b.keeperCostRound ?? 0
+        return aCost - bCost
+      })
+    } else {
+      result.sort((a, b) => a.fullName.localeCompare(b.fullName))
+    }
+    return result
+  }, [players, search, posFilter, sortBy])
 
   /* Shared stat line renderer */
   const StatLine = ({ player }: { player: TradePlayer }) => (
@@ -171,14 +185,18 @@ export function TradeDashboard({ players }: { players: TradePlayer[] }) {
         )}
       </div>
       <div className="flex-1 min-w-0">
-        <div className="font-bold text-sm flex items-center gap-2">
+        <div className="font-bold text-sm flex items-center gap-2 flex-wrap">
           <span>{player.fullName}</span>
           {typeof player.ecr === 'number' ? (
             <span className="stat-badge bg-accent/10 text-accent">ECR #{player.ecr}</span>
           ) : null}
+          {player.keeperCostLabel ? (
+            <span className="stat-badge bg-primary/10 text-primary font-mono">{player.keeperCostLabel}</span>
+          ) : null}
         </div>
         <div className="text-xs text-muted-foreground font-mono">
           {player.position ?? '—'} · {player.mlbTeam ?? '—'}
+          {player.keeperCostRound ? ` · Keep @ Rd ${player.keeperCostRound}` : player.keeperCostLabel?.includes('ECR') ? ' · Keep @ ECR' : player.keeperCostLabel?.includes('NA') ? ' · NA slot' : ''}
         </div>
       </div>
       {showClose ? (
@@ -406,6 +424,24 @@ export function TradeDashboard({ players }: { players: TradePlayer[] }) {
                     }`}
                   >
                     {pos}
+                  </button>
+                ))}
+              </div>
+
+              {/* Sort controls */}
+              <div className="flex gap-1.5 mb-3 items-center">
+                <span className="text-[10px] text-muted-foreground font-mono uppercase tracking-widest mr-1">Sort:</span>
+                {([['name', 'Name'], ['ecr', 'ECR'], ['cost', 'Keeper Cost']] as const).map(([key, label]) => (
+                  <button
+                    key={key}
+                    onClick={() => setSortBy(key)}
+                    className={`px-2.5 py-1 rounded-md text-xs font-bold transition-all uppercase tracking-wider ${
+                      sortBy === key
+                        ? 'bg-accent text-accent-foreground shadow-[0_0_10px_hsl(38_90%_50%/0.3)]'
+                        : 'bg-secondary text-muted-foreground hover:text-accent hover:border-accent/30'
+                    }`}
+                  >
+                    {label}
                   </button>
                 ))}
               </div>
