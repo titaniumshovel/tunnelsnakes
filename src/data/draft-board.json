@@ -26,73 +26,109 @@
         "slot": 1,
         "originalOwner": "Pudge",
         "currentOwner": "Pudge",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Pudge"
+        ]
       },
       {
         "slot": 2,
         "originalOwner": "Nick",
         "currentOwner": "Nick",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Nick"
+        ]
       },
       {
         "slot": 3,
         "originalOwner": "Web",
         "currentOwner": "Web",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Web"
+        ]
       },
       {
         "slot": 4,
         "originalOwner": "Tom",
         "currentOwner": "Tom",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Tom"
+        ]
       },
       {
         "slot": 5,
         "originalOwner": "Tyler",
         "currentOwner": "Tyler",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Tyler"
+        ]
       },
       {
         "slot": 6,
         "originalOwner": "Thomas",
         "currentOwner": "Thomas",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Thomas"
+        ]
       },
       {
         "slot": 7,
         "originalOwner": "Chris",
         "currentOwner": "Chris",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Chris"
+        ]
       },
       {
         "slot": 8,
         "originalOwner": "Alex",
         "currentOwner": "Alex",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Alex"
+        ]
       },
       {
         "slot": 9,
         "originalOwner": "Greasy",
         "currentOwner": "Greasy",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Greasy"
+        ]
       },
       {
         "slot": 10,
         "originalOwner": "Bob",
         "currentOwner": "Bob",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Bob"
+        ]
       },
       {
         "slot": 11,
         "originalOwner": "Mike",
         "currentOwner": "Mike",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Mike"
+        ]
       },
       {
         "slot": 12,
         "originalOwner": "Sean",
         "currentOwner": "Sean",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Sean"
+        ]
       }
     ],
     "2": [
@@ -100,73 +136,109 @@
         "slot": 1,
         "originalOwner": "Pudge",
         "currentOwner": "Pudge",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Pudge"
+        ]
       },
       {
         "slot": 2,
         "originalOwner": "Nick",
         "currentOwner": "Nick",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Nick"
+        ]
       },
       {
         "slot": 3,
         "originalOwner": "Web",
         "currentOwner": "Web",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Web"
+        ]
       },
       {
         "slot": 4,
         "originalOwner": "Tom",
         "currentOwner": "Tom",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Tom"
+        ]
       },
       {
         "slot": 5,
         "originalOwner": "Tyler",
         "currentOwner": "Tyler",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Tyler"
+        ]
       },
       {
         "slot": 6,
         "originalOwner": "Thomas",
         "currentOwner": "Thomas",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Thomas"
+        ]
       },
       {
         "slot": 7,
         "originalOwner": "Chris",
         "currentOwner": "Chris",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Chris"
+        ]
       },
       {
         "slot": 8,
         "originalOwner": "Alex",
         "currentOwner": "Alex",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Alex"
+        ]
       },
       {
         "slot": 9,
         "originalOwner": "Greasy",
         "currentOwner": "Greasy",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Greasy"
+        ]
       },
       {
         "slot": 10,
         "originalOwner": "Bob",
         "currentOwner": "Bob",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Bob"
+        ]
       },
       {
         "slot": 11,
         "originalOwner": "Mike",
         "currentOwner": "Mike",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Mike"
+        ]
       },
       {
         "slot": 12,
         "originalOwner": "Sean",
         "currentOwner": "Sean",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Sean"
+        ]
       }
     ],
     "3": [
@@ -174,73 +246,109 @@
         "slot": 1,
         "originalOwner": "Pudge",
         "currentOwner": "Pudge",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Pudge"
+        ]
       },
       {
         "slot": 2,
         "originalOwner": "Nick",
         "currentOwner": "Nick",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Nick"
+        ]
       },
       {
         "slot": 3,
         "originalOwner": "Web",
         "currentOwner": "Web",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Web"
+        ]
       },
       {
         "slot": 4,
         "originalOwner": "Tom",
         "currentOwner": "Tom",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Tom"
+        ]
       },
       {
         "slot": 5,
         "originalOwner": "Tyler",
         "currentOwner": "Tyler",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Tyler"
+        ]
       },
       {
         "slot": 6,
         "originalOwner": "Thomas",
         "currentOwner": "Thomas",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Thomas"
+        ]
       },
       {
         "slot": 7,
         "originalOwner": "Chris",
         "currentOwner": "Chris",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Chris"
+        ]
       },
       {
         "slot": 8,
         "originalOwner": "Alex",
         "currentOwner": "Alex",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Alex"
+        ]
       },
       {
         "slot": 9,
         "originalOwner": "Greasy",
         "currentOwner": "Greasy",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Greasy"
+        ]
       },
       {
         "slot": 10,
         "originalOwner": "Bob",
         "currentOwner": "Bob",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Bob"
+        ]
       },
       {
         "slot": 11,
         "originalOwner": "Mike",
         "currentOwner": "Mike",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Mike"
+        ]
       },
       {
         "slot": 12,
         "originalOwner": "Sean",
         "currentOwner": "Sean",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Sean"
+        ]
       }
     ],
     "4": [
@@ -248,73 +356,109 @@
         "slot": 1,
         "originalOwner": "Pudge",
         "currentOwner": "Pudge",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Pudge"
+        ]
       },
       {
         "slot": 2,
         "originalOwner": "Nick",
         "currentOwner": "Nick",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Nick"
+        ]
       },
       {
         "slot": 3,
         "originalOwner": "Web",
         "currentOwner": "Web",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Web"
+        ]
       },
       {
         "slot": 4,
         "originalOwner": "Tom",
         "currentOwner": "Tom",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Tom"
+        ]
       },
       {
         "slot": 5,
         "originalOwner": "Tyler",
         "currentOwner": "Tyler",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Tyler"
+        ]
       },
       {
         "slot": 6,
         "originalOwner": "Thomas",
         "currentOwner": "Thomas",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Thomas"
+        ]
       },
       {
         "slot": 7,
         "originalOwner": "Chris",
         "currentOwner": "Chris",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Chris"
+        ]
       },
       {
         "slot": 8,
         "originalOwner": "Alex",
         "currentOwner": "Alex",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Alex"
+        ]
       },
       {
         "slot": 9,
         "originalOwner": "Greasy",
         "currentOwner": "Greasy",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Greasy"
+        ]
       },
       {
         "slot": 10,
         "originalOwner": "Bob",
         "currentOwner": "Bob",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Bob"
+        ]
       },
       {
         "slot": 11,
         "originalOwner": "Mike",
         "currentOwner": "Mike",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Mike"
+        ]
       },
       {
         "slot": 12,
         "originalOwner": "Sean",
         "currentOwner": "Sean",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Sean"
+        ]
       }
     ],
     "5": [
@@ -322,73 +466,109 @@
         "slot": 1,
         "originalOwner": "Pudge",
         "currentOwner": "Pudge",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Pudge"
+        ]
       },
       {
         "slot": 2,
         "originalOwner": "Nick",
         "currentOwner": "Nick",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Nick"
+        ]
       },
       {
         "slot": 3,
         "originalOwner": "Web",
         "currentOwner": "Web",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Web"
+        ]
       },
       {
         "slot": 4,
         "originalOwner": "Tom",
         "currentOwner": "Tom",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Tom"
+        ]
       },
       {
         "slot": 5,
         "originalOwner": "Tyler",
         "currentOwner": "Tyler",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Tyler"
+        ]
       },
       {
         "slot": 6,
         "originalOwner": "Thomas",
         "currentOwner": "Thomas",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Thomas"
+        ]
       },
       {
         "slot": 7,
         "originalOwner": "Chris",
         "currentOwner": "Chris",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Chris"
+        ]
       },
       {
         "slot": 8,
         "originalOwner": "Alex",
         "currentOwner": "Alex",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Alex"
+        ]
       },
       {
         "slot": 9,
         "originalOwner": "Greasy",
         "currentOwner": "Greasy",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Greasy"
+        ]
       },
       {
         "slot": 10,
         "originalOwner": "Bob",
         "currentOwner": "Bob",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Bob"
+        ]
       },
       {
         "slot": 11,
         "originalOwner": "Mike",
         "currentOwner": "Mike",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Mike"
+        ]
       },
       {
         "slot": 12,
         "originalOwner": "Sean",
         "currentOwner": "Sean",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Sean"
+        ]
       }
     ],
     "6": [
@@ -396,73 +576,111 @@
         "slot": 1,
         "originalOwner": "Pudge",
         "currentOwner": "Pudge",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Pudge"
+        ]
       },
       {
         "slot": 2,
         "originalOwner": "Nick",
         "currentOwner": "Nick",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Nick"
+        ]
       },
       {
         "slot": 3,
         "originalOwner": "Web",
         "currentOwner": "Web",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Web"
+        ]
       },
       {
         "slot": 4,
         "originalOwner": "Tom",
         "currentOwner": "Tom",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Tom"
+        ]
       },
       {
         "slot": 5,
         "originalOwner": "Tyler",
         "currentOwner": "Alex",
-        "traded": true
+        "traded": true,
+        "path": [
+          "Tyler",
+          "Alex"
+        ]
       },
       {
         "slot": 6,
         "originalOwner": "Thomas",
         "currentOwner": "Thomas",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Thomas"
+        ]
       },
       {
         "slot": 7,
         "originalOwner": "Chris",
         "currentOwner": "Chris",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Chris"
+        ]
       },
       {
         "slot": 8,
         "originalOwner": "Alex",
         "currentOwner": "Mike",
-        "traded": true
+        "traded": true,
+        "path": [
+          "Alex",
+          "Mike"
+        ]
       },
       {
         "slot": 9,
         "originalOwner": "Greasy",
         "currentOwner": "Greasy",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Greasy"
+        ]
       },
       {
         "slot": 10,
         "originalOwner": "Bob",
         "currentOwner": "Bob",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Bob"
+        ]
       },
       {
         "slot": 11,
         "originalOwner": "Mike",
         "currentOwner": "Mike",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Mike"
+        ]
       },
       {
         "slot": 12,
         "originalOwner": "Sean",
         "currentOwner": "Sean",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Sean"
+        ]
       }
     ],
     "7": [
@@ -470,73 +688,116 @@
         "slot": 1,
         "originalOwner": "Pudge",
         "currentOwner": "Pudge",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Pudge"
+        ]
       },
       {
         "slot": 2,
         "originalOwner": "Nick",
         "currentOwner": "Nick",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Nick"
+        ]
       },
       {
         "slot": 3,
         "originalOwner": "Web",
         "currentOwner": "Web",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Web"
+        ]
       },
       {
         "slot": 4,
         "originalOwner": "Tom",
         "currentOwner": "Tom",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Tom"
+        ]
       },
       {
         "slot": 5,
         "originalOwner": "Tyler",
         "currentOwner": "Mike",
-        "traded": true
+        "traded": true,
+        "path": [
+          "Tyler",
+          "Mike"
+        ]
       },
       {
         "slot": 6,
         "originalOwner": "Thomas",
         "currentOwner": "Thomas",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Thomas"
+        ]
       },
       {
         "slot": 7,
         "originalOwner": "Chris",
         "currentOwner": "Sean",
-        "traded": true
+        "traded": true,
+        "path": [
+          "Chris",
+          "Alex",
+          "Sean"
+        ]
       },
       {
         "slot": 8,
         "originalOwner": "Alex",
         "currentOwner": "Mike",
-        "traded": true
+        "traded": true,
+        "path": [
+          "Alex",
+          "Mike"
+        ]
       },
       {
         "slot": 9,
         "originalOwner": "Greasy",
         "currentOwner": "Greasy",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Greasy"
+        ]
       },
       {
         "slot": 10,
         "originalOwner": "Bob",
         "currentOwner": "Bob",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Bob"
+        ]
       },
       {
         "slot": 11,
         "originalOwner": "Mike",
         "currentOwner": "Alex",
-        "traded": true
+        "traded": true,
+        "path": [
+          "Mike",
+          "Nick",
+          "Alex"
+        ]
       },
       {
         "slot": 12,
         "originalOwner": "Sean",
         "currentOwner": "Greasy",
-        "traded": true
+        "traded": true,
+        "path": [
+          "Sean",
+          "Greasy"
+        ]
       }
     ],
     "8": [
@@ -544,73 +805,114 @@
         "slot": 1,
         "originalOwner": "Pudge",
         "currentOwner": "Pudge",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Pudge"
+        ]
       },
       {
         "slot": 2,
         "originalOwner": "Nick",
         "currentOwner": "Alex",
-        "traded": true
+        "traded": true,
+        "path": [
+          "Nick",
+          "Alex"
+        ]
       },
       {
         "slot": 3,
         "originalOwner": "Web",
         "currentOwner": "Web",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Web"
+        ]
       },
       {
         "slot": 4,
         "originalOwner": "Tom",
         "currentOwner": "Tom",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Tom"
+        ]
       },
       {
         "slot": 5,
         "originalOwner": "Tyler",
         "currentOwner": "Mike",
-        "traded": true
+        "traded": true,
+        "path": [
+          "Tyler",
+          "Mike"
+        ]
       },
       {
         "slot": 6,
         "originalOwner": "Thomas",
         "currentOwner": "Thomas",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Thomas"
+        ]
       },
       {
         "slot": 7,
         "originalOwner": "Chris",
         "currentOwner": "Chris",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Chris"
+        ]
       },
       {
         "slot": 8,
         "originalOwner": "Alex",
         "currentOwner": "Nick",
-        "traded": true
+        "traded": true,
+        "path": [
+          "Alex",
+          "Mike",
+          "Nick"
+        ]
       },
       {
         "slot": 9,
         "originalOwner": "Greasy",
         "currentOwner": "Greasy",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Greasy"
+        ]
       },
       {
         "slot": 10,
         "originalOwner": "Bob",
         "currentOwner": "Bob",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Bob"
+        ]
       },
       {
         "slot": 11,
         "originalOwner": "Mike",
         "currentOwner": "Mike",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Mike"
+        ]
       },
       {
         "slot": 12,
         "originalOwner": "Sean",
         "currentOwner": "Tom",
-        "traded": true
+        "traded": true,
+        "path": [
+          "Sean",
+          "Tom"
+        ]
       }
     ],
     "9": [
@@ -618,73 +920,117 @@
         "slot": 1,
         "originalOwner": "Pudge",
         "currentOwner": "Pudge",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Pudge"
+        ]
       },
       {
         "slot": 2,
         "originalOwner": "Nick",
         "currentOwner": "Nick",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Nick"
+        ]
       },
       {
         "slot": 3,
         "originalOwner": "Web",
         "currentOwner": "Web",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Web"
+        ]
       },
       {
         "slot": 4,
         "originalOwner": "Tom",
         "currentOwner": "Tom",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Tom"
+        ]
       },
       {
         "slot": 5,
         "originalOwner": "Tyler",
         "currentOwner": "Alex",
-        "traded": true
+        "traded": true,
+        "path": [
+          "Tyler",
+          "Alex"
+        ]
       },
       {
         "slot": 6,
         "originalOwner": "Thomas",
         "currentOwner": "Thomas",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Thomas"
+        ]
       },
       {
         "slot": 7,
         "originalOwner": "Chris",
         "currentOwner": "Pudge",
-        "traded": true
+        "traded": true,
+        "path": [
+          "Chris",
+          "Pudge"
+        ]
       },
       {
         "slot": 8,
         "originalOwner": "Alex",
         "currentOwner": "Mike",
-        "traded": true
+        "traded": true,
+        "path": [
+          "Alex",
+          "Mike"
+        ]
       },
       {
         "slot": 9,
         "originalOwner": "Greasy",
         "currentOwner": "Chris",
-        "traded": true
+        "traded": true,
+        "path": [
+          "Greasy",
+          "Bob",
+          "Chris"
+        ]
       },
       {
         "slot": 10,
         "originalOwner": "Bob",
         "currentOwner": "Web",
-        "traded": true
+        "traded": true,
+        "path": [
+          "Bob",
+          "Web"
+        ]
       },
       {
         "slot": 11,
         "originalOwner": "Mike",
         "currentOwner": "Alex",
-        "traded": true
+        "traded": true,
+        "path": [
+          "Mike",
+          "Nick",
+          "Alex"
+        ]
       },
       {
         "slot": 12,
         "originalOwner": "Sean",
         "currentOwner": "Sean",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Sean"
+        ]
       }
     ],
     "10": [
@@ -692,73 +1038,114 @@
         "slot": 1,
         "originalOwner": "Pudge",
         "currentOwner": "Pudge",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Pudge"
+        ]
       },
       {
         "slot": 2,
         "originalOwner": "Nick",
         "currentOwner": "Alex",
-        "traded": true
+        "traded": true,
+        "path": [
+          "Nick",
+          "Alex"
+        ]
       },
       {
         "slot": 3,
         "originalOwner": "Web",
         "currentOwner": "Web",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Web"
+        ]
       },
       {
         "slot": 4,
         "originalOwner": "Tom",
         "currentOwner": "Tom",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Tom"
+        ]
       },
       {
         "slot": 5,
         "originalOwner": "Tyler",
         "currentOwner": "Mike",
-        "traded": true
+        "traded": true,
+        "path": [
+          "Tyler",
+          "Mike"
+        ]
       },
       {
         "slot": 6,
         "originalOwner": "Thomas",
         "currentOwner": "Thomas",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Thomas"
+        ]
       },
       {
         "slot": 7,
         "originalOwner": "Chris",
         "currentOwner": "Nick",
-        "traded": true
+        "traded": true,
+        "path": [
+          "Chris",
+          "Nick"
+        ]
       },
       {
         "slot": 8,
         "originalOwner": "Alex",
         "currentOwner": "Mike",
-        "traded": true
+        "traded": true,
+        "path": [
+          "Alex",
+          "Mike"
+        ]
       },
       {
         "slot": 9,
         "originalOwner": "Greasy",
         "currentOwner": "Greasy",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Greasy"
+        ]
       },
       {
         "slot": 10,
         "originalOwner": "Bob",
         "currentOwner": "Web",
-        "traded": true
+        "traded": true,
+        "path": [
+          "Bob",
+          "Web"
+        ]
       },
       {
         "slot": 11,
         "originalOwner": "Mike",
         "currentOwner": "Mike",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Mike"
+        ]
       },
       {
         "slot": 12,
         "originalOwner": "Sean",
         "currentOwner": "Sean",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Sean"
+        ]
       }
     ],
     "11": [
@@ -766,73 +1153,112 @@
         "slot": 1,
         "originalOwner": "Pudge",
         "currentOwner": "Pudge",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Pudge"
+        ]
       },
       {
         "slot": 2,
         "originalOwner": "Nick",
         "currentOwner": "Nick",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Nick"
+        ]
       },
       {
         "slot": 3,
         "originalOwner": "Web",
         "currentOwner": "Web",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Web"
+        ]
       },
       {
         "slot": 4,
         "originalOwner": "Tom",
         "currentOwner": "Tom",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Tom"
+        ]
       },
       {
         "slot": 5,
         "originalOwner": "Tyler",
         "currentOwner": "Tyler",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Tyler"
+        ]
       },
       {
         "slot": 6,
         "originalOwner": "Thomas",
         "currentOwner": "Thomas",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Thomas"
+        ]
       },
       {
         "slot": 7,
         "originalOwner": "Chris",
         "currentOwner": "Chris",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Chris"
+        ]
       },
       {
         "slot": 8,
         "originalOwner": "Alex",
         "currentOwner": "Mike",
-        "traded": true
+        "traded": true,
+        "path": [
+          "Alex",
+          "Mike"
+        ]
       },
       {
         "slot": 9,
         "originalOwner": "Greasy",
         "currentOwner": "Greasy",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Greasy"
+        ]
       },
       {
         "slot": 10,
         "originalOwner": "Bob",
         "currentOwner": "Alex",
-        "traded": true
+        "traded": true,
+        "path": [
+          "Bob",
+          "Nick",
+          "Alex"
+        ]
       },
       {
         "slot": 11,
         "originalOwner": "Mike",
         "currentOwner": "Mike",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Mike"
+        ]
       },
       {
         "slot": 12,
         "originalOwner": "Sean",
         "currentOwner": "Sean",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Sean"
+        ]
       }
     ],
     "12": [
@@ -840,73 +1266,114 @@
         "slot": 1,
         "originalOwner": "Pudge",
         "currentOwner": "Pudge",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Pudge"
+        ]
       },
       {
         "slot": 2,
         "originalOwner": "Nick",
         "currentOwner": "Tom",
-        "traded": true
+        "traded": true,
+        "path": [
+          "Nick",
+          "Bob",
+          "Tom"
+        ]
       },
       {
         "slot": 3,
         "originalOwner": "Web",
         "currentOwner": "Web",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Web"
+        ]
       },
       {
         "slot": 4,
         "originalOwner": "Tom",
         "currentOwner": "Tom",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Tom"
+        ]
       },
       {
         "slot": 5,
         "originalOwner": "Tyler",
         "currentOwner": "Tyler",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Tyler"
+        ]
       },
       {
         "slot": 6,
         "originalOwner": "Thomas",
         "currentOwner": "Thomas",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Thomas"
+        ]
       },
       {
         "slot": 7,
         "originalOwner": "Chris",
         "currentOwner": "Web",
-        "traded": true
+        "traded": true,
+        "path": [
+          "Chris",
+          "Bob",
+          "Web"
+        ]
       },
       {
         "slot": 8,
         "originalOwner": "Alex",
         "currentOwner": "Alex",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Alex"
+        ]
       },
       {
         "slot": 9,
         "originalOwner": "Greasy",
         "currentOwner": "Greasy",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Greasy"
+        ]
       },
       {
         "slot": 10,
         "originalOwner": "Bob",
         "currentOwner": "Bob",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Bob"
+        ]
       },
       {
         "slot": 11,
         "originalOwner": "Mike",
         "currentOwner": "Alex",
-        "traded": true
+        "traded": true,
+        "path": [
+          "Mike",
+          "Alex"
+        ]
       },
       {
         "slot": 12,
         "originalOwner": "Sean",
         "currentOwner": "Sean",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Sean"
+        ]
       }
     ],
     "13": [
@@ -914,73 +1381,112 @@
         "slot": 1,
         "originalOwner": "Pudge",
         "currentOwner": "Pudge",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Pudge"
+        ]
       },
       {
         "slot": 2,
         "originalOwner": "Nick",
         "currentOwner": "Nick",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Nick"
+        ]
       },
       {
         "slot": 3,
         "originalOwner": "Web",
         "currentOwner": "Web",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Web"
+        ]
       },
       {
         "slot": 4,
         "originalOwner": "Tom",
         "currentOwner": "Tom",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Tom"
+        ]
       },
       {
         "slot": 5,
         "originalOwner": "Tyler",
         "currentOwner": "Alex",
-        "traded": true
+        "traded": true,
+        "path": [
+          "Tyler",
+          "Alex"
+        ]
       },
       {
         "slot": 6,
         "originalOwner": "Thomas",
         "currentOwner": "Thomas",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Thomas"
+        ]
       },
       {
         "slot": 7,
         "originalOwner": "Chris",
         "currentOwner": "Bob",
-        "traded": true
+        "traded": true,
+        "path": [
+          "Chris",
+          "Bob"
+        ]
       },
       {
         "slot": 8,
         "originalOwner": "Alex",
         "currentOwner": "Alex",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Alex"
+        ]
       },
       {
         "slot": 9,
         "originalOwner": "Greasy",
         "currentOwner": "Greasy",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Greasy"
+        ]
       },
       {
         "slot": 10,
         "originalOwner": "Bob",
         "currentOwner": "Bob",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Bob"
+        ]
       },
       {
         "slot": 11,
         "originalOwner": "Mike",
         "currentOwner": "Mike",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Mike"
+        ]
       },
       {
         "slot": 12,
         "originalOwner": "Sean",
         "currentOwner": "Alex",
-        "traded": true
+        "traded": true,
+        "path": [
+          "Sean",
+          "Alex"
+        ]
       }
     ],
     "14": [
@@ -988,73 +1494,110 @@
         "slot": 1,
         "originalOwner": "Pudge",
         "currentOwner": "Pudge",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Pudge"
+        ]
       },
       {
         "slot": 2,
         "originalOwner": "Nick",
         "currentOwner": "Nick",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Nick"
+        ]
       },
       {
         "slot": 3,
         "originalOwner": "Web",
         "currentOwner": "Web",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Web"
+        ]
       },
       {
         "slot": 4,
         "originalOwner": "Tom",
         "currentOwner": "Tom",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Tom"
+        ]
       },
       {
         "slot": 5,
         "originalOwner": "Tyler",
         "currentOwner": "Tyler",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Tyler"
+        ]
       },
       {
         "slot": 6,
         "originalOwner": "Thomas",
         "currentOwner": "Thomas",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Thomas"
+        ]
       },
       {
         "slot": 7,
         "originalOwner": "Chris",
         "currentOwner": "Chris",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Chris"
+        ]
       },
       {
         "slot": 8,
         "originalOwner": "Alex",
         "currentOwner": "Alex",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Alex"
+        ]
       },
       {
         "slot": 9,
         "originalOwner": "Greasy",
         "currentOwner": "Greasy",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Greasy"
+        ]
       },
       {
         "slot": 10,
         "originalOwner": "Bob",
         "currentOwner": "Nick",
-        "traded": true
+        "traded": true,
+        "path": [
+          "Bob",
+          "Nick"
+        ]
       },
       {
         "slot": 11,
         "originalOwner": "Mike",
         "currentOwner": "Mike",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Mike"
+        ]
       },
       {
         "slot": 12,
         "originalOwner": "Sean",
         "currentOwner": "Sean",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Sean"
+        ]
       }
     ],
     "15": [
@@ -1062,73 +1605,111 @@
         "slot": 1,
         "originalOwner": "Pudge",
         "currentOwner": "Pudge",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Pudge"
+        ]
       },
       {
         "slot": 2,
         "originalOwner": "Nick",
         "currentOwner": "Nick",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Nick"
+        ]
       },
       {
         "slot": 3,
         "originalOwner": "Web",
         "currentOwner": "Web",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Web"
+        ]
       },
       {
         "slot": 4,
         "originalOwner": "Tom",
         "currentOwner": "Bob",
-        "traded": true
+        "traded": true,
+        "path": [
+          "Tom",
+          "Bob"
+        ]
       },
       {
         "slot": 5,
         "originalOwner": "Tyler",
         "currentOwner": "Tyler",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Tyler"
+        ]
       },
       {
         "slot": 6,
         "originalOwner": "Thomas",
         "currentOwner": "Thomas",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Thomas"
+        ]
       },
       {
         "slot": 7,
         "originalOwner": "Chris",
         "currentOwner": "Chris",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Chris"
+        ]
       },
       {
         "slot": 8,
         "originalOwner": "Alex",
         "currentOwner": "Mike",
-        "traded": true
+        "traded": true,
+        "path": [
+          "Alex",
+          "Mike"
+        ]
       },
       {
         "slot": 9,
         "originalOwner": "Greasy",
         "currentOwner": "Greasy",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Greasy"
+        ]
       },
       {
         "slot": 10,
         "originalOwner": "Bob",
         "currentOwner": "Bob",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Bob"
+        ]
       },
       {
         "slot": 11,
         "originalOwner": "Mike",
         "currentOwner": "Mike",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Mike"
+        ]
       },
       {
         "slot": 12,
         "originalOwner": "Sean",
         "currentOwner": "Sean",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Sean"
+        ]
       }
     ],
     "16": [
@@ -1136,73 +1717,110 @@
         "slot": 1,
         "originalOwner": "Pudge",
         "currentOwner": "Pudge",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Pudge"
+        ]
       },
       {
         "slot": 2,
         "originalOwner": "Nick",
         "currentOwner": "Nick",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Nick"
+        ]
       },
       {
         "slot": 3,
         "originalOwner": "Web",
         "currentOwner": "Web",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Web"
+        ]
       },
       {
         "slot": 4,
         "originalOwner": "Tom",
         "currentOwner": "Tom",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Tom"
+        ]
       },
       {
         "slot": 5,
         "originalOwner": "Tyler",
         "currentOwner": "Tyler",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Tyler"
+        ]
       },
       {
         "slot": 6,
         "originalOwner": "Thomas",
         "currentOwner": "Thomas",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Thomas"
+        ]
       },
       {
         "slot": 7,
         "originalOwner": "Chris",
         "currentOwner": "Chris",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Chris"
+        ]
       },
       {
         "slot": 8,
         "originalOwner": "Alex",
         "currentOwner": "Alex",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Alex"
+        ]
       },
       {
         "slot": 9,
         "originalOwner": "Greasy",
         "currentOwner": "Greasy",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Greasy"
+        ]
       },
       {
         "slot": 10,
         "originalOwner": "Bob",
         "currentOwner": "Greasy",
-        "traded": true
+        "traded": true,
+        "path": [
+          "Bob",
+          "Greasy"
+        ]
       },
       {
         "slot": 11,
         "originalOwner": "Mike",
         "currentOwner": "Mike",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Mike"
+        ]
       },
       {
         "slot": 12,
         "originalOwner": "Sean",
         "currentOwner": "Sean",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Sean"
+        ]
       }
     ],
     "17": [
@@ -1210,73 +1828,112 @@
         "slot": 1,
         "originalOwner": "Pudge",
         "currentOwner": "Pudge",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Pudge"
+        ]
       },
       {
         "slot": 2,
         "originalOwner": "Nick",
         "currentOwner": "Bob",
-        "traded": true
+        "traded": true,
+        "path": [
+          "Nick",
+          "Bob"
+        ]
       },
       {
         "slot": 3,
         "originalOwner": "Web",
         "currentOwner": "Web",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Web"
+        ]
       },
       {
         "slot": 4,
         "originalOwner": "Tom",
         "currentOwner": "Sean",
-        "traded": true
+        "traded": true,
+        "path": [
+          "Tom",
+          "Sean"
+        ]
       },
       {
         "slot": 5,
         "originalOwner": "Tyler",
         "currentOwner": "Tyler",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Tyler"
+        ]
       },
       {
         "slot": 6,
         "originalOwner": "Thomas",
         "currentOwner": "Thomas",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Thomas"
+        ]
       },
       {
         "slot": 7,
         "originalOwner": "Chris",
         "currentOwner": "Chris",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Chris"
+        ]
       },
       {
         "slot": 8,
         "originalOwner": "Alex",
         "currentOwner": "Alex",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Alex"
+        ]
       },
       {
         "slot": 9,
         "originalOwner": "Greasy",
         "currentOwner": "Greasy",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Greasy"
+        ]
       },
       {
         "slot": 10,
         "originalOwner": "Bob",
         "currentOwner": "Bob",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Bob"
+        ]
       },
       {
         "slot": 11,
         "originalOwner": "Mike",
         "currentOwner": "Web",
-        "traded": true
+        "traded": true,
+        "path": [
+          "Mike",
+          "Web"
+        ]
       },
       {
         "slot": 12,
         "originalOwner": "Sean",
         "currentOwner": "Sean",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Sean"
+        ]
       }
     ],
     "18": [
@@ -1284,73 +1941,112 @@
         "slot": 1,
         "originalOwner": "Pudge",
         "currentOwner": "Pudge",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Pudge"
+        ]
       },
       {
         "slot": 2,
         "originalOwner": "Nick",
         "currentOwner": "Nick",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Nick"
+        ]
       },
       {
         "slot": 3,
         "originalOwner": "Web",
         "currentOwner": "Web",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Web"
+        ]
       },
       {
         "slot": 4,
         "originalOwner": "Tom",
         "currentOwner": "Tom",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Tom"
+        ]
       },
       {
         "slot": 5,
         "originalOwner": "Tyler",
         "currentOwner": "Tyler",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Tyler"
+        ]
       },
       {
         "slot": 6,
         "originalOwner": "Thomas",
         "currentOwner": "Thomas",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Thomas"
+        ]
       },
       {
         "slot": 7,
         "originalOwner": "Chris",
         "currentOwner": "Chris",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Chris"
+        ]
       },
       {
         "slot": 8,
         "originalOwner": "Alex",
         "currentOwner": "Tyler",
-        "traded": true
+        "traded": true,
+        "path": [
+          "Alex",
+          "Tyler"
+        ]
       },
       {
         "slot": 9,
         "originalOwner": "Greasy",
         "currentOwner": "Sean",
-        "traded": true
+        "traded": true,
+        "path": [
+          "Greasy",
+          "Sean"
+        ]
       },
       {
         "slot": 10,
         "originalOwner": "Bob",
         "currentOwner": "Bob",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Bob"
+        ]
       },
       {
         "slot": 11,
         "originalOwner": "Mike",
         "currentOwner": "Alex",
-        "traded": true
+        "traded": true,
+        "path": [
+          "Mike",
+          "Alex"
+        ]
       },
       {
         "slot": 12,
         "originalOwner": "Sean",
         "currentOwner": "Sean",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Sean"
+        ]
       }
     ],
     "19": [
@@ -1358,73 +2054,114 @@
         "slot": 1,
         "originalOwner": "Pudge",
         "currentOwner": "Pudge",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Pudge"
+        ]
       },
       {
         "slot": 2,
         "originalOwner": "Nick",
         "currentOwner": "Chris",
-        "traded": true
+        "traded": true,
+        "path": [
+          "Nick",
+          "Chris"
+        ]
       },
       {
         "slot": 3,
         "originalOwner": "Web",
         "currentOwner": "Bob",
-        "traded": true
+        "traded": true,
+        "path": [
+          "Web",
+          "Bob"
+        ]
       },
       {
         "slot": 4,
         "originalOwner": "Tom",
         "currentOwner": "Tom",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Tom"
+        ]
       },
       {
         "slot": 5,
         "originalOwner": "Tyler",
         "currentOwner": "Tyler",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Tyler"
+        ]
       },
       {
         "slot": 6,
         "originalOwner": "Thomas",
         "currentOwner": "Thomas",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Thomas"
+        ]
       },
       {
         "slot": 7,
         "originalOwner": "Chris",
         "currentOwner": "Chris",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Chris"
+        ]
       },
       {
         "slot": 8,
         "originalOwner": "Alex",
         "currentOwner": "Nick",
-        "traded": true
+        "traded": true,
+        "path": [
+          "Alex",
+          "Nick"
+        ]
       },
       {
         "slot": 9,
         "originalOwner": "Greasy",
         "currentOwner": "Greasy",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Greasy"
+        ]
       },
       {
         "slot": 10,
         "originalOwner": "Bob",
         "currentOwner": "Bob",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Bob"
+        ]
       },
       {
         "slot": 11,
         "originalOwner": "Mike",
         "currentOwner": "Tyler",
-        "traded": true
+        "traded": true,
+        "path": [
+          "Mike",
+          "Alex",
+          "Tyler"
+        ]
       },
       {
         "slot": 12,
         "originalOwner": "Sean",
         "currentOwner": "Sean",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Sean"
+        ]
       }
     ],
     "20": [
@@ -1432,73 +2169,116 @@
         "slot": 1,
         "originalOwner": "Pudge",
         "currentOwner": "Chris",
-        "traded": true
+        "traded": true,
+        "path": [
+          "Pudge",
+          "Chris"
+        ]
       },
       {
         "slot": 2,
         "originalOwner": "Nick",
         "currentOwner": "Bob",
-        "traded": true
+        "traded": true,
+        "path": [
+          "Nick",
+          "Bob"
+        ]
       },
       {
         "slot": 3,
         "originalOwner": "Web",
         "currentOwner": "Mike",
-        "traded": true
+        "traded": true,
+        "path": [
+          "Web",
+          "Mike"
+        ]
       },
       {
         "slot": 4,
         "originalOwner": "Tom",
         "currentOwner": "Tom",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Tom"
+        ]
       },
       {
         "slot": 5,
         "originalOwner": "Tyler",
         "currentOwner": "Tyler",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Tyler"
+        ]
       },
       {
         "slot": 6,
         "originalOwner": "Thomas",
         "currentOwner": "Thomas",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Thomas"
+        ]
       },
       {
         "slot": 7,
         "originalOwner": "Chris",
         "currentOwner": "Chris",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Chris"
+        ]
       },
       {
         "slot": 8,
         "originalOwner": "Alex",
         "currentOwner": "Tyler",
-        "traded": true
+        "traded": true,
+        "path": [
+          "Alex",
+          "Tyler"
+        ]
       },
       {
         "slot": 9,
         "originalOwner": "Greasy",
         "currentOwner": "Greasy",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Greasy"
+        ]
       },
       {
         "slot": 10,
         "originalOwner": "Bob",
         "currentOwner": "Nick",
-        "traded": true
+        "traded": true,
+        "path": [
+          "Bob",
+          "Nick"
+        ]
       },
       {
         "slot": 11,
         "originalOwner": "Mike",
         "currentOwner": "Nick",
-        "traded": true
+        "traded": true,
+        "path": [
+          "Mike",
+          "Alex",
+          "Nick"
+        ]
       },
       {
         "slot": 12,
         "originalOwner": "Sean",
         "currentOwner": "Sean",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Sean"
+        ]
       }
     ],
     "21": [
@@ -1506,73 +2286,114 @@
         "slot": 1,
         "originalOwner": "Pudge",
         "currentOwner": "Pudge",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Pudge"
+        ]
       },
       {
         "slot": 2,
         "originalOwner": "Nick",
         "currentOwner": "Tyler",
-        "traded": true
+        "traded": true,
+        "path": [
+          "Nick",
+          "Mike",
+          "Tyler"
+        ]
       },
       {
         "slot": 3,
         "originalOwner": "Web",
         "currentOwner": "Bob",
-        "traded": true
+        "traded": true,
+        "path": [
+          "Web",
+          "Bob"
+        ]
       },
       {
         "slot": 4,
         "originalOwner": "Tom",
         "currentOwner": "Tom",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Tom"
+        ]
       },
       {
         "slot": 5,
         "originalOwner": "Tyler",
         "currentOwner": "Tyler",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Tyler"
+        ]
       },
       {
         "slot": 6,
         "originalOwner": "Thomas",
         "currentOwner": "Thomas",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Thomas"
+        ]
       },
       {
         "slot": 7,
         "originalOwner": "Chris",
         "currentOwner": "Chris",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Chris"
+        ]
       },
       {
         "slot": 8,
         "originalOwner": "Alex",
         "currentOwner": "Alex",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Alex"
+        ]
       },
       {
         "slot": 9,
         "originalOwner": "Greasy",
         "currentOwner": "Greasy",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Greasy"
+        ]
       },
       {
         "slot": 10,
         "originalOwner": "Bob",
         "currentOwner": "Bob",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Bob"
+        ]
       },
       {
         "slot": 11,
         "originalOwner": "Mike",
         "currentOwner": "Nick",
-        "traded": true
+        "traded": true,
+        "path": [
+          "Mike",
+          "Alex",
+          "Nick"
+        ]
       },
       {
         "slot": 12,
         "originalOwner": "Sean",
         "currentOwner": "Sean",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Sean"
+        ]
       }
     ],
     "22": [
@@ -1580,73 +2401,114 @@
         "slot": 1,
         "originalOwner": "Pudge",
         "currentOwner": "Pudge",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Pudge"
+        ]
       },
       {
         "slot": 2,
         "originalOwner": "Nick",
         "currentOwner": "Tyler",
-        "traded": true
+        "traded": true,
+        "path": [
+          "Nick",
+          "Mike",
+          "Tyler"
+        ]
       },
       {
         "slot": 3,
         "originalOwner": "Web",
         "currentOwner": "Web",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Web"
+        ]
       },
       {
         "slot": 4,
         "originalOwner": "Tom",
         "currentOwner": "Tom",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Tom"
+        ]
       },
       {
         "slot": 5,
         "originalOwner": "Tyler",
         "currentOwner": "Tyler",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Tyler"
+        ]
       },
       {
         "slot": 6,
         "originalOwner": "Thomas",
         "currentOwner": "Thomas",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Thomas"
+        ]
       },
       {
         "slot": 7,
         "originalOwner": "Chris",
         "currentOwner": "Chris",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Chris"
+        ]
       },
       {
         "slot": 8,
         "originalOwner": "Alex",
         "currentOwner": "Nick",
-        "traded": true
+        "traded": true,
+        "path": [
+          "Alex",
+          "Nick"
+        ]
       },
       {
         "slot": 9,
         "originalOwner": "Greasy",
         "currentOwner": "Greasy",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Greasy"
+        ]
       },
       {
         "slot": 10,
         "originalOwner": "Bob",
         "currentOwner": "Chris",
-        "traded": true
+        "traded": true,
+        "path": [
+          "Bob",
+          "Chris"
+        ]
       },
       {
         "slot": 11,
         "originalOwner": "Mike",
         "currentOwner": "Alex",
-        "traded": true
+        "traded": true,
+        "path": [
+          "Mike",
+          "Alex"
+        ]
       },
       {
         "slot": 12,
         "originalOwner": "Sean",
         "currentOwner": "Sean",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Sean"
+        ]
       }
     ],
     "23": [
@@ -1654,73 +2516,115 @@
         "slot": 1,
         "originalOwner": "Pudge",
         "currentOwner": "Pudge",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Pudge"
+        ]
       },
       {
         "slot": 2,
         "originalOwner": "Nick",
         "currentOwner": "Tyler",
-        "traded": true
+        "traded": true,
+        "path": [
+          "Nick",
+          "Mike",
+          "Tyler"
+        ]
       },
       {
         "slot": 3,
         "originalOwner": "Web",
         "currentOwner": "Bob",
-        "traded": true
+        "traded": true,
+        "path": [
+          "Web",
+          "Bob"
+        ]
       },
       {
         "slot": 4,
         "originalOwner": "Tom",
         "currentOwner": "Tom",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Tom"
+        ]
       },
       {
         "slot": 5,
         "originalOwner": "Tyler",
         "currentOwner": "Tyler",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Tyler"
+        ]
       },
       {
         "slot": 6,
         "originalOwner": "Thomas",
         "currentOwner": "Thomas",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Thomas"
+        ]
       },
       {
         "slot": 7,
         "originalOwner": "Chris",
         "currentOwner": "Chris",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Chris"
+        ]
       },
       {
         "slot": 8,
         "originalOwner": "Alex",
         "currentOwner": "Nick",
-        "traded": true
+        "traded": true,
+        "path": [
+          "Alex",
+          "Nick"
+        ]
       },
       {
         "slot": 9,
         "originalOwner": "Greasy",
         "currentOwner": "Greasy",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Greasy"
+        ]
       },
       {
         "slot": 10,
         "originalOwner": "Bob",
         "currentOwner": "Bob",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Bob"
+        ]
       },
       {
         "slot": 11,
         "originalOwner": "Mike",
         "currentOwner": "Chris",
-        "traded": true
+        "traded": true,
+        "path": [
+          "Mike",
+          "Alex",
+          "Chris"
+        ]
       },
       {
         "slot": 12,
         "originalOwner": "Sean",
         "currentOwner": "Sean",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Sean"
+        ]
       }
     ],
     "24": [
@@ -1728,73 +2632,109 @@
         "slot": 1,
         "originalOwner": "Pudge",
         "currentOwner": "Pudge",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Pudge"
+        ]
       },
       {
         "slot": 2,
         "originalOwner": "Nick",
         "currentOwner": "Nick",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Nick"
+        ]
       },
       {
         "slot": 3,
         "originalOwner": "Web",
         "currentOwner": "Web",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Web"
+        ]
       },
       {
         "slot": 4,
         "originalOwner": "Tom",
         "currentOwner": "Tom",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Tom"
+        ]
       },
       {
         "slot": 5,
         "originalOwner": "Tyler",
         "currentOwner": "Tyler",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Tyler"
+        ]
       },
       {
         "slot": 6,
         "originalOwner": "Thomas",
         "currentOwner": "Thomas",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Thomas"
+        ]
       },
       {
         "slot": 7,
         "originalOwner": "Chris",
         "currentOwner": "Chris",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Chris"
+        ]
       },
       {
         "slot": 8,
         "originalOwner": "Alex",
         "currentOwner": "Alex",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Alex"
+        ]
       },
       {
         "slot": 9,
         "originalOwner": "Greasy",
         "currentOwner": "Greasy",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Greasy"
+        ]
       },
       {
         "slot": 10,
         "originalOwner": "Bob",
         "currentOwner": "Bob",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Bob"
+        ]
       },
       {
         "slot": 11,
         "originalOwner": "Mike",
         "currentOwner": "Mike",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Mike"
+        ]
       },
       {
         "slot": 12,
         "originalOwner": "Sean",
         "currentOwner": "Sean",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Sean"
+        ]
       }
     ],
     "25": [
@@ -1802,73 +2742,109 @@
         "slot": 1,
         "originalOwner": "Pudge",
         "currentOwner": "Pudge",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Pudge"
+        ]
       },
       {
         "slot": 2,
         "originalOwner": "Nick",
         "currentOwner": "Nick",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Nick"
+        ]
       },
       {
         "slot": 3,
         "originalOwner": "Web",
         "currentOwner": "Web",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Web"
+        ]
       },
       {
         "slot": 4,
         "originalOwner": "Tom",
         "currentOwner": "Tom",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Tom"
+        ]
       },
       {
         "slot": 5,
         "originalOwner": "Tyler",
         "currentOwner": "Tyler",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Tyler"
+        ]
       },
       {
         "slot": 6,
         "originalOwner": "Thomas",
         "currentOwner": "Thomas",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Thomas"
+        ]
       },
       {
         "slot": 7,
         "originalOwner": "Chris",
         "currentOwner": "Chris",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Chris"
+        ]
       },
       {
         "slot": 8,
         "originalOwner": "Alex",
         "currentOwner": "Alex",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Alex"
+        ]
       },
       {
         "slot": 9,
         "originalOwner": "Greasy",
         "currentOwner": "Greasy",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Greasy"
+        ]
       },
       {
         "slot": 10,
         "originalOwner": "Bob",
         "currentOwner": "Bob",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Bob"
+        ]
       },
       {
         "slot": 11,
         "originalOwner": "Mike",
         "currentOwner": "Mike",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Mike"
+        ]
       },
       {
         "slot": 12,
         "originalOwner": "Sean",
         "currentOwner": "Sean",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Sean"
+        ]
       }
     ],
     "26": [
@@ -1876,73 +2852,109 @@
         "slot": 1,
         "originalOwner": "Pudge",
         "currentOwner": "Pudge",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Pudge"
+        ]
       },
       {
         "slot": 2,
         "originalOwner": "Nick",
         "currentOwner": "Nick",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Nick"
+        ]
       },
       {
         "slot": 3,
         "originalOwner": "Web",
         "currentOwner": "Web",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Web"
+        ]
       },
       {
         "slot": 4,
         "originalOwner": "Tom",
         "currentOwner": "Tom",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Tom"
+        ]
       },
       {
         "slot": 5,
         "originalOwner": "Tyler",
         "currentOwner": "Tyler",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Tyler"
+        ]
       },
       {
         "slot": 6,
         "originalOwner": "Thomas",
         "currentOwner": "Thomas",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Thomas"
+        ]
       },
       {
         "slot": 7,
         "originalOwner": "Chris",
         "currentOwner": "Chris",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Chris"
+        ]
       },
       {
         "slot": 8,
         "originalOwner": "Alex",
         "currentOwner": "Alex",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Alex"
+        ]
       },
       {
         "slot": 9,
         "originalOwner": "Greasy",
         "currentOwner": "Greasy",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Greasy"
+        ]
       },
       {
         "slot": 10,
         "originalOwner": "Bob",
         "currentOwner": "Bob",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Bob"
+        ]
       },
       {
         "slot": 11,
         "originalOwner": "Mike",
         "currentOwner": "Mike",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Mike"
+        ]
       },
       {
         "slot": 12,
         "originalOwner": "Sean",
         "currentOwner": "Sean",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Sean"
+        ]
       }
     ],
     "27": [
@@ -1950,73 +2962,109 @@
         "slot": 1,
         "originalOwner": "Pudge",
         "currentOwner": "Pudge",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Pudge"
+        ]
       },
       {
         "slot": 2,
         "originalOwner": "Nick",
         "currentOwner": "Nick",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Nick"
+        ]
       },
       {
         "slot": 3,
         "originalOwner": "Web",
         "currentOwner": "Web",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Web"
+        ]
       },
       {
         "slot": 4,
         "originalOwner": "Tom",
         "currentOwner": "Tom",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Tom"
+        ]
       },
       {
         "slot": 5,
         "originalOwner": "Tyler",
         "currentOwner": "Tyler",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Tyler"
+        ]
       },
       {
         "slot": 6,
         "originalOwner": "Thomas",
         "currentOwner": "Thomas",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Thomas"
+        ]
       },
       {
         "slot": 7,
         "originalOwner": "Chris",
         "currentOwner": "Chris",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Chris"
+        ]
       },
       {
         "slot": 8,
         "originalOwner": "Alex",
         "currentOwner": "Alex",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Alex"
+        ]
       },
       {
         "slot": 9,
         "originalOwner": "Greasy",
         "currentOwner": "Greasy",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Greasy"
+        ]
       },
       {
         "slot": 10,
         "originalOwner": "Bob",
         "currentOwner": "Bob",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Bob"
+        ]
       },
       {
         "slot": 11,
         "originalOwner": "Mike",
         "currentOwner": "Mike",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Mike"
+        ]
       },
       {
         "slot": 12,
         "originalOwner": "Sean",
         "currentOwner": "Sean",
-        "traded": false
+        "traded": false,
+        "path": [
+          "Sean"
+        ]
       }
     ]
   },

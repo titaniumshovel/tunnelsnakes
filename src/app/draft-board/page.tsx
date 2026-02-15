@@ -10,6 +10,7 @@ type DraftPick = {
   originalOwner: string
   currentOwner: string
   traded: boolean
+  path?: string[]
 }
 
 type DraftBoard = {
@@ -147,14 +148,16 @@ export default function DraftBoardPage() {
 
                       const colors = TEAM_COLORS[pick.currentOwner]
                       const isTraded = pick.traded
-                      const ownColumn = data.draftOrder[colIdx] === pick.currentOwner
+                      const path = pick.path ?? [pick.originalOwner]
+                      const isMultiHop = path.length > 2
+                      const pathDisplay = path.join(' → ')
 
                       return (
                         <td
                           key={slot}
                           className="p-0.5 text-center border border-border/10"
                           title={isTraded
-                            ? `Pick ${round}.${slot} — Originally ${pick.originalOwner}'s, now owned by ${pick.currentOwner}`
+                            ? `Pick ${round}.${slot} — Path: ${pathDisplay}`
                             : `Pick ${round}.${slot} — ${pick.currentOwner}`}
                         >
                           <div className={`rounded px-1 py-1.5 border ${
@@ -164,8 +167,16 @@ export default function DraftBoardPage() {
                               {pick.currentOwner}
                             </div>
                             {isTraded && (
-                              <div className="text-[9px] text-accent font-mono leading-tight">
-                                ↔ {pick.originalOwner}
+                              <div className={`text-[9px] font-mono leading-tight ${isMultiHop ? 'text-yellow-400' : 'text-accent'}`}>
+                                {isMultiHop
+                                  ? path.slice(0, -1).map((p, i) => (
+                                      <span key={i}>
+                                        {i > 0 && '→'}
+                                        <span className={TEAM_COLORS[p]?.text ?? 'text-muted-foreground'}>{p}</span>
+                                      </span>
+                                    ))
+                                  : <>↔ {pick.originalOwner}</>
+                                }
                               </div>
                             )}
                           </div>
@@ -211,7 +222,8 @@ export default function DraftBoardPage() {
               <li>• <span className="text-foreground">Snake draft:</span> Odd rounds pick 1→12, even rounds 12→1</li>
               <li>• <span className="text-foreground">Rounds 1-23:</span> Regular players</li>
               <li>• <span className="text-amber-400">Rounds 24-27:</span> NA/Minor League only</li>
-              <li>• <span className="text-accent">↔ symbol:</span> Pick was traded (shows original owner)</li>
+              <li>• <span className="text-accent">↔ symbol:</span> Pick was traded once (shows original owner)</li>
+              <li>• <span className="text-yellow-400">Multi-hop path:</span> Pick traded through multiple teams (e.g. Mike→Nick→Alex)</li>
               <li>• <span className="text-foreground">← arrow:</span> Even rounds flow right-to-left</li>
               <li className="pt-2 border-t border-border">• <span className="text-foreground">Hover</span> any cell for full trade details</li>
             </ul>
