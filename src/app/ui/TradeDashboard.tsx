@@ -39,7 +39,25 @@ const LEAGUE_TEAMS = [
   "Tyler's Slugfest",
 ]
 
-const KEEPERS = new Set(['Aaron Judge', 'José Ramírez', 'Freddie Freeman', 'Bryce Harper'])
+/* Status-based styling — driven by DB keeper_status field */
+const STATUS_STYLES: Record<string, { border: string; bg: string; badge: string; badgeText: string; label: string; icon: string }> = {
+  keeping: {
+    border: 'border-green-500/40',
+    bg: 'bg-green-500/8',
+    badge: 'bg-green-500/20 text-green-400',
+    badgeText: 'KEEPER',
+    label: '🔒 LOCKED',
+    icon: '🔒',
+  },
+  'trade-target': {
+    border: 'border-amber-500/40',
+    bg: 'bg-amber-500/8',
+    badge: 'bg-amber-500/20 text-amber-400',
+    badgeText: 'HIGH VALUE',
+    label: '🎯 TRADE TARGET',
+    icon: '🎯',
+  },
+}
 
 /* Fallout flavor text that rotates in the empty trade panel */
 const VAULT_QUOTES = [
@@ -55,6 +73,7 @@ export function TradeDashboard({ players }: { players: TradePlayer[] }) {
   const [selected, setSelected] = useState<TradePlayer | null>(null)
   const [search, setSearch] = useState('')
   const [posFilter, setPosFilter] = useState('ALL')
+  const [statusFilter, setStatusFilter] = useState<'ALL' | 'keeping' | 'trade-target' | 'available'>('ALL')
   const [sortBy, setSortBy] = useState<'name' | 'ecr' | 'cost'>('name')
 
   const [selectedPicks, setSelectedPicks] = useState<number[]>([])
@@ -127,7 +146,10 @@ export function TradeDashboard({ players }: { players: TradePlayer[] }) {
       const matchSearch =
         !q || p.fullName.toLowerCase().includes(q) || (p.mlbTeam ?? '').toLowerCase().includes(q)
       const matchPos = posFilter === 'ALL' || p.position === posFilter
-      return matchSearch && matchPos
+      const matchStatus =
+        statusFilter === 'ALL' ||
+        (statusFilter === 'available' ? !STATUS_STYLES[p.keeperStatus] : p.keeperStatus === statusFilter)
+      return matchSearch && matchPos && matchStatus
     })
     if (sortBy === 'ecr') {
       result.sort((a, b) => (a.ecr ?? 999) - (b.ecr ?? 999))
@@ -142,7 +164,7 @@ export function TradeDashboard({ players }: { players: TradePlayer[] }) {
       result.sort((a, b) => a.fullName.localeCompare(b.fullName))
     }
     return result
-  }, [players, search, posFilter, sortBy])
+  }, [players, search, posFilter, statusFilter, sortBy])
 
   /* Shared stat line renderer */
   const StatLine = ({ player }: { player: TradePlayer }) => (
@@ -428,6 +450,28 @@ export function TradeDashboard({ players }: { players: TradePlayer[] }) {
                 ))}
               </div>
 
+              {/* Status filters */}
+              <div className="flex gap-1.5 mb-3 items-center flex-wrap">
+                <span className="text-[10px] text-muted-foreground font-mono uppercase tracking-widest mr-1">Status:</span>
+                {([['ALL', 'All'], ['keeping', '🔒 Keepers'], ['trade-target', '🎯 Trade Targets'], ['available', 'Available']] as const).map(([key, label]) => (
+                  <button
+                    key={key}
+                    onClick={() => setStatusFilter(key as typeof statusFilter)}
+                    className={`px-2.5 py-1 rounded-md text-xs font-bold transition-all tracking-wider ${
+                      statusFilter === key
+                        ? key === 'keeping'
+                          ? 'bg-green-500/20 text-green-400 shadow-[0_0_10px_rgba(34,197,94,0.3)]'
+                          : key === 'trade-target'
+                          ? 'bg-amber-500/20 text-amber-400 shadow-[0_0_10px_rgba(245,158,11,0.3)]'
+                          : 'bg-primary text-primary-foreground shadow-[0_0_10px_hsl(121_99%_54%/0.3)]'
+                        : 'bg-secondary text-muted-foreground hover:text-primary'
+                    }`}
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
+
               {/* Sort controls */}
               <div className="flex gap-1.5 mb-3 items-center">
                 <span className="text-[10px] text-muted-foreground font-mono uppercase tracking-widest mr-1">Sort:</span>
@@ -449,16 +493,17 @@ export function TradeDashboard({ players }: { players: TradePlayer[] }) {
               {/* Player rows */}
               <div className="flex-1 overflow-y-auto space-y-1 -mx-1 px-1">
                 {filtered.map((p) => {
-                  const isKeeper = KEEPERS.has(p.fullName)
+                  const style = STATUS_STYLES[p.keeperStatus]
+                  const isKeeper = p.keeperStatus === 'keeping'
                   return (
                     <div
                       key={p.rosterRowId}
                       onClick={() => (isKeeper ? null : setSelected(p))}
                       className={`player-row ${selected?.rosterRowId === p.rosterRowId ? 'selected' : ''} ${
-                        isKeeper ? 'bg-accent/5 border-accent/20 cursor-not-allowed hover:bg-accent/5' : ''
+                        style ? `${style.bg} ${style.border} ${isKeeper ? 'cursor-not-allowed' : ''}` : ''
                       }`}
                       aria-disabled={isKeeper}
-                      title={isKeeper ? 'KEEPER — Not available for trade' : undefined}
+                      title={isKeeper ? 'KEEPER — Not available for trade' : style ? style.label : undefined}
                     >
                       {/* Avatar */}
                       <div className="w-9 h-9 rounded-md bg-secondary flex items-center justify-center text-xs font-bold text-muted-foreground shrink-0 overflow-hidden border border-border">
@@ -474,6 +519,11 @@ export function TradeDashboard({ players }: { players: TradePlayer[] }) {
                       <div className="flex-1 min-w-0">
                         <div className="font-semibold text-sm flex items-center gap-2 flex-wrap">
                           <span className="truncate max-w-[12rem] sm:max-w-none">{p.fullName}</span>
+                          {style ? (
+                            <span className={`stat-badge ${style.badge} whitespace-nowrap font-mono font-bold uppercase tracking-wider`}>
+                              {style.icon} {style.badgeText}
+                            </span>
+                          ) : null}
                           {typeof p.ecr === 'number' ? (
                             <span className="stat-badge bg-accent/10 text-accent whitespace-nowrap font-mono">ECR #{p.ecr}</span>
                           ) : null}
@@ -483,6 +533,7 @@ export function TradeDashboard({ players }: { players: TradePlayer[] }) {
                         </div>
                         <div className="text-xs text-muted-foreground font-mono">
                           {p.position ?? '—'} · {p.mlbTeam ?? '—'}
+                          {p.keeperCostRound ? ` · Keep @ Rd ${p.keeperCostRound}` : p.keeperCostLabel?.includes('ECR') ? ' · Keep @ ECR' : p.keeperCostLabel?.includes('NA') ? ' · NA slot' : ''}
                           {p.notes ? ' · ' : ''}
                           {p.notes ? <span className="text-accent">{p.notes}</span> : null}
                         </div>
@@ -512,12 +563,17 @@ export function TradeDashboard({ players }: { players: TradePlayer[] }) {
                         ))}
                       </div>
 
-                      {/* Keeper badge */}
-                      <div className="text-xs text-muted-foreground">
+                      {/* Status badge (right side) */}
+                      <div className="text-xs text-muted-foreground shrink-0">
                         {isKeeper ? (
-                          <span className="stat-badge bg-accent/15 text-accent uppercase tracking-wider">
+                          <span className="stat-badge bg-green-500/15 text-green-400 uppercase tracking-wider">
                             <Shield className="w-3 h-3" />
-                            KEEP
+                            LOCKED
+                          </span>
+                        ) : p.keeperStatus === 'trade-target' ? (
+                          <span className="stat-badge bg-amber-500/15 text-amber-400 uppercase tracking-wider">
+                            <Radiation className="w-3 h-3" />
+                            AVAILABLE
                           </span>
                         ) : (
                           <span className="font-mono">{p.keeperStatus}</span>
