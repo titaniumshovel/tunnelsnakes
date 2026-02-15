@@ -1,10 +1,8 @@
 'use client'
 
 import { useState } from 'react'
-import { ArrowLeft, AlertTriangle, Calendar, Users } from 'lucide-react'
+import { ArrowLeft, Calendar, Users, ChevronDown, ChevronUp } from 'lucide-react'
 import Link from 'next/link'
-
-// Import the draft board data
 import draftBoardData from '@/data/draft-board.json'
 
 type DraftPick = {
@@ -18,242 +16,216 @@ type DraftBoard = {
   draftOrder: string[]
   rounds: number
   naRounds: number[]
-  auditStatus?: string
-  auditNotes?: string[]
-  trades: Array<{
-    description: string
-    source: string
-  }>
+  trades: Array<{ description: string; source: string }>
   picks: Record<string, DraftPick[]>
 }
 
-// Team colors for visual distinction
-const TEAM_COLORS: Record<string, string> = {
-  'Pudge': 'bg-red-500/20 border-red-400/40 text-red-300',
-  'Nick': 'bg-blue-500/20 border-blue-400/40 text-blue-300',
-  'Web': 'bg-green-500/20 border-green-400/40 text-green-300',
-  'Tom': 'bg-yellow-500/20 border-yellow-400/40 text-yellow-300',
-  'Tyler': 'bg-purple-500/20 border-purple-400/40 text-purple-300',
-  'Thomas': 'bg-pink-500/20 border-pink-400/40 text-pink-300',
-  'Chris': 'bg-primary/20 border-primary/40 text-primary',
-  'Alex': 'bg-orange-500/20 border-orange-400/40 text-orange-300',
-  'Greasy': 'bg-cyan-500/20 border-cyan-400/40 text-cyan-300',
-  'Bob': 'bg-slate-500/20 border-slate-400/40 text-slate-300',
-  'Mike': 'bg-indigo-500/20 border-indigo-400/40 text-indigo-300',
-  'Sean': 'bg-emerald-500/20 border-emerald-400/40 text-emerald-300',
-  'CONFLICT': 'bg-destructive/20 border-destructive/40 text-red-300'
+const TEAM_COLORS: Record<string, { bg: string; border: string; text: string; dot: string }> = {
+  Pudge:  { bg: 'bg-red-900/40',     border: 'border-red-500/50',    text: 'text-red-300',     dot: 'bg-red-400' },
+  Nick:   { bg: 'bg-blue-900/40',    border: 'border-blue-500/50',   text: 'text-blue-300',    dot: 'bg-blue-400' },
+  Web:    { bg: 'bg-green-900/40',   border: 'border-green-500/50',  text: 'text-green-300',   dot: 'bg-green-400' },
+  Tom:    { bg: 'bg-yellow-900/40',  border: 'border-yellow-500/50', text: 'text-yellow-300',  dot: 'bg-yellow-400' },
+  Tyler:  { bg: 'bg-purple-900/40',  border: 'border-purple-500/50', text: 'text-purple-300',  dot: 'bg-purple-400' },
+  Thomas: { bg: 'bg-pink-900/40',    border: 'border-pink-500/50',   text: 'text-pink-300',    dot: 'bg-pink-400' },
+  Chris:  { bg: 'bg-amber-900/40',   border: 'border-amber-500/50',  text: 'text-amber-300',   dot: 'bg-amber-400' },
+  Alex:   { bg: 'bg-orange-900/40',  border: 'border-orange-500/50', text: 'text-orange-300',  dot: 'bg-orange-400' },
+  Greasy: { bg: 'bg-cyan-900/40',    border: 'border-cyan-500/50',   text: 'text-cyan-300',    dot: 'bg-cyan-400' },
+  Bob:    { bg: 'bg-slate-700/40',   border: 'border-slate-400/50',  text: 'text-slate-300',   dot: 'bg-slate-400' },
+  Mike:   { bg: 'bg-indigo-900/40',  border: 'border-indigo-500/50', text: 'text-indigo-300',  dot: 'bg-indigo-400' },
+  Sean:   { bg: 'bg-emerald-900/40', border: 'border-emerald-500/50',text: 'text-emerald-300', dot: 'bg-emerald-400' },
 }
 
 export default function DraftBoardPage() {
   const [showTrades, setShowTrades] = useState(false)
   const data = draftBoardData as DraftBoard
 
-  // Generate all 27 rounds of picks
-  const allRounds = []
-  for (let round = 1; round <= data.rounds; round++) {
-    const roundPicks = []
-    
-    // If we have actual pick data, use it; otherwise generate default
-    if (data.picks[round.toString()]) {
-      roundPicks.push(...data.picks[round.toString()])
-    } else {
-      // Generate default snake draft order
-      for (let slot = 1; slot <= 12; slot++) {
-        const draftSlot = round % 2 === 1 ? slot : 13 - slot
-        const owner = data.draftOrder[slot - 1]
-        roundPicks.push({
-          slot: draftSlot,
-          originalOwner: owner,
-          currentOwner: owner,
-          traded: false
-        })
-      }
-    }
-    
-    // Sort by slot number for display
-    roundPicks.sort((a, b) => a.slot - b.slot)
-    allRounds.push({ round, picks: roundPicks, isNA: data.naRounds.includes(round) })
-  }
-
   return (
     <main className="min-h-screen bg-background">
       {/* Header */}
       <div className="sticky top-0 z-10 bg-background/95 backdrop-blur border-b border-primary/20">
-        <div className="mx-auto max-w-7xl p-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <Link 
-                href="/" 
-                className="flex items-center gap-2 text-primary hover:text-primary/80 transition-colors"
-              >
-                <ArrowLeft className="h-5 w-5" />
-                <span className="font-mono">← BACK TO TERMINAL</span>
+        <div className="mx-auto max-w-[1400px] px-4 py-3">
+          <div className="flex items-center justify-between flex-wrap gap-2">
+            <div className="flex items-center gap-3">
+              <Link href="/" className="flex items-center gap-1.5 text-primary hover:text-primary/80 transition-colors text-sm font-mono">
+                <ArrowLeft className="h-4 w-4" />
+                TERMINAL
               </Link>
-              <div className="h-6 w-px bg-border" />
-              <h1 className="text-2xl font-bold text-primary vault-glow">
+              <div className="h-5 w-px bg-border" />
+              <h1 className="text-xl md:text-2xl font-bold text-primary vault-glow font-mono">
                 🎯 2026 DRAFT BOARD
               </h1>
             </div>
-            
-            <div className="flex items-center gap-4">
-              <div className="flex items-center gap-2 text-sm font-mono text-muted-foreground">
-                <Calendar className="h-4 w-4" />
-                <span>March 6, 2026</span>
-              </div>
-              <div className="flex items-center gap-2 text-sm font-mono text-muted-foreground">
-                <Users className="h-4 w-4" />
-                <span>12 Teams • 27 Rounds</span>
-              </div>
+            <div className="flex items-center gap-4 text-xs font-mono text-muted-foreground">
+              <span className="flex items-center gap-1.5"><Calendar className="h-3.5 w-3.5" /> March 6, 2026</span>
+              <span className="flex items-center gap-1.5"><Users className="h-3.5 w-3.5" /> 12 Teams • 27 Rounds</span>
             </div>
           </div>
-
-          {/* Audit Status Warning */}
-          {data.auditStatus === 'CONFLICTS FOUND' && (
-            <div className="mt-4 p-3 bg-destructive/10 border border-destructive/30 rounded-lg">
-              <div className="flex items-start gap-3">
-                <AlertTriangle className="h-5 w-5 text-destructive mt-0.5" />
-                <div>
-                  <p className="font-semibold text-destructive">AUDIT CONFLICTS DETECTED</p>
-                  <p className="text-sm text-muted-foreground mt-1">
-                    Trade records contain impossible transactions. Manual verification recommended.
-                  </p>
-                  <button 
-                    onClick={() => setShowTrades(!showTrades)}
-                    className="text-xs text-primary hover:text-primary/80 mt-2 underline"
-                  >
-                    {showTrades ? 'Hide' : 'Show'} Trade Log
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Trade Log */}
-          {showTrades && (
-            <div className="mt-4 p-4 bg-card rounded-lg border border-primary/20">
-              <h3 className="font-bold text-primary mb-3">TRADE LOG</h3>
-              <div className="space-y-2">
-                {data.trades.map((trade, i) => (
-                  <div key={i} className="text-sm font-mono">
-                    <span className="text-muted-foreground">[{trade.source}]</span>{' '}
-                    <span className={trade.description.includes('CONFLICT') ? 'text-destructive' : 'text-foreground'}>
-                      {trade.description}
-                    </span>
-                  </div>
-                ))}
-              </div>
-              {data.auditNotes && (
-                <div className="mt-3 pt-3 border-t border-border">
-                  <p className="text-xs text-muted-foreground font-semibold mb-2">AUDIT NOTES:</p>
-                  {data.auditNotes.map((note, i) => (
-                    <p key={i} className="text-xs text-muted-foreground">• {note}</p>
-                  ))}
-                </div>
-              )}
-            </div>
-          )}
         </div>
       </div>
 
-      {/* Draft Board Grid */}
-      <div className="mx-auto max-w-7xl p-4">
-        <div className="overflow-x-auto">
-          <div className="min-w-[900px]">
-            {/* Column Headers */}
-            <div className="grid grid-cols-13 gap-1 mb-2">
-              <div className="p-2 text-center font-mono text-xs text-muted-foreground">
-                RND
-              </div>
-              {data.draftOrder.map((team, index) => (
-                <div key={team} className="p-2 text-center">
-                  <div className="text-xs font-mono text-muted-foreground">#{index + 1}</div>
-                  <div className="text-sm font-bold text-foreground truncate">{team}</div>
+      <div className="mx-auto max-w-[1400px] p-4 space-y-4">
+        {/* Trade Log Toggle */}
+        <button
+          onClick={() => setShowTrades(!showTrades)}
+          className="flex items-center gap-2 text-sm font-mono text-primary hover:text-primary/80 transition-colors"
+        >
+          {showTrades ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+          {showTrades ? 'Hide' : 'Show'} Trade Log ({data.trades.length} trades)
+        </button>
+
+        {showTrades && (
+          <div className="p-4 bg-card rounded-lg border border-primary/20 max-h-80 overflow-y-auto">
+            <div className="space-y-1.5">
+              {data.trades.map((trade, i) => (
+                <div key={i} className="text-xs font-mono flex gap-2">
+                  <span className="text-muted-foreground shrink-0">[{trade.source === 'yahoo_2025' ? 'IN-SEASON' : 'OFFSEASON'}]</span>
+                  <span className="text-foreground">{trade.description}</span>
                 </div>
               ))}
             </div>
+          </div>
+        )}
 
-            {/* Draft Rounds */}
-            <div className="space-y-1">
-              {allRounds.map(({ round, picks, isNA }) => (
-                <div key={round} className="grid grid-cols-13 gap-1">
-                  {/* Round Label */}
-                  <div className={`p-3 rounded border text-center font-mono font-bold ${
-                    isNA 
-                      ? 'bg-accent/20 border-accent/40 text-accent' 
-                      : 'bg-muted border-border text-foreground'
-                  }`}>
-                    {isNA ? `NA${round - 23}` : round}
-                  </div>
+        {/* Draft Board Grid */}
+        <div className="overflow-x-auto rounded-lg border border-primary/20">
+          <table className="w-full border-collapse" style={{ minWidth: '960px' }}>
+            <thead>
+              <tr className="bg-card">
+                <th className="sticky left-0 z-[5] bg-card p-2 text-center font-mono text-xs text-muted-foreground border-b border-r border-primary/20 w-12">
+                  RND
+                </th>
+                {data.draftOrder.map((team, idx) => {
+                  const colors = TEAM_COLORS[team]
+                  return (
+                    <th key={team} className="p-2 text-center border-b border-primary/20 min-w-[75px]">
+                      <div className="text-[10px] font-mono text-muted-foreground">#{idx + 1}</div>
+                      <div className={`text-xs font-bold ${colors?.text ?? 'text-foreground'}`}>{team}</div>
+                    </th>
+                  )
+                })}
+              </tr>
+            </thead>
+            <tbody>
+              {Array.from({ length: data.rounds }, (_, i) => i + 1).map((round) => {
+                const roundPicks = (data.picks[round.toString()] ?? []) as DraftPick[]
+                const isNA = data.naRounds.includes(round)
+                const isEven = round % 2 === 0
 
-                  {/* Draft Picks */}
-                  {picks.map((pick) => {
-                    const colorClass = TEAM_COLORS[pick.currentOwner] || TEAM_COLORS['Bob']
-                    const isSnakeReverse = round % 2 === 0
-                    
-                    return (
-                      <div
-                        key={`${round}-${pick.slot}`}
-                        className={`p-2 rounded border text-center transition-all hover:scale-105 ${colorClass}`}
-                        title={
-                          pick.traded 
-                            ? `Originally ${pick.originalOwner}, traded to ${pick.currentOwner}`
-                            : `${pick.currentOwner} - Pick ${round}.${pick.slot}`
-                        }
-                      >
-                        <div className="text-xs font-mono font-bold truncate">
-                          {pick.currentOwner}
+                // Build a map: slot → pick data
+                const slotMap = new Map<number, DraftPick>()
+                for (const p of roundPicks) {
+                  slotMap.set(p.slot, p)
+                }
+
+                // For snake display, even rounds go 12→1
+                const displaySlots = isEven
+                  ? [12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1]
+                  : [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+
+                return (
+                  <tr key={round} className={`${isNA ? 'bg-amber-950/20' : round % 2 === 0 ? 'bg-card/50' : ''} hover:bg-primary/5 transition-colors`}>
+                    <td className={`sticky left-0 z-[5] p-2 text-center font-mono font-bold text-sm border-r border-primary/20 ${
+                      isNA ? 'bg-amber-950/40 text-amber-400' : round % 2 === 0 ? 'bg-card/90' : 'bg-background'
+                    }`}>
+                      {isNA ? (
+                        <div>
+                          <div>{round}</div>
+                          <div className="text-[9px] text-amber-500">NA</div>
                         </div>
-                        <div className="text-xs text-muted-foreground">
-                          {round}.{pick.slot}
-                        </div>
-                        {pick.traded && (
-                          <div className="text-xs text-accent">
-                            ↔
+                      ) : (
+                        <>
+                          {round}
+                          {isEven && <span className="text-[9px] text-muted-foreground ml-0.5">←</span>}
+                        </>
+                      )}
+                    </td>
+                    {displaySlots.map((slot, colIdx) => {
+                      const pick = slotMap.get(slot)
+                      if (!pick) {
+                        return <td key={slot} className="p-1 text-center border border-border/10"><span className="text-xs text-muted-foreground">—</span></td>
+                      }
+
+                      const colors = TEAM_COLORS[pick.currentOwner]
+                      const isTraded = pick.traded
+                      const ownColumn = data.draftOrder[colIdx] === pick.currentOwner
+
+                      return (
+                        <td
+                          key={slot}
+                          className="p-0.5 text-center border border-border/10"
+                          title={isTraded
+                            ? `Pick ${round}.${slot} — Originally ${pick.originalOwner}'s, now owned by ${pick.currentOwner}`
+                            : `Pick ${round}.${slot} — ${pick.currentOwner}`}
+                        >
+                          <div className={`rounded px-1 py-1.5 border ${
+                            colors ? `${colors.bg} ${colors.border}` : 'bg-muted border-border'
+                          } ${isTraded ? 'ring-1 ring-accent/30' : ''}`}>
+                            <div className={`text-[11px] font-mono font-bold leading-tight ${colors?.text ?? 'text-foreground'}`}>
+                              {pick.currentOwner}
+                            </div>
+                            {isTraded && (
+                              <div className="text-[9px] text-accent font-mono leading-tight">
+                                ↔ {pick.originalOwner}
+                              </div>
+                            )}
                           </div>
-                        )}
-                      </div>
-                    )
-                  })}
-                </div>
-              ))}
+                        </td>
+                      )
+                    })}
+                  </tr>
+                )
+              })}
+            </tbody>
+          </table>
+        </div>
+
+        {/* Legend & Stats */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {/* Team Legend */}
+          <div className="p-4 bg-card rounded-lg border border-primary/20">
+            <h3 className="font-bold text-primary mb-3 font-mono text-sm">TEAMS</h3>
+            <div className="grid grid-cols-3 gap-1.5">
+              {data.draftOrder.map((team) => {
+                const colors = TEAM_COLORS[team]
+                const pickCount = Object.values(data.picks).reduce((acc, round) =>
+                  acc + (round as DraftPick[]).filter(p => p.currentOwner === team).length, 0
+                )
+                const tradedIn = Object.values(data.picks).reduce((acc, round) =>
+                  acc + (round as DraftPick[]).filter(p => p.currentOwner === team && p.traded).length, 0
+                )
+                return (
+                  <div key={team} className={`flex items-center gap-1.5 rounded px-2 py-1 ${colors?.bg} ${colors?.border} border`}>
+                    <div className={`h-2 w-2 rounded-full shrink-0 ${colors?.dot}`} />
+                    <span className={`text-xs font-mono font-bold ${colors?.text}`}>{team}</span>
+                    <span className="text-[9px] text-muted-foreground ml-auto">{pickCount}pk</span>
+                  </div>
+                )
+              })}
             </div>
+          </div>
+
+          {/* Key Info */}
+          <div className="p-4 bg-card rounded-lg border border-primary/20">
+            <h3 className="font-bold text-primary mb-3 font-mono text-sm">FORMAT</h3>
+            <ul className="text-xs space-y-1.5 font-mono text-muted-foreground">
+              <li>• <span className="text-foreground">Snake draft:</span> Odd rounds pick 1→12, even rounds 12→1</li>
+              <li>• <span className="text-foreground">Rounds 1-23:</span> Regular players</li>
+              <li>• <span className="text-amber-400">Rounds 24-27:</span> NA/Minor League only</li>
+              <li>• <span className="text-accent">↔ symbol:</span> Pick was traded (shows original owner)</li>
+              <li>• <span className="text-foreground">← arrow:</span> Even rounds flow right-to-left</li>
+              <li className="pt-2 border-t border-border">• <span className="text-foreground">Hover</span> any cell for full trade details</li>
+            </ul>
           </div>
         </div>
 
-        {/* Legend */}
-        <div className="mt-6 p-4 bg-card rounded-lg border border-primary/20">
-          <h3 className="font-bold text-primary mb-3">LEGEND</h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div>
-              <p className="text-sm font-semibold mb-2">Draft Format:</p>
-              <ul className="text-xs space-y-1 font-mono text-muted-foreground">
-                <li>• Snake draft: Odd rounds 1→12, Even rounds 12→1</li>
-                <li>• Rounds 1-23: Regular players</li>
-                <li className="text-accent">• Rounds 24-27: NA/Minor League only</li>
-              </ul>
-            </div>
-            <div>
-              <p className="text-sm font-semibold mb-2">Pick Display:</p>
-              <ul className="text-xs space-y-1 font-mono text-muted-foreground">
-                <li>• Each cell shows: Team Name, Round.Slot</li>
-                <li className="text-accent">• ↔ indicates traded pick</li>
-                <li className="text-destructive">• CONFLICT = impossible trade</li>
-              </ul>
-            </div>
-            <div>
-              <p className="text-sm font-semibold mb-2">Team Colors:</p>
-              <div className="grid grid-cols-2 gap-1">
-                {Object.entries(TEAM_COLORS)
-                  .filter(([team]) => team !== 'CONFLICT')
-                  .slice(0, 12)
-                  .map(([team, colorClass]) => (
-                    <div key={team} className={`text-xs p-1 rounded ${colorClass}`}>
-                      {team}
-                    </div>
-                  ))}
-              </div>
-            </div>
-          </div>
+        {/* Footer */}
+        <div className="text-center py-4">
+          <p className="text-xs font-mono text-muted-foreground">
+            THE SANDLOT — 2026 FANTASY BASEBALL DRAFT • MARCH 6, 2026
+          </p>
+          <p className="text-[10px] font-mono text-muted-foreground/50 mt-1">
+            &quot;Tunnel Snakes Rule!&quot; 🐍
+          </p>
         </div>
       </div>
     </main>
