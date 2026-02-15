@@ -1,104 +1,162 @@
-import { getSupabaseClient } from '@/lib/supabase'
-import { TradeDashboard, type TradePlayer } from '@/app/ui/TradeDashboard'
+import Link from 'next/link'
+import { MANAGERS, TEAM_COLORS } from '@/data/managers'
 
-/* Players manually tagged as high value trade pieces */
-const HIGH_VALUE_PLAYER_IDS = [
-  '0bb03f22-365e-4b3d-ba13-a2628214e780', // Yandy Díaz
-  '49cba133-cd1f-417b-9fd8-c981ae0a3eac', // Zack Wheeler
-  'e268f280-0543-4005-b01e-2867fbe5d27c', // Chris Sale
-  '16f65ddf-3862-454f-8708-04c174733d0f', // Austin Riley
-  '092f1a9b-2bf4-412b-a559-51c1e090b7e7', // Andrés Muñoz
-  '7ee12849-ab0f-44a1-b71e-5d730f90ce2d', // Nick Pivetta
-  '808e683e-1932-4abf-a0b9-c82b3d8e7008', // Jackson Merrill
-  '25675237-934e-49fb-b782-7ca31664ded0', // Steven Kwan
+const NAV_CARDS = [
+  {
+    href: '/teams',
+    icon: '👥',
+    title: 'TEAMS',
+    desc: 'All 12 teams, managers & draft positions',
+    color: 'primary',
+  },
+  {
+    href: '/draft-board',
+    icon: '🎯',
+    title: 'DRAFT BOARD',
+    desc: '2026 snake draft — 27 rounds of destiny',
+    color: 'primary',
+  },
+  {
+    href: '/offer',
+    icon: '🤝',
+    title: 'TRADE BLOCK',
+    desc: 'Tunnel Snakes trade portal — make your pitch',
+    color: 'accent',
+  },
+  {
+    href: '#',
+    icon: '🧠',
+    title: 'ASK SMALLS',
+    desc: 'AI league assistant — coming soon',
+    color: 'muted',
+    badge: 'SOON',
+  },
+  {
+    href: '#',
+    icon: '🔐',
+    title: 'KEEPERS',
+    desc: 'Keeper lists & cost analysis — coming soon',
+    color: 'muted',
+    badge: 'SOON',
+  },
 ]
 
-export const revalidate = 60
+export default function Home() {
+  return (
+    <main className="min-h-[80vh]">
+      {/* Hero Section */}
+      <section className="relative overflow-hidden">
+        {/* Subtle grid bg */}
+        <div className="absolute inset-0 opacity-5" style={{
+          backgroundImage: 'linear-gradient(hsl(var(--primary)) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--primary)) 1px, transparent 1px)',
+          backgroundSize: '40px 40px',
+        }} />
 
-type TradeBlockRow = {
-  id: string
-  notes: string | null
-  keeper_status: string
-  players: {
-    id: string
-    full_name: string
-    mlb_team: string | null
-    primary_position: string | null
-    headshot_url: string | null
-    fantasypros_ecr: number | null
-    keeper_cost_round: number | null
-    keeper_cost_label: string | null
-    stats_2025: any | null
-  } | null
+        <div className="relative mx-auto max-w-[1400px] px-4 pt-16 pb-12 text-center">
+          {/* Big Title */}
+          <h1 className="text-6xl sm:text-7xl md:text-8xl font-black text-primary vault-glow tracking-tight font-mono pip-flicker">
+            THE SANDLOT
+          </h1>
+          <p className="mt-3 text-sm sm:text-base font-mono text-muted-foreground tracking-widest uppercase">
+            Fantasy Baseball League Hub • Est. 2019 • 12 Teams
+          </p>
+
+          {/* Quick Stats Bar */}
+          <div className="mt-8 inline-flex flex-wrap justify-center gap-3 sm:gap-6 text-xs sm:text-sm font-mono">
+            <Stat label="TEAMS" value="12" />
+            <StatDivider />
+            <Stat label="ROUNDS" value="27" />
+            <StatDivider />
+            <Stat label="DRAFT DAY" value="MAR 6" />
+            <StatDivider />
+            <Stat label="BUY-IN" value="$200" />
+          </div>
+
+          {/* Terminal flavor text */}
+          <div className="mt-8 font-mono text-xs text-primary/50">
+            <span className="terminal-cursor">&gt; initializing draft protocols</span>
+          </div>
+        </div>
+      </section>
+
+      {/* Navigation Cards */}
+      <section className="mx-auto max-w-[1400px] px-4 pb-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {NAV_CARDS.map((card) => (
+            <Link
+              key={card.title}
+              href={card.href}
+              className={`group relative dashboard-card p-6 transition-all duration-200 ${
+                card.badge
+                  ? 'opacity-60 cursor-default'
+                  : 'hover:border-primary/40 hover:shadow-[0_0_25px_hsl(var(--primary)/0.15)]'
+              }`}
+            >
+              {card.badge && (
+                <span className="absolute top-3 right-3 px-2 py-0.5 text-[10px] font-mono font-bold uppercase tracking-wider bg-accent/20 text-accent border border-accent/30 rounded">
+                  {card.badge}
+                </span>
+              )}
+              <div className="text-3xl mb-3">{card.icon}</div>
+              <h2 className={`text-lg font-bold font-mono tracking-wider ${
+                card.badge ? 'text-muted-foreground' : 'text-primary group-hover:vault-glow'
+              }`}>
+                {card.title}
+              </h2>
+              <p className="mt-1 text-sm text-muted-foreground font-mono">
+                {card.desc}
+              </p>
+              {!card.badge && (
+                <div className="mt-3 text-xs font-mono text-primary/50 group-hover:text-primary/80 transition-colors">
+                  → ENTER
+                </div>
+              )}
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      {/* Teams Quick Grid */}
+      <section className="mx-auto max-w-[1400px] px-4 pb-12">
+        <h2 className="text-sm font-mono font-bold text-primary vault-glow mb-4 uppercase tracking-wider">
+          ⚡ League Roster — 12 Teams
+        </h2>
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2">
+          {MANAGERS.map((m) => {
+            const colors = TEAM_COLORS[m.colorKey]
+            return (
+              <Link
+                key={m.teamSlug}
+                href={`/team/${m.teamSlug}`}
+                className={`flex items-center gap-2 rounded-lg px-3 py-2 border transition-all duration-150 hover:scale-[1.02] ${colors?.bg} ${colors?.border}`}
+              >
+                <div className={`h-2.5 w-2.5 rounded-full shrink-0 ${colors?.dot}`} />
+                <div className="min-w-0">
+                  <div className={`text-xs font-mono font-bold truncate ${colors?.text}`}>
+                    {m.teamName}
+                  </div>
+                  <div className="text-[10px] font-mono text-muted-foreground">
+                    {m.displayName} • #{m.draftPosition}
+                  </div>
+                </div>
+              </Link>
+            )
+          })}
+        </div>
+      </section>
+    </main>
+  )
 }
 
-export default async function Home() {
-  const leagueKey = process.env.YAHOO_LEAGUE_KEY
-  const teamKey = process.env.YAHOO_TEAM_KEY
+function Stat({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="text-center">
+      <div className="text-primary vault-glow font-bold text-lg sm:text-xl">{value}</div>
+      <div className="text-muted-foreground text-[10px] tracking-widest">{label}</div>
+    </div>
+  )
+}
 
-  if (!leagueKey || !teamKey) {
-    return (
-      <main className="mx-auto max-w-3xl p-6">
-        <h1 className="text-2xl font-bold text-primary vault-glow">🐍 TUNNEL SNAKES — Trade Terminal</h1>
-        <p className="mt-4 font-mono text-muted-foreground">
-          &gt; ERROR: Missing <code className="text-accent">YAHOO_LEAGUE_KEY</code> / <code className="text-accent">YAHOO_TEAM_KEY</code> environment variables.
-        </p>
-        <p className="mt-2 font-mono text-muted-foreground">
-          &gt; Consult the Overseer (check your .env.local file).
-        </p>
-      </main>
-    )
-  }
-
-  const supabase = getSupabaseClient()
-  if (!supabase) {
-    return (
-      <main className="mx-auto max-w-3xl p-6">
-        <h1 className="text-2xl font-bold text-primary vault-glow">🐍 TUNNEL SNAKES — Trade Terminal</h1>
-        <p className="mt-4 font-mono text-muted-foreground">
-          &gt; ERROR: Missing Supabase connection. The vault&apos;s database is offline.
-        </p>
-      </main>
-    )
-  }
-
-  const { data, error } = await supabase
-    .from('my_roster_players')
-    .select('id, notes, keeper_status, players:player_id(id, full_name, mlb_team, primary_position, headshot_url, fantasypros_ecr, keeper_cost_round, keeper_cost_label, stats_2025)')
-    .eq('yahoo_league_key', leagueKey)
-    .eq('yahoo_team_key', teamKey)
-    .eq('is_available', true)
-
-  if (error) {
-    return (
-      <main className="mx-auto max-w-3xl p-6">
-        <h1 className="text-2xl font-bold text-primary vault-glow">🐍 TUNNEL SNAKES — Trade Terminal</h1>
-        <p className="mt-4 text-red-500 font-mono">
-          &gt; CRITICAL ERROR: {error.message}
-        </p>
-      </main>
-    )
-  }
-
-  const rows = (data ?? []) as unknown as TradeBlockRow[]
-  const players: TradePlayer[] = rows
-    .filter((r) => r.players)
-    .map((r) => ({
-      rosterRowId: r.id,
-      playerId: r.players!.id,
-      fullName: r.players!.full_name,
-      mlbTeam: r.players!.mlb_team,
-      position: r.players!.primary_position,
-      keeperStatus: r.keeper_status,
-      highValue: HIGH_VALUE_PLAYER_IDS.includes(r.players!.id),
-      notes: r.notes,
-      headshotUrl: r.players!.headshot_url,
-      ecr: r.players!.fantasypros_ecr,
-      keeperCostLabel: r.players!.keeper_cost_label,
-      keeperCostRound: r.players!.keeper_cost_round,
-      stats2025: r.players!.stats_2025,
-    }))
-    .sort((a, b) => (a.position ?? '').localeCompare(b.position ?? '') || a.fullName.localeCompare(b.fullName))
-
-  return <TradeDashboard players={players} />
+function StatDivider() {
+  return <div className="hidden sm:block h-8 w-px bg-primary/20" />
 }

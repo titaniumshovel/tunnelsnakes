@@ -1,8 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { ArrowLeft, Calendar, Users, ChevronDown, ChevronUp } from 'lucide-react'
-import Link from 'next/link'
+import { Calendar, Users, ChevronDown, ChevronUp } from 'lucide-react'
 import draftBoardData from '@/data/draft-board.json'
 
 type DraftPick = {
@@ -61,20 +60,13 @@ export default function DraftBoardPage() {
 
   return (
     <main className="min-h-screen bg-background">
-      {/* Header */}
-      <div className="sticky top-0 z-10 bg-background/95 backdrop-blur border-b border-primary/20">
+      {/* Page Header (nav is in layout) */}
+      <div className="bg-background/80 border-b border-primary/10">
         <div className="mx-auto max-w-[1400px] px-4 py-3">
           <div className="flex items-center justify-between flex-wrap gap-2">
-            <div className="flex items-center gap-3">
-              <Link href="/" className="flex items-center gap-1.5 text-primary hover:text-primary/80 transition-colors text-sm font-mono">
-                <ArrowLeft className="h-4 w-4" />
-                TERMINAL
-              </Link>
-              <div className="h-5 w-px bg-border" />
-              <h1 className="text-xl md:text-2xl font-bold text-primary vault-glow font-mono">
-                🎯 2026 DRAFT BOARD
-              </h1>
-            </div>
+            <h1 className="text-xl md:text-2xl font-bold text-primary vault-glow font-mono">
+              🎯 2026 DRAFT BOARD
+            </h1>
             <div className="flex items-center gap-4 text-xs font-mono text-muted-foreground">
               <span className="flex items-center gap-1.5"><Calendar className="h-3.5 w-3.5" /> March 6, 2026</span>
               <span className="flex items-center gap-1.5"><Users className="h-3.5 w-3.5" /> 12 Teams • 27 Rounds</span>
@@ -559,9 +551,6 @@ export default function DraftBoardPage() {
         <div className="text-center py-4">
           <p className="text-xs font-mono text-muted-foreground">
             THE SANDLOT — 2026 FANTASY BASEBALL DRAFT • MARCH 6, 2026
-          </p>
-          <p className="text-[10px] font-mono text-muted-foreground/50 mt-1">
-            &quot;Tunnel Snakes Rule!&quot; 🐍
           </p>
         </div>
       </div>
