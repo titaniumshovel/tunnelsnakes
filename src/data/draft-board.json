@@ -1,0 +1,51 @@
+{
+  "draftOrder": ["Pudge", "Nick", "Web", "Tom", "Tyler", "Thomas", "Chris", "Alex", "Greasy", "Bob", "Mike", "Sean"],
+  "rounds": 27,
+  "naRounds": [24, 25, 26, 27],
+  "auditStatus": "CONFLICTS FOUND",
+  "auditNotes": [
+    "Gmail trade records contain impossible transactions",
+    "Alex's Rd 19,20 picks traded to both Tyler AND Nick (impossible)",
+    "Mike's late-round picks over-committed in multiple trades",
+    "Recommended: Manual verification with league commissioner"
+  ],
+  "trades": [
+    {"description": "Bob→Chris: Bob's Rd 9 for Chris's Rd 13 (+ players)", "source": "pre-thread"},
+    {"description": "Sean→Alex: Sean's Rd 13 for Alex's Rd 7 (+ players)", "source": "offseason email"},
+    {"description": "Greasy→Sean: Greasy's Rd 18 for Sean's Rd 7 (+ players)", "source": "offseason email"},
+    {"description": "Alex→Tyler: Alex's Rd 18,19,20 for Tyler's Rd 6,9,13 (+ players)", "source": "offseason email"},
+    {"description": "Nick→Alex: CONFLICT - picks already traded to Tyler", "source": "offseason email - ERROR"},
+    {"description": "Mike→Alex: Mike's Rd 15 for Alex's Rd 12 (+ players)", "source": "offseason email"},
+    {"description": "Mike→Tyler: Mike's Rd 21,22,23 for Tyler's Rd 7,8,10 (+ players)", "source": "recent email"}
+  ],
+  "picks": {
+    "1": [
+      {"slot": 1, "originalOwner": "Pudge", "currentOwner": "Pudge", "traded": false},
+      {"slot": 2, "originalOwner": "Nick", "currentOwner": "Nick", "traded": false},
+      {"slot": 3, "originalOwner": "Web", "currentOwner": "Web", "traded": false},
+      {"slot": 4, "originalOwner": "Tom", "currentOwner": "Tom", "traded": false},
+      {"slot": 5, "originalOwner": "Tyler", "currentOwner": "Tyler", "traded": false},
+      {"slot": 6, "originalOwner": "Thomas", "currentOwner": "Thomas", "traded": false},
+      {"slot": 7, "originalOwner": "Chris", "currentOwner": "Chris", "traded": false},
+      {"slot": 8, "originalOwner": "Alex", "currentOwner": "Alex", "traded": false},
+      {"slot": 9, "originalOwner": "Greasy", "currentOwner": "Greasy", "traded": false},
+      {"slot": 10, "originalOwner": "Bob", "currentOwner": "Bob", "traded": false},
+      {"slot": 11, "originalOwner": "Mike", "currentOwner": "Mike", "traded": false},
+      {"slot": 12, "originalOwner": "Sean", "currentOwner": "Sean", "traded": false}
+    ],
+    "7": [
+      {"slot": 1, "originalOwner": "Pudge", "currentOwner": "Pudge", "traded": false},
+      {"slot": 2, "originalOwner": "Nick", "currentOwner": "CONFLICT", "traded": true},
+      {"slot": 3, "originalOwner": "Web", "currentOwner": "Web", "traded": false},
+      {"slot": 4, "originalOwner": "Tom", "currentOwner": "Tom", "traded": false},
+      {"slot": 5, "originalOwner": "Tyler", "currentOwner": "CONFLICT", "traded": true},
+      {"slot": 6, "originalOwner": "Thomas", "currentOwner": "Thomas", "traded": false},
+      {"slot": 7, "originalOwner": "Chris", "currentOwner": "Chris", "traded": false},
+      {"slot": 8, "originalOwner": "Alex", "currentOwner": "CONFLICT", "traded": true},
+      {"slot": 9, "originalOwner": "Greasy", "currentOwner": "Greasy", "traded": false},
+      {"slot": 10, "originalOwner": "Bob", "currentOwner": "Bob", "traded": false},
+      {"slot": 11, "originalOwner": "Mike", "currentOwner": "Mike", "traded": false},
+      {"slot": 12, "originalOwner": "Sean", "currentOwner": "CONFLICT", "traded": true}
+    ]
+  }
+}

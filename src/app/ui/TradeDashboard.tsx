@@ -354,7 +354,13 @@ export function TradeDashboard({ players }: { players: TradePlayer[] }) {
               </p>
             </div>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
+            <Link 
+              href="/draft-board"
+              className="btn-trade px-4 py-2 text-sm flex items-center gap-2 hover:scale-105 transition-all"
+            >
+              🎯 DRAFT BOARD
+            </Link>
             <div className="stat-badge bg-primary/15 text-primary font-mono">
               <Radiation className="w-3 h-3" />
               Roster: {players.length}
