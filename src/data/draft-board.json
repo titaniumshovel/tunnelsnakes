@@ -475,8 +475,8 @@
       {
         "slot": 2,
         "originalOwner": "Nick",
-        "currentOwner": "Alex",
-        "traded": true
+        "currentOwner": "Nick",
+        "traded": false
       },
       {
         "slot": 3,
@@ -505,7 +505,7 @@
       {
         "slot": 7,
         "originalOwner": "Chris",
-        "currentOwner": "Greasy",
+        "currentOwner": "Sean",
         "traded": true
       },
       {
@@ -529,14 +529,14 @@
       {
         "slot": 11,
         "originalOwner": "Mike",
-        "currentOwner": "Nick",
+        "currentOwner": "Alex",
         "traded": true
       },
       {
         "slot": 12,
         "originalOwner": "Sean",
-        "currentOwner": "Sean",
-        "traded": false
+        "currentOwner": "Greasy",
+        "traded": true
       }
     ],
     "8": [
@@ -585,7 +585,7 @@
       {
         "slot": 8,
         "originalOwner": "Alex",
-        "currentOwner": "Mike",
+        "currentOwner": "Nick",
         "traded": true
       },
       {
@@ -603,8 +603,8 @@
       {
         "slot": 11,
         "originalOwner": "Mike",
-        "currentOwner": "Nick",
-        "traded": true
+        "currentOwner": "Mike",
+        "traded": false
       },
       {
         "slot": 12,
@@ -623,8 +623,8 @@
       {
         "slot": 2,
         "originalOwner": "Nick",
-        "currentOwner": "Alex",
-        "traded": true
+        "currentOwner": "Nick",
+        "traded": false
       },
       {
         "slot": 3,
@@ -677,7 +677,7 @@
       {
         "slot": 11,
         "originalOwner": "Mike",
-        "currentOwner": "Nick",
+        "currentOwner": "Alex",
         "traded": true
       },
       {
@@ -771,8 +771,8 @@
       {
         "slot": 2,
         "originalOwner": "Nick",
-        "currentOwner": "Alex",
-        "traded": true
+        "currentOwner": "Nick",
+        "traded": false
       },
       {
         "slot": 3,
@@ -819,7 +819,7 @@
       {
         "slot": 10,
         "originalOwner": "Bob",
-        "currentOwner": "Nick",
+        "currentOwner": "Alex",
         "traded": true
       },
       {
@@ -845,7 +845,7 @@
       {
         "slot": 2,
         "originalOwner": "Nick",
-        "currentOwner": "Web",
+        "currentOwner": "Tom",
         "traded": true
       },
       {
@@ -875,7 +875,7 @@
       {
         "slot": 7,
         "originalOwner": "Chris",
-        "currentOwner": "Bob",
+        "currentOwner": "Web",
         "traded": true
       },
       {
@@ -893,8 +893,8 @@
       {
         "slot": 10,
         "originalOwner": "Bob",
-        "currentOwner": "Tom",
-        "traded": true
+        "currentOwner": "Bob",
+        "traded": false
       },
       {
         "slot": 11,
@@ -1399,7 +1399,7 @@
       {
         "slot": 8,
         "originalOwner": "Alex",
-        "currentOwner": "Tyler",
+        "currentOwner": "Nick",
         "traded": true
       },
       {
@@ -1417,7 +1417,7 @@
       {
         "slot": 11,
         "originalOwner": "Mike",
-        "currentOwner": "Nick",
+        "currentOwner": "Tyler",
         "traded": true
       },
       {
@@ -1547,8 +1547,8 @@
       {
         "slot": 8,
         "originalOwner": "Alex",
-        "currentOwner": "Nick",
-        "traded": true
+        "currentOwner": "Alex",
+        "traded": false
       },
       {
         "slot": 9,
@@ -1565,7 +1565,7 @@
       {
         "slot": 11,
         "originalOwner": "Mike",
-        "currentOwner": "Alex",
+        "currentOwner": "Nick",
         "traded": true
       },
       {
