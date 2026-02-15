@@ -1,6 +1,18 @@
 import { getSupabaseClient } from '@/lib/supabase'
 import { TradeDashboard, type TradePlayer } from '@/app/ui/TradeDashboard'
 
+/* Players manually tagged as high value trade pieces */
+const HIGH_VALUE_PLAYER_IDS = [
+  '0bb03f22-365e-4b3d-ba13-a2628214e780', // Yandy Díaz
+  '49cba133-cd1f-417b-9fd8-c981ae0a3eac', // Zack Wheeler
+  'e268f280-0543-4005-b01e-2867fbe5d27c', // Chris Sale
+  '16f65ddf-3862-454f-8708-04c174733d0f', // Austin Riley
+  '092f1a9b-2bf4-412b-a559-51c1e090b7e7', // Andrés Muñoz
+  '7ee12849-ab0f-44a1-b71e-5d730f90ce2d', // Nick Pivetta
+  '808e683e-1932-4abf-a0b9-c82b3d8e7008', // Jackson Merrill
+  '25675237-934e-49fb-b782-7ca31664ded0', // Steven Kwan
+]
+
 export const revalidate = 60
 
 type TradeBlockRow = {
@@ -78,6 +90,7 @@ export default async function Home() {
       mlbTeam: r.players!.mlb_team,
       position: r.players!.primary_position,
       keeperStatus: r.keeper_status,
+      highValue: HIGH_VALUE_PLAYER_IDS.includes(r.players!.id),
       notes: r.notes,
       headshotUrl: r.players!.headshot_url,
       ecr: r.players!.fantasypros_ecr,

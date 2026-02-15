@@ -14,6 +14,7 @@ export type TradePlayer = {
   mlbTeam?: string | null
   position?: string | null
   keeperStatus: string
+  highValue?: boolean
   notes?: string | null
   headshotUrl?: string | null
   ecr?: number | null
@@ -22,6 +23,7 @@ export type TradePlayer = {
   stats2025?: any | null
 }
 
+/* Players manually tagged as high value trade pieces */
 const DRAFT_PICKS = Array.from({ length: 24 }, (_, i) => i + 1)
 
 const LEAGUE_TEAMS = [
@@ -49,7 +51,7 @@ const STATUS_STYLES: Record<string, { border: string; bg: string; badge: string;
     label: '🔒 LOCKED',
     icon: '🔒',
   },
-  'trade-target': {
+  'high-value': {
     border: '',
     bg: '',
     badge: 'bg-amber-500/20 text-amber-400',
@@ -81,7 +83,7 @@ export function TradeDashboard({ players }: { players: TradePlayer[] }) {
   const [selected, setSelected] = useState<TradePlayer | null>(null)
   const [search, setSearch] = useState('')
   const [posFilter, setPosFilter] = useState('ALL')
-  const [statusFilter, setStatusFilter] = useState<'ALL' | 'keeping' | 'trade-target' | 'available'>('ALL')
+  const [statusFilter, setStatusFilter] = useState<'ALL' | 'keeping' | 'high-value' | 'available'>('ALL')
   const [sortBy, setSortBy] = useState<'name' | 'ecr' | 'cost'>('name')
 
   const [selectedPicks, setSelectedPicks] = useState<number[]>([])
@@ -157,6 +159,7 @@ export function TradeDashboard({ players }: { players: TradePlayer[] }) {
       const matchStatus =
         statusFilter === 'ALL' ||
         (statusFilter === 'keeping' ? (p.keeperStatus === 'keeping' || p.keeperStatus === 'keeping-na') :
+         statusFilter === 'high-value' ? p.highValue === true :
          statusFilter === 'available' ? (p.keeperStatus !== 'keeping' && p.keeperStatus !== 'keeping-na') :
          p.keeperStatus === statusFilter)
       return matchSearch && matchPos && matchStatus
@@ -463,7 +466,7 @@ export function TradeDashboard({ players }: { players: TradePlayer[] }) {
               {/* Status filters */}
               <div className="flex gap-1.5 mb-3 items-center flex-wrap">
                 <span className="text-[10px] text-muted-foreground font-mono uppercase tracking-widest mr-1">Status:</span>
-                {([['ALL', 'All'], ['keeping', '🔒 Keepers'], ['trade-target', '⭐ High Value'], ['available', 'Available']] as const).map(([key, label]) => (
+                {([['ALL', 'All'], ['keeping', '🔒 Keepers'], ['high-value', '⭐ High Value'], ['available', 'Available']] as const).map(([key, label]) => (
                   <button
                     key={key}
                     onClick={() => setStatusFilter(key as typeof statusFilter)}
@@ -471,7 +474,7 @@ export function TradeDashboard({ players }: { players: TradePlayer[] }) {
                       statusFilter === key
                         ? key === 'keeping'
                           ? 'bg-green-500/20 text-green-400 shadow-[0_0_10px_rgba(34,197,94,0.3)]'
-                          : key === 'trade-target'
+                          : key === 'high-value'
                           ? 'bg-amber-500/20 text-amber-400 shadow-[0_0_10px_rgba(245,158,11,0.3)]'
                           : 'bg-primary text-primary-foreground shadow-[0_0_10px_hsl(121_99%_54%/0.3)]'
                         : 'bg-secondary text-muted-foreground hover:text-primary'
@@ -503,7 +506,8 @@ export function TradeDashboard({ players }: { players: TradePlayer[] }) {
               {/* Player rows */}
               <div className="flex-1 overflow-y-auto space-y-1 -mx-1 px-1">
                 {filtered.map((p) => {
-                  const style = STATUS_STYLES[p.keeperStatus]
+                  const styleKey = p.keeperStatus === 'keeping' || p.keeperStatus === 'keeping-na' ? p.keeperStatus : p.highValue ? 'high-value' : p.keeperStatus
+                  const style = STATUS_STYLES[styleKey]
                   const isKeeper = p.keeperStatus === 'keeping' || p.keeperStatus === 'keeping-na'
                   return (
                     <div
@@ -584,6 +588,10 @@ export function TradeDashboard({ players }: { players: TradePlayer[] }) {
                           <span className="stat-badge bg-blue-500/15 text-blue-400 uppercase tracking-wider">
                             <Shield className="w-3 h-3" />
                             NA SLOT
+                          </span>
+                        ) : p.highValue ? (
+                          <span className="stat-badge bg-amber-500/15 text-amber-400 uppercase tracking-wider">
+                            ⭐ HIGH VALUE
                           </span>
                         ) : (
                           <span className="font-mono">{p.keeperStatus}</span>
