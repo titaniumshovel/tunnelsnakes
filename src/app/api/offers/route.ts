@@ -11,6 +11,21 @@ const BodySchema = z.object({
   requestedPlayerId: z.string().uuid().optional(),
 })
 
+async function notifyTelegram(text: string) {
+  const token = process.env.TELEGRAM_BOT_TOKEN
+  const chatId = process.env.TELEGRAM_CHAT_ID
+  if (!token || !chatId) return
+  try {
+    await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ chat_id: chatId, text, parse_mode: 'HTML' }),
+    })
+  } catch {
+    // Fire and forget — don't block the offer submission
+  }
+}
+
 export async function POST(req: Request) {
   const leagueKey = process.env.YAHOO_LEAGUE_KEY
   const teamKey = process.env.YAHOO_TEAM_KEY
@@ -34,6 +49,17 @@ export async function POST(req: Request) {
 
   const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
+  // Look up the requested player name for the notification
+  let playerName = 'Unknown'
+  if (requestedPlayerId) {
+    const { data: player } = await supabase
+      .from('players')
+      .select('full_name')
+      .eq('id', requestedPlayerId)
+      .single()
+    if (player) playerName = player.full_name
+  }
+
   const { error: offerErr } = await supabase.from('trade_offers').insert({
     yahoo_league_key: leagueKey,
     yahoo_team_key: teamKey,
@@ -49,6 +75,19 @@ export async function POST(req: Request) {
   if (offerErr) {
     return new NextResponse(offerErr.message, { status: 500 })
   }
+
+  // Send Telegram notification
+  const lines = [
+    `🐍 <b>NEW TRADE OFFER</b>`,
+    ``,
+    `<b>From:</b> ${teamName}${displayName ? ` (${displayName})` : ''}`,
+    `<b>Wants:</b> ${playerName}`,
+    `<b>Offer:</b> ${offerText}`,
+  ]
+  if (message) lines.push(`<b>Message:</b> ${message}`)
+  lines.push(``, `<i>tunnelsnakes.vercel.app</i>`)
+
+  await notifyTelegram(lines.join('\n'))
 
   return NextResponse.json({ ok: true })
 }
