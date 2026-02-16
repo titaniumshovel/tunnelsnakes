@@ -42,7 +42,7 @@ type RosterPlayer = {
 const MAX_KEEPERS = 6
 const MAX_NA = 4
 
-const STATUS_CYCLE = ['undecided', 'keeping', 'not-keeping'] as const
+const STATUS_CYCLE = ['undecided', 'keeping', 'keeping-na', 'not-keeping'] as const
 const STATUS_DISPLAY: Record<string, { icon: string; label: string; color: string; bg: string; border: string }> = {
   keeping: { icon: '🔒', label: 'KEEPING', color: 'text-secondary', bg: 'bg-secondary/10', border: 'border-secondary/30' },
   'keeping-na': { icon: '🔷', label: 'KEEPER (NA)', color: 'text-blue-400', bg: 'bg-blue-500/10', border: 'border-blue-500/30' },
@@ -58,6 +58,7 @@ export default function DashboardPage() {
   const [roster, setRoster] = useState<RosterPlayer[]>([])
   const [rosterLoading, setRosterLoading] = useState(true)
   const [updatingId, setUpdatingId] = useState<string | null>(null)
+  const [limitWarning, setLimitWarning] = useState<string | null>(null)
   const router = useRouter()
 
   useEffect(() => {
@@ -108,20 +109,34 @@ export default function DashboardPage() {
   }, [manager, fetchRoster])
 
   async function cycleKeeperStatus(rp: RosterPlayer) {
-    // Determine next status in cycle
+    // Determine next status in cycle, skipping any that are at limit
     const currentIdx = STATUS_CYCLE.indexOf(rp.keeper_status as typeof STATUS_CYCLE[number])
-    const nextIdx = (currentIdx + 1) % STATUS_CYCLE.length
-    const nextStatus = STATUS_CYCLE[nextIdx]
+    const currentKeepers = roster.filter(r => r.id !== rp.id && r.keeper_status === 'keeping').length
+    const currentNA = roster.filter(r => r.id !== rp.id && r.keeper_status === 'keeping-na').length
 
-    // Check limits before allowing "keeping"
-    if (nextStatus === 'keeping') {
-      const currentKeepers = roster.filter(r => r.keeper_status === 'keeping').length
-      if (currentKeepers >= MAX_KEEPERS) {
-        // Can't add more keepers
-        return
+    let nextStatus: typeof STATUS_CYCLE[number] | null = null
+    for (let i = 1; i <= STATUS_CYCLE.length; i++) {
+      const candidateIdx = (currentIdx + i) % STATUS_CYCLE.length
+      const candidate = STATUS_CYCLE[candidateIdx]
+
+      if (candidate === 'keeping' && currentKeepers >= MAX_KEEPERS) {
+        // Show warning and skip
+        setLimitWarning(`Keeper limit reached (${MAX_KEEPERS}/${MAX_KEEPERS}). Remove a keeper first.`)
+        setTimeout(() => setLimitWarning(null), 3000)
+        continue
       }
+      if (candidate === 'keeping-na' && currentNA >= MAX_NA) {
+        setLimitWarning(`NA limit reached (${MAX_NA}/${MAX_NA}). Remove an NA keeper first.`)
+        setTimeout(() => setLimitWarning(null), 3000)
+        continue
+      }
+      nextStatus = candidate
+      break
     }
 
+    if (!nextStatus || nextStatus === rp.keeper_status) return
+
+    setLimitWarning(null)
     setUpdatingId(rp.id)
     const res = await fetch('/api/keepers', {
       method: 'PATCH',
@@ -291,19 +306,40 @@ export default function DashboardPage() {
             </div>
           </div>
 
-          {/* Keeper limit bar */}
-          <div className="mb-4">
-            <div className="h-2 bg-secondary rounded-full overflow-hidden">
-              <div
-                className="h-full bg-secondary/60 rounded-full transition-all duration-300"
-                style={{ width: `${(keepersSelected / MAX_KEEPERS) * 100}%` }}
-              />
+          {/* Keeper limit bars */}
+          <div className="mb-4 space-y-2">
+            <div>
+              <div className="flex justify-between text-[10px] font-mono text-muted-foreground mb-1">
+                <span>🔒 Keepers: {keepersSelected}/{MAX_KEEPERS}</span>
+                <span>{MAX_KEEPERS - keepersSelected} remaining</span>
+              </div>
+              <div className="h-2 bg-muted rounded-full overflow-hidden">
+                <div
+                  className={`h-full rounded-full transition-all duration-300 ${keepersSelected >= MAX_KEEPERS ? 'bg-accent' : 'bg-secondary/60'}`}
+                  style={{ width: `${(keepersSelected / MAX_KEEPERS) * 100}%` }}
+                />
+              </div>
             </div>
-            <div className="flex justify-between text-[10px] font-mono text-muted-foreground mt-1">
-              <span>{keepersSelected} of {MAX_KEEPERS} keeper slots used</span>
-              <span>{MAX_KEEPERS - keepersSelected} remaining</span>
+            <div>
+              <div className="flex justify-between text-[10px] font-mono text-muted-foreground mb-1">
+                <span>🔷 Minor Leaguers (NA): {naKeepers}/{MAX_NA}</span>
+                <span>{MAX_NA - naKeepers} remaining</span>
+              </div>
+              <div className="h-2 bg-muted rounded-full overflow-hidden">
+                <div
+                  className={`h-full rounded-full transition-all duration-300 ${naKeepers >= MAX_NA ? 'bg-accent' : 'bg-blue-500/60'}`}
+                  style={{ width: `${(naKeepers / MAX_NA) * 100}%` }}
+                />
+              </div>
             </div>
           </div>
+
+          {/* Limit warning */}
+          {limitWarning && (
+            <div className="mb-3 px-3 py-2 rounded-md bg-amber-100 dark:bg-amber-900/30 border border-amber-300 dark:border-amber-500/30 text-amber-800 dark:text-amber-300 text-xs font-mono animate-fade-in-up">
+              ⚠️ {limitWarning}
+            </div>
+          )}
 
           {rosterLoading ? (
             <p className="text-sm text-muted-foreground">Loading roster...</p>
@@ -326,7 +362,7 @@ export default function DashboardPage() {
                     key={rp.id}
                     className={`flex items-center gap-3 px-3 py-2.5 rounded-md border transition-all cursor-pointer hover:scale-[1.005] active:scale-[0.995] ${statusInfo.bg} ${statusInfo.border} ${isUpdating ? 'opacity-60' : ''}`}
                     onClick={() => !isUpdating && cycleKeeperStatus(rp)}
-                    title="Click to cycle: Undecided → Keeping → Not Keeping"
+                    title="Click to cycle: Undecided → Keeping → NA Keeper → Not Keeping"
                   >
                     <span className="text-lg shrink-0">{statusInfo.icon}</span>
                     <div className="flex-1 min-w-0">
@@ -356,7 +392,7 @@ export default function DashboardPage() {
           )}
 
           <div className="mt-3 text-xs font-mono text-muted-foreground/60 text-center">
-            Click any player to cycle: ⏳ Undecided → 🔒 Keeping → ❌ Not Keeping
+            Click to cycle: ⏳ Undecided → 🔒 Keeping → 🔷 NA Keeper → ❌ Not Keeping
           </div>
         </div>
 
