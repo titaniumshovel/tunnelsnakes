@@ -52,6 +52,39 @@ function getPositionGroupOrder(group: string): number {
   return order.indexOf(group)
 }
 
+type TeamTrade = {
+  id: string
+  from_team_name: string
+  target_team: string | null
+  status: string
+  description: string | null
+  teams_involved: string[]
+  created_at: string
+  approved_at: string | null
+}
+
+async function getTeamTrades(teamName: string): Promise<TeamTrade[]> {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  if (!supabaseUrl || !supabaseKey) return []
+
+  const supabase = createClient(supabaseUrl, supabaseKey)
+  const { data, error } = await supabase
+    .from('trade_offers')
+    .select('id, from_team_name, target_team, status, description, teams_involved, created_at, approved_at')
+    .or(`from_team_name.eq.${teamName},target_team.eq.${teamName},teams_involved.cs.{${teamName}}`)
+    .in('status', ['completed', 'approved'])
+    .order('created_at', { ascending: false })
+    .limit(5)
+
+  if (error) {
+    console.error('Error fetching team trades:', error)
+    return []
+  }
+
+  return (data ?? []) as TeamTrade[]
+}
+
 async function getTeamRoster(yahooTeamKey: string): Promise<RosterPlayer[]> {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
   const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
@@ -96,6 +129,7 @@ export default async function TeamProfilePage({ params }: Props) {
 
   const colors = TEAM_COLORS[manager.colorKey]
   const roster = await getTeamRoster(manager.yahooTeamKey)
+  const recentTrades = await getTeamTrades(manager.teamName)
 
   // Group players by position
   const grouped: Record<string, RosterPlayer[]> = {}
@@ -300,6 +334,55 @@ export default async function TeamProfilePage({ params }: Props) {
           </div>
         )}
 
+        {/* Recent Trades */}
+        {recentTrades.length > 0 && (
+          <div className="mt-6 sandlot-card overflow-hidden">
+            <div className="px-4 py-3 bg-muted border-b border-border">
+              <h2 className="text-sm font-serif font-bold text-primary flex items-center gap-2">
+                🤝 Recent Trades
+              </h2>
+            </div>
+            <div className="divide-y divide-border">
+              {recentTrades.map((trade) => {
+                const otherTeams = (trade.teams_involved ?? [trade.from_team_name, trade.target_team].filter(Boolean))
+                  .filter((t): t is string => t !== null && t !== manager.teamName)
+                const dateStr = new Date(trade.approved_at ?? trade.created_at).toLocaleDateString('en-US', {
+                  month: 'short',
+                  day: 'numeric',
+                  year: 'numeric',
+                })
+                return (
+                  <div key={trade.id} className="px-4 py-3 hover:bg-muted/50 transition-colors">
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm text-foreground">
+                          {trade.description ?? 'Trade details unavailable'}
+                        </p>
+                        {otherTeams.length > 0 && (
+                          <p className="text-xs text-muted-foreground mt-1">
+                            with <span className="font-semibold">{otherTeams.join(', ')}</span>
+                          </p>
+                        )}
+                      </div>
+                      <span className="text-[10px] text-muted-foreground font-mono shrink-0 mt-0.5">
+                        {dateStr}
+                      </span>
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+            <div className="px-4 py-2 bg-muted border-t border-border">
+              <Link
+                href="/trades"
+                className="text-xs text-primary hover:text-primary/80 font-semibold transition-colors"
+              >
+                View all trades →
+              </Link>
+            </div>
+          </div>
+        )}
+
         {/* Quick Links */}
         <div className="mt-6 flex flex-wrap gap-3">
           <Link
@@ -322,10 +405,10 @@ export default async function TeamProfilePage({ params }: Props) {
           </Link>
           {manager.teamSlug === 'tunnel-snakes' && (
             <Link
-              href="/offer"
+              href="/trades"
               className="flex items-center gap-2 px-4 py-2 rounded-md border border-accent/30 text-sm font-semibold text-accent hover:bg-accent/10 transition-colors"
             >
-              🤝 Trade Portal
+              🤝 Trade Center
             </Link>
           )}
         </div>

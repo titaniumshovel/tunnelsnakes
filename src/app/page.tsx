@@ -32,13 +32,6 @@ const NAV_CARDS: Array<{ href: string; icon: string; title: string; desc: string
     color: 'primary',
   },
   {
-    href: '/offer',
-    icon: '📝',
-    title: 'TRADE BLOCK',
-    desc: 'Tunnel Snakes trade portal — make your pitch',
-    color: 'primary',
-  },
-  {
     href: '/ask-smalls',
     icon: '🧢',
     title: 'ASK SMALLS',

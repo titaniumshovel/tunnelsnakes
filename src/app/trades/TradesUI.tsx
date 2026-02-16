@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState, useCallback, useMemo } from 'react'
+import { useSearchParams } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { MANAGERS, TEAM_COLORS, getManagerByEmail, type Manager } from '@/data/managers'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -53,7 +54,7 @@ const STATUS_CONFIG: Record<string, { label: string; color: string; bg: string }
   vetoed: { label: 'VETOED', color: 'text-red-400', bg: 'bg-red-500/15 border-red-500/30' },
 }
 
-type FilterTab = 'all' | 'offseason' | 'midseason' | 'pending' | 'picktrail'
+type FilterTab = 'all' | 'offseason' | 'midseason' | 'pending' | 'picktrail' | 'propose'
 
 function getManagerByTeamName(teamName: string): Manager | undefined {
   return MANAGERS.find(m => m.teamName === teamName)
@@ -113,14 +114,16 @@ export function TradesUI() {
   const [userEmail, setUserEmail] = useState<string | null>(null)
   const [manager, setManager] = useState<Manager | null>(null)
   const [filter, setFilter] = useState<FilterTab>('all')
-  const [showPropose, setShowPropose] = useState(false)
   const [expandedComments, setExpandedComments] = useState<Set<string>>(new Set())
 
-  // Proposal form state
-  const [propTargetTeam, setPropTargetTeam] = useState('')
-  const [propDescription, setPropDescription] = useState('')
-  const [propSubmitting, setPropSubmitting] = useState(false)
-  const [propSuccess, setPropSuccess] = useState(false)
+  // Public offer form state (📝 PROPOSE tab)
+  const [offerTeam, setOfferTeam] = useState('')
+  const [offerName, setOfferName] = useState('')
+  const [offerEmail, setOfferEmail] = useState('')
+  const [offerText, setOfferText] = useState('')
+  const [offerMessage, setOfferMessage] = useState('')
+  const [offerStatus, setOfferStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle')
+  const [offerError, setOfferError] = useState<string | null>(null)
 
   const fetchTrades = useCallback(async () => {
     const res = await fetch('/api/trades')
@@ -130,6 +133,15 @@ export function TradesUI() {
     }
     setLoading(false)
   }, [])
+
+  // Read URL tab param
+  const searchParams = useSearchParams()
+  useEffect(() => {
+    const tab = searchParams.get('tab')
+    if (tab === 'propose') {
+      setFilter('propose')
+    }
+  }, [searchParams])
 
   useEffect(() => {
     const supabase = createClient()
@@ -177,31 +189,31 @@ export function TradesUI() {
     }
   }
 
-  async function handlePropose() {
-    if (!propTargetTeam || !propDescription.trim() || !manager) return
-    setPropSubmitting(true)
+  async function handleOffer(e: React.FormEvent) {
+    e.preventDefault()
+    setOfferStatus('submitting')
+    setOfferError(null)
 
-    const res = await fetch('/api/trades', {
+    const res = await fetch('/api/offers', {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify({
-        from_team_name: manager.teamName,
-        target_team: propTargetTeam,
-        description: propDescription,
+        teamName: offerTeam,
+        displayName: offerName,
+        email: offerEmail,
+        offerText,
+        message: offerMessage,
       }),
     })
 
-    if (res.ok) {
-      setPropSuccess(true)
-      setPropTargetTeam('')
-      setPropDescription('')
-      await fetchTrades()
-      setTimeout(() => {
-        setPropSuccess(false)
-        setShowPropose(false)
-      }, 2000)
+    if (!res.ok) {
+      const text = await res.text()
+      setOfferStatus('error')
+      setOfferError(text || 'Something went wrong. Please try again.')
+      return
     }
-    setPropSubmitting(false)
+
+    setOfferStatus('success')
   }
 
   const pendingCount = trades.filter(t => t.status === 'pending' || t.status === 'submitted').length
@@ -245,85 +257,14 @@ export function TradesUI() {
               <div className="text-xs font-mono text-muted-foreground">
                 {trades.length} trade{trades.length !== 1 ? 's' : ''}
               </div>
-              {userEmail && (
-                <button
-                  onClick={() => setShowPropose(!showPropose)}
-                  className="btn-trade px-4 py-2 text-sm"
-                >
-                  {showPropose ? '✕ CLOSE' : '⚡ PROPOSE TRADE'}
-                </button>
-              )}
             </div>
           </div>
         </div>
 
-        {/* Propose Trade Form */}
-        <AnimatePresence>
-          {showPropose && userEmail && manager && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
-              exit={{ opacity: 0, height: 0 }}
-              className="overflow-hidden"
-            >
-              <div className="dashboard-card p-6 border-accent/30">
-                <h2 className="text-lg font-bold text-accent font-mono mb-4 flex items-center gap-2">
-                  ⚡ PROPOSE A TRADE
-                </h2>
-
-                {propSuccess ? (
-                  <div className="text-center py-6">
-                    <div className="text-4xl mb-2">✅</div>
-                    <p className="text-primary font-mono font-bold">Trade Proposal Submitted!</p>
-                    <p className="text-sm text-muted-foreground font-mono mt-1">The commissioner will review it.</p>
-                  </div>
-                ) : (
-                  <div className="space-y-4">
-                    <div className="flex items-center gap-2 text-sm font-mono text-muted-foreground">
-                      <span className="text-primary">{manager.teamName}</span>
-                      <span>→</span>
-                      <select
-                        value={propTargetTeam}
-                        onChange={(e) => setPropTargetTeam(e.target.value)}
-                        className="flex-1 rounded-md border border-border bg-secondary px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary/50 font-mono"
-                      >
-                        <option value="">Select target team…</option>
-                        {MANAGERS.filter(m => m.teamName !== manager.teamName).map(m => (
-                          <option key={m.teamSlug} value={m.teamName}>{m.teamName}</option>
-                        ))}
-                      </select>
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-semibold uppercase tracking-wider text-primary/80 mb-1">
-                        Trade Details
-                      </label>
-                      <textarea
-                        value={propDescription}
-                        onChange={(e) => setPropDescription(e.target.value)}
-                        placeholder="Describe the trade — players, picks, conditions..."
-                        className="w-full min-h-[120px] rounded-md border border-border bg-secondary px-3 py-2 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary/50 font-mono"
-                      />
-                    </div>
-
-                    <button
-                      onClick={handlePropose}
-                      disabled={!propTargetTeam || !propDescription.trim() || propSubmitting}
-                      className="btn-trade w-full"
-                    >
-                      {propSubmitting ? '⏳ SUBMITTING...' : '⚡ SUBMIT TRADE PROPOSAL'}
-                    </button>
-                  </div>
-                )}
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-
         {!userEmail && (
           <div className="dashboard-card p-4 text-center">
             <p className="text-sm font-mono text-muted-foreground">
-              🔐 <a href="/login" className="text-primary hover:text-primary/80 underline">Log in</a> to propose trades, react, and comment
+              🔐 <a href="/login" className="text-primary hover:text-primary/80 underline">Log in</a> to react and comment on trades
             </p>
           </div>
         )}
@@ -336,6 +277,7 @@ export function TradesUI() {
             ['midseason', '2025 IN-SEASON'],
             ['pending', 'PENDING'],
             ['picktrail', '📍 PICK TRAIL'],
+            ['propose', '📝 PROPOSE'],
           ] as [FilterTab, string][]).map(([key, label]) => (
             <button
               key={key}
@@ -361,8 +303,118 @@ export function TradesUI() {
           ))}
         </div>
 
-        {/* Content: either trade feed or pick trail */}
-        {filter === 'picktrail' ? (
+        {/* Content: propose form, pick trail, or trade feed */}
+        {filter === 'propose' ? (
+          <div className="dashboard-card p-6">
+            <h2 className="text-lg font-bold text-primary font-serif mb-2 flex items-center gap-2">
+              ⚾ Propose a Trade
+            </h2>
+            <p className="text-sm text-muted-foreground font-mono mb-6">
+              Put your offer in plain English. Include picks, players, whatever you&apos;ve got.
+              The Commissioner will review your proposal.
+            </p>
+
+            {offerStatus === 'success' ? (
+              <div className="text-center py-8">
+                <div className="text-4xl mb-3">⚾</div>
+                <div className="font-bold text-primary text-lg uppercase tracking-wider">Trade Proposal Submitted!</div>
+                <p className="mt-2 text-sm text-muted-foreground font-mono">
+                  The Commissioner will review your proposal and get back to you.
+                </p>
+                <button
+                  onClick={() => {
+                    setOfferStatus('idle')
+                    setOfferTeam('')
+                    setOfferName('')
+                    setOfferEmail('')
+                    setOfferText('')
+                    setOfferMessage('')
+                  }}
+                  className="mt-4 px-4 py-2 rounded-md border border-primary/30 text-sm font-semibold text-primary hover:bg-primary/10 transition-colors"
+                >
+                  Submit Another
+                </button>
+              </div>
+            ) : (
+              <form onSubmit={handleOffer} className="space-y-4">
+                <div>
+                  <label className="block text-sm font-semibold uppercase tracking-wider text-primary/80">Your Team</label>
+                  <select
+                    className="mt-1 w-full rounded-md border border-border bg-secondary px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary/50 font-mono"
+                    value={offerTeam}
+                    onChange={(e) => setOfferTeam(e.target.value)}
+                    required
+                  >
+                    <option value="">Select your team…</option>
+                    {MANAGERS.map((m) => (
+                      <option key={m.teamSlug} value={m.teamName}>{m.teamName}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-semibold uppercase tracking-wider text-primary/80">
+                    Your Name <span className="normal-case text-muted-foreground font-normal">(optional)</span>
+                  </label>
+                  <input
+                    className="mt-1 w-full rounded-md border border-border bg-secondary px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary/50 font-mono"
+                    value={offerName}
+                    onChange={(e) => setOfferName(e.target.value)}
+                    placeholder="Your name"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-semibold uppercase tracking-wider text-primary/80">
+                    Email <span className="normal-case text-muted-foreground font-normal">(optional)</span>
+                  </label>
+                  <input
+                    className="mt-1 w-full rounded-md border border-border bg-secondary px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary/50 font-mono"
+                    value={offerEmail}
+                    onChange={(e) => setOfferEmail(e.target.value)}
+                    type="email"
+                    placeholder="you@example.com"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-semibold uppercase tracking-wider text-primary/80">Your Offer</label>
+                  <textarea
+                    className="mt-1 w-full min-h-[120px] rounded-md border border-border bg-secondary px-3 py-2 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary/50 font-mono"
+                    value={offerText}
+                    onChange={(e) => setOfferText(e.target.value)}
+                    required
+                    placeholder="Include picks, players, whatever you've got."
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-semibold uppercase tracking-wider text-primary/80">
+                    Additional Notes <span className="normal-case text-muted-foreground font-normal">(optional)</span>
+                  </label>
+                  <textarea
+                    className="mt-1 w-full min-h-[80px] rounded-md border border-border bg-secondary px-3 py-2 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary/50 font-mono"
+                    value={offerMessage}
+                    onChange={(e) => setOfferMessage(e.target.value)}
+                    placeholder="Anything else the Commissioner should know..."
+                  />
+                </div>
+
+                {offerStatus === 'error' && (
+                  <p className="text-sm text-red-500 font-mono">&gt; ERROR: {offerError}</p>
+                )}
+
+                <button
+                  type="submit"
+                  disabled={offerStatus === 'submitting'}
+                  className="w-full px-4 py-3 rounded-md bg-primary text-primary-foreground font-bold text-sm uppercase tracking-wider hover:bg-primary/90 transition-colors disabled:opacity-50"
+                >
+                  {offerStatus === 'submitting' ? '⏳ SUBMITTING...' : '⚾ SUBMIT TRADE PROPOSAL'}
+                </button>
+              </form>
+            )}
+          </div>
+        ) : filter === 'picktrail' ? (
           <PickOriginTrail />
         ) : (
           <div className="space-y-4">
