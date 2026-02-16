@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, useCallback } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { getManagerByEmail, type Manager } from '@/data/managers'
+import { MarkdownMessage } from '@/components/MarkdownMessage'
 
 // ─── Types ────────────────────────────────────────────────
 type Message = {
@@ -290,14 +291,19 @@ export function AskSmallsUI() {
                   <span className="text-xs font-mono font-bold text-green-400">Smalls</span>
                 </div>
               )}
-              <div className={`text-sm font-mono leading-relaxed whitespace-pre-wrap ${
-                msg.role === 'assistant' ? 'smalls-response' : ''
-              }`}>
-                {msg.content}
-                {msg.role === 'assistant' && !msg.content && isStreaming && (
-                  <TypingIndicator />
-                )}
-              </div>
+              {msg.role === 'assistant' ? (
+                <>
+                  {msg.content ? (
+                    <MarkdownMessage content={msg.content} />
+                  ) : isStreaming ? (
+                    <div className="text-sm font-mono"><TypingIndicator /></div>
+                  ) : null}
+                </>
+              ) : (
+                <div className="text-sm font-mono leading-relaxed whitespace-pre-wrap">
+                  {msg.content}
+                </div>
+              )}
             </div>
           </div>
         ))}
