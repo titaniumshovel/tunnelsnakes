@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import { MANAGERS, TEAM_COLORS } from '@/data/managers'
 
 const NAV_CARDS: Array<{ href: string; icon: string; title: string; desc: string; color: string; badge?: string }> = [
@@ -50,7 +51,7 @@ export default function Home() {
   return (
     <main className="min-h-[80vh]">
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-sky-200 via-background to-amber-100">
+      <section className="relative overflow-hidden bg-gradient-to-br from-sky-200 via-background to-amber-100 dark:from-slate-800 dark:via-background dark:to-slate-900">
         <div className="relative mx-auto max-w-[1400px] px-4 pt-16 pb-12 text-center">
           {/* Big Title */}
           <h1 className="text-6xl sm:text-7xl md:text-8xl font-display text-primary tracking-tight">
@@ -125,9 +126,28 @@ export default function Home() {
               <Link
                 key={m.teamSlug}
                 href={`/team/${m.teamSlug}`}
-                className={`flex items-center gap-2 rounded-lg px-3 py-2 border transition-all duration-150 hover:scale-[1.02] ${colors?.bg} ${colors?.border}`}
+                className={`flex items-center gap-3 rounded-lg px-3 py-2 border transition-all duration-150 hover:scale-[1.02] hover:shadow-md ${colors?.bg} ${colors?.border}`}
               >
-                <div className={`h-2.5 w-2.5 rounded-full shrink-0 ${colors?.dot}`} />
+                {/* Team Logo or Fallback Dot */}
+                {m.logo ? (
+                  <div className="relative shrink-0">
+                    <Image
+                      src={`/logos/${m.logo}`}
+                      alt={`${m.teamName} logo`}
+                      width={40}
+                      height={40}
+                      unoptimized
+                      className="rounded-full object-cover"
+                    />
+                  </div>
+                ) : (
+                  <div className={`h-10 w-10 rounded-full shrink-0 ${colors?.dot} flex items-center justify-center`}>
+                    <span className="text-xs font-bold text-white">
+                      {m.teamName.charAt(0)}
+                    </span>
+                  </div>
+                )}
+                
                 <div className="min-w-0">
                   <div className={`text-xs font-semibold truncate ${colors?.text}`}>
                     {m.teamName}

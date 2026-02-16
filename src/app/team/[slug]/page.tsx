@@ -113,12 +113,43 @@ export default async function TeamProfilePage({ params }: Props) {
 
   return (
     <main className="min-h-[80vh] bg-background">
-      {/* Team Color Header Band */}
-      <div className={`h-16 ${colors?.bg} ${colors?.border} border-b-4 flex items-center`}>
+      {/* Team Themed Header Band */}
+      <div className={`bg-gradient-to-r ${manager.theme.gradient} border-b-4 border-border/30 flex items-center py-6`}>
         <div className="mx-auto max-w-3xl px-4 w-full">
-          <h1 className={`text-2xl font-display ${colors?.text}`}>
-            {manager.teamName}
-          </h1>
+          <div className="flex items-center gap-4">
+            {/* Team Logo */}
+            {manager.logo && (
+              <div className="w-16 h-16 rounded-full bg-black/20 p-2 flex-shrink-0">
+                <Image
+                  src={manager.logo}
+                  alt={`${manager.teamName} logo`}
+                  width={64}
+                  height={64}
+                  className="w-full h-full object-contain rounded-full"
+                  unoptimized
+                />
+              </div>
+            )}
+            
+            {/* Team Info */}
+            <div className="flex-1">
+              <h1 className={`text-3xl font-display font-bold ${manager.theme.textColor}`}>
+                {manager.teamName}
+              </h1>
+              <p className={`text-lg italic ${manager.theme.textColor} opacity-90 mt-1`}>
+                {manager.theme.tagline}
+              </p>
+              <p className={`text-sm ${manager.theme.textColor} opacity-80 mt-2`}>
+                Managed by <span className="font-semibold">{manager.displayName}</span>
+                {manager.role === 'commissioner' && (
+                  <span className="ml-2 text-[10px] px-2 py-1 bg-white/20 text-white border border-white/30 rounded font-semibold uppercase">
+                    Commissioner
+                  </span>
+                )}
+                {' '} • Draft Position #{manager.draftPosition}
+              </p>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -131,51 +162,31 @@ export default async function TeamProfilePage({ params }: Props) {
           ← ALL TEAMS
         </Link>
 
-        {/* Team Header Card */}
-        <div className="sandlot-card p-8">
-          <div className="flex items-center gap-4">
-            <div className={`h-12 w-12 rounded-full ${colors?.dot} flex items-center justify-center text-xl`}>
-              ⚾
-            </div>
-            <div>
-              <h2 className={`text-2xl font-serif font-bold ${colors?.text}`}>
-                {manager.teamName}
-              </h2>
-              <p className="text-sm text-muted-foreground mt-1">
-                Managed by <span className="text-foreground font-semibold">{manager.displayName}</span>
-                {manager.role === 'commissioner' && (
-                  <span className="ml-2 text-[10px] px-1.5 py-0.5 bg-accent/20 text-accent border border-accent/30 rounded font-semibold uppercase">
-                    Commissioner
-                  </span>
-                )}
-              </p>
-            </div>
-          </div>
-
-          {/* Stats Row */}
-          <div className="mt-6 grid grid-cols-3 gap-4">
-            <div className="text-center p-3 rounded-lg bg-muted border border-border">
-              <div className={`text-2xl font-bold ${colors?.text}`}>
-                #{manager.draftPosition}
-              </div>
-              <div className="text-[10px] text-muted-foreground uppercase tracking-wide mt-1">
-                Draft Position
-              </div>
-            </div>
-            <div className="text-center p-3 rounded-lg bg-muted border border-border">
+        {/* Team Stats Card */}
+        <div className="sandlot-card p-6">
+          <div className="grid grid-cols-3 gap-4">
+            <div className="text-center p-4 rounded-lg bg-muted border border-border">
               <div className="text-2xl font-bold text-primary">
                 {roster.length}
               </div>
-              <div className="text-[10px] text-muted-foreground uppercase tracking-wide mt-1">
+              <div className="text-xs text-muted-foreground uppercase tracking-wide mt-1">
                 Roster Size
               </div>
             </div>
-            <div className="text-center p-3 rounded-lg bg-muted border border-border">
+            <div className="text-center p-4 rounded-lg bg-muted border border-border">
               <div className="text-2xl font-bold text-accent">
                 {keeperCount > 0 ? keeperCount : '—'}
               </div>
-              <div className="text-[10px] text-muted-foreground uppercase tracking-wide mt-1">
+              <div className="text-xs text-muted-foreground uppercase tracking-wide mt-1">
                 Keepers Set
+              </div>
+            </div>
+            <div className="text-center p-4 rounded-lg bg-muted border border-border">
+              <div className={`text-2xl font-bold ${colors?.text}`}>
+                2026
+              </div>
+              <div className="text-xs text-muted-foreground uppercase tracking-wide mt-1">
+                Season
               </div>
             </div>
           </div>

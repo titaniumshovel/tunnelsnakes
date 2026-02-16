@@ -5,6 +5,7 @@ import { usePathname, useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { getManagerByEmail, type Manager } from '@/data/managers'
+import { ThemeToggle } from '@/components/ThemeToggle'
 
 const NAV_LINKS = [
   { href: '/', label: 'HOME', icon: '⚾' },
@@ -107,6 +108,11 @@ export function NavHeader() {
                 )
               })}
             </nav>
+
+            {/* Theme Toggle (desktop) */}
+            <div className="ml-2">
+              <ThemeToggle />
+            </div>
 
             {/* Auth section (desktop) */}
             {authLoaded && (
@@ -226,6 +232,14 @@ export function NavHeader() {
                   </Link>
                 )
               })}
+
+              {/* Theme Toggle in mobile menu */}
+              <div className="border-t border-border pt-2 mt-2">
+                <div className="flex items-center gap-2 px-3 py-2">
+                  <span className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">THEME:</span>
+                  <ThemeToggle />
+                </div>
+              </div>
 
               {/* Auth links in mobile menu */}
               {authLoaded && isLoggedIn && (
