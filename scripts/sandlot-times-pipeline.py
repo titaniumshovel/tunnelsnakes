@@ -320,7 +320,7 @@ OUTPUT FORMAT — respond with valid JSON only, no markdown code fences:
     }}
   ],
   "hot_take": "A fun, opinionated editorial paragraph from Smalls (the league AI). Be witty, make predictions, call out managers by name, reference the league. 3-5 sentences.",
-  "hero_image_prompt": "A descriptive prompt for generating a hero banner image based on today's top story. Style: vintage baseball card meets newspaper front page, dramatic lighting."
+  "hero_image_prompt": "A descriptive prompt for generating a hero banner image based on today's top story. Style: warm vintage baseball illustration with earth tones (cream, brown, green), classic sandlot/field aesthetic, hand-painted feel. NO neon, NO terminal screens, NO green glow."
 }}
 
 GUIDELINES:
@@ -398,7 +398,7 @@ def generate_fallback_edition(news_items: list[dict]) -> dict:
         "fantasy_impact": [],
         "league_watch": [],
         "hot_take": "The Sandlot Times AI editor is taking a personal day. Here are the raw headlines. — Smalls 🤖",
-        "hero_image_prompt": "A vintage newspaper front page about baseball, dramatic sepia tones, 'EXTRA EXTRA' headline",
+        "hero_image_prompt": "A warm vintage baseball newspaper front page, earth tones and sepia, classic sandlot field aesthetic, hand-painted feel",
     }
 
 
