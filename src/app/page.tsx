@@ -132,7 +132,7 @@ export default function Home() {
                 {m.logo ? (
                   <div className="relative shrink-0">
                     <Image
-                      src={`/logos/${m.logo}`}
+                      src={m.logo}
                       alt={`${m.teamName} logo`}
                       width={72}
                       height={72}
