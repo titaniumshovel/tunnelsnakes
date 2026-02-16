@@ -64,7 +64,7 @@ export default function DraftBoardPage() {
       <div className="bg-background/80 border-b border-primary/10">
         <div className="mx-auto max-w-[1400px] px-4 py-3">
           <div className="flex items-center justify-between flex-wrap gap-2">
-            <h1 className="text-xl md:text-2xl font-bold text-primary vault-glow font-mono">
+            <h1 className="text-xl md:text-2xl font-serif font-bold text-primary">
               🎯 2026 DRAFT BOARD
             </h1>
             <div className="flex items-center gap-4 text-xs font-mono text-muted-foreground">
@@ -83,9 +83,9 @@ export default function DraftBoardPage() {
             <div className="flex items-center gap-1 bg-card rounded-lg border border-primary/20 p-0.5">
               <button
                 onClick={() => setViewMode('board')}
-                className={`px-3 py-1.5 rounded text-xs font-mono font-bold transition-colors ${
+                className={`px-3 py-1.5 rounded text-xs font-semibold font-bold transition-colors ${
                   viewMode === 'board'
-                    ? 'bg-primary/20 text-primary vault-glow'
+                    ? 'bg-primary text-primary-foreground'
                     : 'text-muted-foreground hover:text-foreground'
                 }`}
               >
@@ -93,9 +93,9 @@ export default function DraftBoardPage() {
               </button>
               <button
                 onClick={() => setViewMode('owner')}
-                className={`px-3 py-1.5 rounded text-xs font-mono font-bold transition-colors ${
+                className={`px-3 py-1.5 rounded text-xs font-semibold font-bold transition-colors ${
                   viewMode === 'owner'
-                    ? 'bg-primary/20 text-primary vault-glow'
+                    ? 'bg-primary text-primary-foreground'
                     : 'text-muted-foreground hover:text-foreground'
                 }`}
               >
@@ -103,9 +103,9 @@ export default function DraftBoardPage() {
               </button>
               <button
                 onClick={() => setViewMode('clicky')}
-                className={`px-3 py-1.5 rounded text-xs font-mono font-bold transition-colors ${
+                className={`px-3 py-1.5 rounded text-xs font-semibold font-bold transition-colors ${
                   viewMode === 'clicky'
-                    ? 'bg-primary/20 text-primary vault-glow'
+                    ? 'bg-primary text-primary-foreground'
                     : 'text-muted-foreground hover:text-foreground'
                 }`}
               >

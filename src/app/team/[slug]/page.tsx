@@ -112,30 +112,39 @@ export default async function TeamProfilePage({ params }: Props) {
   const keeperCount = roster.filter(r => r.keeper_status === 'keeping' || r.keeper_status === 'keeping-na').length
 
   return (
-    <main className="min-h-[80vh]">
+    <main className="min-h-[80vh] bg-background">
+      {/* Team Color Header Band */}
+      <div className={`h-16 ${colors?.bg} ${colors?.border} border-b-4 flex items-center`}>
+        <div className="mx-auto max-w-3xl px-4 w-full">
+          <h1 className={`text-2xl font-display ${colors?.text}`}>
+            {manager.teamName}
+          </h1>
+        </div>
+      </div>
+
       <div className="mx-auto max-w-3xl px-4 py-8">
         {/* Back Link */}
         <Link
           href="/teams"
-          className="inline-flex items-center gap-1.5 text-primary hover:text-primary/80 transition-colors text-sm font-mono mb-6"
+          className="inline-flex items-center gap-1.5 text-primary hover:text-primary/80 transition-colors text-sm font-semibold mb-6"
         >
           ← ALL TEAMS
         </Link>
 
         {/* Team Header Card */}
-        <div className={`dashboard-card p-8 border ${colors?.border} ${colors?.bg}`}>
+        <div className="sandlot-card p-8">
           <div className="flex items-center gap-4">
             <div className={`h-12 w-12 rounded-full ${colors?.dot} flex items-center justify-center text-xl`}>
               ⚾
             </div>
             <div>
-              <h1 className={`text-3xl font-bold font-mono tracking-wider ${colors?.text} vault-glow`}>
+              <h2 className={`text-2xl font-serif font-bold ${colors?.text}`}>
                 {manager.teamName}
-              </h1>
-              <p className="text-sm font-mono text-muted-foreground mt-1">
-                Managed by <span className="text-foreground font-bold">{manager.displayName}</span>
+              </h2>
+              <p className="text-sm text-muted-foreground mt-1">
+                Managed by <span className="text-foreground font-semibold">{manager.displayName}</span>
                 {manager.role === 'commissioner' && (
-                  <span className="ml-2 text-[10px] px-1.5 py-0.5 bg-accent/20 text-accent border border-accent/30 rounded font-bold uppercase">
+                  <span className="ml-2 text-[10px] px-1.5 py-0.5 bg-accent/20 text-accent border border-accent/30 rounded font-semibold uppercase">
                     Commissioner
                   </span>
                 )}
@@ -145,27 +154,27 @@ export default async function TeamProfilePage({ params }: Props) {
 
           {/* Stats Row */}
           <div className="mt-6 grid grid-cols-3 gap-4">
-            <div className="text-center p-3 rounded-lg bg-background/50 border border-primary/10">
-              <div className={`text-2xl font-bold font-mono ${colors?.text}`}>
+            <div className="text-center p-3 rounded-lg bg-muted border border-border">
+              <div className={`text-2xl font-bold ${colors?.text}`}>
                 #{manager.draftPosition}
               </div>
-              <div className="text-[10px] font-mono text-muted-foreground uppercase tracking-widest mt-1">
+              <div className="text-[10px] text-muted-foreground uppercase tracking-wide mt-1">
                 Draft Position
               </div>
             </div>
-            <div className="text-center p-3 rounded-lg bg-background/50 border border-primary/10">
-              <div className="text-2xl font-bold font-mono text-primary">
+            <div className="text-center p-3 rounded-lg bg-muted border border-border">
+              <div className="text-2xl font-bold text-primary">
                 {roster.length}
               </div>
-              <div className="text-[10px] font-mono text-muted-foreground uppercase tracking-widest mt-1">
+              <div className="text-[10px] text-muted-foreground uppercase tracking-wide mt-1">
                 Roster Size
               </div>
             </div>
-            <div className="text-center p-3 rounded-lg bg-background/50 border border-primary/10">
-              <div className="text-2xl font-bold font-mono text-accent">
+            <div className="text-center p-3 rounded-lg bg-muted border border-border">
+              <div className="text-2xl font-bold text-accent">
                 {keeperCount > 0 ? keeperCount : '—'}
               </div>
-              <div className="text-[10px] font-mono text-muted-foreground uppercase tracking-widest mt-1">
+              <div className="text-[10px] text-muted-foreground uppercase tracking-wide mt-1">
                 Keepers Set
               </div>
             </div>
@@ -174,14 +183,14 @@ export default async function TeamProfilePage({ params }: Props) {
 
         {/* Roster */}
         {roster.length === 0 ? (
-          <div className="mt-6 dashboard-card p-8 text-center">
+          <div className="mt-6 sandlot-card p-8 text-center">
             <div className="text-4xl mb-3">📋</div>
-            <h2 className="text-lg font-bold font-mono text-primary tracking-wider">
+            <h2 className="text-lg font-serif font-bold text-primary">
               {manager.yahooTeamKey.includes('.t.11') || manager.yahooTeamKey.includes('.t.12')
-                ? 'EXPANSION TEAM — NO ROSTER YET'
-                : 'ROSTER COMING SOON'}
+                ? 'Expansion Team — No Roster Yet'
+                : 'Roster Coming Soon'}
             </h2>
-            <p className="mt-2 text-sm font-mono text-muted-foreground">
+            <p className="mt-2 text-sm text-muted-foreground">
               {manager.yahooTeamKey.includes('.t.11') || manager.yahooTeamKey.includes('.t.12')
                 ? `${manager.displayName} will build their roster in the 2026 expansion draft.`
                 : 'Roster data will appear once imported.'}
@@ -190,22 +199,22 @@ export default async function TeamProfilePage({ params }: Props) {
         ) : (
           <div className="mt-6 space-y-4">
             {sortedGroups.map(([group, players]) => (
-              <div key={group} className="dashboard-card overflow-hidden">
-                <div className={`px-4 py-2 border-b border-primary/10 ${colors?.bg}`}>
-                  <h2 className={`text-xs font-bold font-mono uppercase tracking-widest ${colors?.text}`}>
+              <div key={group} className="sandlot-card overflow-hidden border-l-4" style={{ borderLeftColor: colors?.hex }}>
+                <div className="px-4 py-3 bg-muted border-b border-border">
+                  <h2 className="text-sm font-serif font-bold text-primary">
                     {group} ({players.length})
                   </h2>
                 </div>
-                <div className="divide-y divide-primary/5">
+                <div className="divide-y divide-border">
                   {players.map((rp) => {
                     if (!rp.players) return null
                     const p = rp.players
                     const keeperCostRound = rp.keeper_cost_round ?? p.keeper_cost_round
                     const keeperCostLabel = rp.keeper_cost_label ?? p.keeper_cost_label
                     return (
-                      <div key={rp.id} className="flex items-center gap-3 px-4 py-2.5 hover:bg-primary/5 transition-colors">
+                      <div key={rp.id} className="flex items-center gap-3 px-4 py-2.5 hover:bg-muted/50 transition-colors">
                         {/* Headshot */}
-                        <div className="w-10 h-10 rounded-full bg-muted flex-shrink-0 overflow-hidden border border-primary/10">
+                        <div className="w-10 h-10 rounded-full bg-muted flex-shrink-0 overflow-hidden border border-border">
                           {p.headshot_url ? (
                             <Image
                               src={p.headshot_url}
@@ -224,10 +233,10 @@ export default async function TeamProfilePage({ params }: Props) {
 
                         {/* Player Info */}
                         <div className="flex-1 min-w-0">
-                          <div className="text-sm font-mono font-bold text-foreground truncate">
+                          <div className="text-sm font-semibold text-foreground truncate">
                             {p.full_name}
                           </div>
-                          <div className="text-[10px] font-mono text-muted-foreground flex items-center gap-2 flex-wrap">
+                          <div className="text-[10px] text-muted-foreground flex items-center gap-2 flex-wrap">
                             <span>{p.primary_position ?? '—'}</span>
                             <span>·</span>
                             <span>{p.mlb_team ?? 'FA'}</span>
@@ -248,17 +257,17 @@ export default async function TeamProfilePage({ params }: Props) {
 
                         {/* Keeper Status Badge */}
                         {rp.keeper_status === 'keeping' && (
-                          <span className="text-[10px] px-2 py-0.5 rounded-full bg-green-500/15 text-green-400 border border-green-500/20 font-mono font-bold">
+                          <span className="text-[10px] px-2 py-0.5 rounded-full bg-green-500/15 text-green-600 border border-green-500/30 font-semibold">
                             🔒 KEEPER
                           </span>
                         )}
                         {rp.keeper_status === 'keeping-na' && (
-                          <span className="text-[10px] px-2 py-0.5 rounded-full bg-blue-500/15 text-blue-400 border border-blue-500/20 font-mono font-bold">
+                          <span className="text-[10px] px-2 py-0.5 rounded-full bg-blue-500/15 text-blue-600 border border-blue-500/30 font-semibold">
                             🔷 NA
                           </span>
                         )}
                         {rp.keeper_status === 'not-keeping' && (
-                          <span className="text-[10px] px-2 py-0.5 rounded-full bg-red-500/15 text-red-400 border border-red-500/20 font-mono font-bold">
+                          <span className="text-[10px] px-2 py-0.5 rounded-full bg-red-500/15 text-red-600 border border-red-500/30 font-semibold">
                             ❌ CUT
                           </span>
                         )}
@@ -282,26 +291,26 @@ export default async function TeamProfilePage({ params }: Props) {
         <div className="mt-6 flex flex-wrap gap-3">
           <Link
             href="/keepers"
-            className="flex items-center gap-2 px-4 py-2 rounded-md border border-primary/20 text-sm font-mono text-primary hover:bg-primary/10 transition-colors"
+            className="flex items-center gap-2 px-4 py-2 rounded-md border border-border text-sm font-semibold text-primary hover:bg-primary/10 transition-colors"
           >
             🔐 Keeper Tracker
           </Link>
           <Link
             href="/draft-board"
-            className="flex items-center gap-2 px-4 py-2 rounded-md border border-primary/20 text-sm font-mono text-primary hover:bg-primary/10 transition-colors"
+            className="flex items-center gap-2 px-4 py-2 rounded-md border border-border text-sm font-semibold text-primary hover:bg-primary/10 transition-colors"
           >
             🎯 View Draft Board
           </Link>
           <Link
             href="/teams"
-            className="flex items-center gap-2 px-4 py-2 rounded-md border border-primary/20 text-sm font-mono text-primary hover:bg-primary/10 transition-colors"
+            className="flex items-center gap-2 px-4 py-2 rounded-md border border-border text-sm font-semibold text-primary hover:bg-primary/10 transition-colors"
           >
             👥 All Teams
           </Link>
           {manager.teamSlug === 'tunnel-snakes' && (
             <Link
               href="/offer"
-              className="flex items-center gap-2 px-4 py-2 rounded-md border border-accent/30 text-sm font-mono text-accent hover:bg-accent/10 transition-colors"
+              className="flex items-center gap-2 px-4 py-2 rounded-md border border-accent/30 text-sm font-semibold text-accent hover:bg-accent/10 transition-colors"
             >
               🤝 Trade Portal
             </Link>

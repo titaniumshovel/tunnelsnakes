@@ -220,7 +220,7 @@ export function TradesUI() {
       <main className="min-h-[80vh] flex items-center justify-center">
         <div className="text-center">
           <div className="text-2xl mb-2">🤝</div>
-          <p className="text-sm font-mono text-primary vault-glow terminal-cursor">Loading trade center</p>
+          <p className="text-sm font-semibold text-primary">Loading trade center</p>
         </div>
       </main>
     )
@@ -233,7 +233,7 @@ export function TradesUI() {
         <div className="dashboard-card p-6">
           <div className="flex items-start justify-between flex-wrap gap-4">
             <div>
-              <h1 className="text-2xl font-bold text-primary vault-glow font-mono flex items-center gap-3">
+              <h1 className="text-2xl font-serif font-bold text-primary flex items-center gap-3">
                 <span className="text-3xl">🤝</span>
                 TRADE CENTER
               </h1>

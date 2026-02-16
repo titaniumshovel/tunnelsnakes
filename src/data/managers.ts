@@ -32,18 +32,18 @@ export const MANAGERS: Manager[] = [
 
 /** Team colors — shared between draft board, teams page, etc. */
 export const TEAM_COLORS: Record<string, { bg: string; border: string; text: string; dot: string; hex: string }> = {
-  Pudge:  { bg: 'bg-red-900/40',     border: 'border-red-500/50',    text: 'text-red-300',     dot: 'bg-red-400',     hex: '#f87171' },
-  Nick:   { bg: 'bg-blue-900/40',    border: 'border-blue-500/50',   text: 'text-blue-300',    dot: 'bg-blue-400',    hex: '#60a5fa' },
-  Web:    { bg: 'bg-green-900/40',   border: 'border-green-500/50',  text: 'text-green-300',   dot: 'bg-green-400',   hex: '#4ade80' },
-  Tom:    { bg: 'bg-yellow-900/40',  border: 'border-yellow-500/50', text: 'text-yellow-300',  dot: 'bg-yellow-400',  hex: '#facc15' },
-  Tyler:  { bg: 'bg-purple-900/40',  border: 'border-purple-500/50', text: 'text-purple-300',  dot: 'bg-purple-400',  hex: '#c084fc' },
-  Thomas: { bg: 'bg-pink-900/40',    border: 'border-pink-500/50',   text: 'text-pink-300',    dot: 'bg-pink-400',    hex: '#f472b6' },
-  Chris:  { bg: 'bg-amber-900/40',   border: 'border-amber-500/50',  text: 'text-amber-300',   dot: 'bg-amber-400',   hex: '#fbbf24' },
-  Alex:   { bg: 'bg-orange-900/40',  border: 'border-orange-500/50', text: 'text-orange-300',  dot: 'bg-orange-400',  hex: '#fb923c' },
-  Greasy: { bg: 'bg-cyan-900/40',    border: 'border-cyan-500/50',   text: 'text-cyan-300',    dot: 'bg-cyan-400',    hex: '#22d3ee' },
-  Bob:    { bg: 'bg-slate-700/40',   border: 'border-slate-400/50',  text: 'text-slate-300',   dot: 'bg-slate-400',   hex: '#94a3b8' },
-  Mike:   { bg: 'bg-fuchsia-900/40', border: 'border-fuchsia-500/50',text: 'text-fuchsia-300', dot: 'bg-fuchsia-400', hex: '#e879f9' },
-  Sean:   { bg: 'bg-emerald-900/40', border: 'border-emerald-500/50',text: 'text-emerald-300', dot: 'bg-emerald-400', hex: '#34d399' },
+  Pudge:  { bg: 'bg-red-50',      border: 'border-red-300',     text: 'text-red-700',      dot: 'bg-red-500',      hex: '#ef4444' },
+  Nick:   { bg: 'bg-blue-50',     border: 'border-blue-300',    text: 'text-blue-700',     dot: 'bg-blue-500',     hex: '#3b82f6' },
+  Web:    { bg: 'bg-green-50',    border: 'border-green-300',   text: 'text-green-700',    dot: 'bg-green-500',    hex: '#22c55e' },
+  Tom:    { bg: 'bg-yellow-50',   border: 'border-yellow-400',  text: 'text-yellow-700',   dot: 'bg-yellow-500',   hex: '#eab308' },
+  Tyler:  { bg: 'bg-purple-50',   border: 'border-purple-300',  text: 'text-purple-700',   dot: 'bg-purple-500',   hex: '#a855f7' },
+  Thomas: { bg: 'bg-pink-50',     border: 'border-pink-300',    text: 'text-pink-700',     dot: 'bg-pink-500',     hex: '#ec4899' },
+  Chris:  { bg: 'bg-amber-50',    border: 'border-amber-400',   text: 'text-amber-700',    dot: 'bg-amber-500',    hex: '#f59e0b' },
+  Alex:   { bg: 'bg-orange-50',   border: 'border-orange-300',  text: 'text-orange-700',   dot: 'bg-orange-500',   hex: '#f97316' },
+  Greasy: { bg: 'bg-cyan-50',     border: 'border-cyan-300',    text: 'text-cyan-700',     dot: 'bg-cyan-500',     hex: '#06b6d4' },
+  Bob:    { bg: 'bg-slate-100',   border: 'border-slate-300',   text: 'text-slate-700',    dot: 'bg-slate-500',    hex: '#64748b' },
+  Mike:   { bg: 'bg-fuchsia-50',  border: 'border-fuchsia-300', text: 'text-fuchsia-700',  dot: 'bg-fuchsia-500',  hex: '#d946ef' },
+  Sean:   { bg: 'bg-emerald-50',  border: 'border-emerald-300', text: 'text-emerald-700',  dot: 'bg-emerald-500',  hex: '#10b981' },
 }
 
 export function getManagerBySlug(slug: string): Manager | undefined {

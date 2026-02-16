@@ -1,12 +1,31 @@
 export function Footer() {
   return (
-    <footer className="border-t border-primary/10 mt-12">
-      <div className="mx-auto max-w-[1400px] px-4 py-6 text-center">
-        <p className="text-xs font-mono text-muted-foreground">
-          THE SANDLOT — Est. 2019 • Powered by ⚾️ and bad trades
-        </p>
-        <p className="text-[10px] font-mono text-muted-foreground/40 mt-1">
-          &quot;You&apos;re killing me, Smalls!&quot;
+    <footer className="bg-amber-900 text-amber-100 mt-12">
+      <div className="mx-auto max-w-[1400px] px-4 py-8 text-center">
+        <div className="mb-4">
+          <p className="text-lg font-serif">
+            &quot;You&apos;re killing me, Smalls!&quot;
+          </p>
+        </div>
+        <div className="flex justify-center items-center gap-4 text-sm mb-4">
+          <a 
+            href="#" 
+            className="hover:text-amber-200 transition-colors"
+          >
+            League Rules
+          </a>
+          <span>|</span>
+          <a 
+            href="https://baseball.fantasysports.yahoo.com/b1/24701" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="hover:text-amber-200 transition-colors"
+          >
+            Yahoo League
+          </a>
+        </div>
+        <p className="text-xs">
+          THE SANDLOT — Est. 2019 • 12 Teams • $200 Buy-in • Powered by ⚾️ and bad trades
         </p>
       </div>
     </footer>

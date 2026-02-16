@@ -6,7 +6,7 @@ import type { Components } from 'react-markdown'
 
 const components: Components = {
   h1: ({ children }) => (
-    <h1 className="text-lg font-bold text-primary vault-glow mt-4 mb-2">{children}</h1>
+    <h1 className="text-lg font-serif font-bold text-primary mt-4 mb-2">{children}</h1>
   ),
   h2: ({ children }) => (
     <h2 className="text-base font-bold text-primary mt-3 mb-1.5">{children}</h2>

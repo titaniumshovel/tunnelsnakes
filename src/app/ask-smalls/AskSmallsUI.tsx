@@ -216,7 +216,7 @@ export function AskSmallsUI() {
         <div className="flex items-center gap-3">
           <span className="text-3xl">🧢</span>
           <div>
-            <h1 className="text-lg font-mono font-bold text-primary vault-glow tracking-wider">
+            <h1 className="text-lg font-serif font-bold text-primary">
               ASK SMALLS
             </h1>
             <p className="text-xs font-mono text-muted-foreground">
@@ -248,7 +248,7 @@ export function AskSmallsUI() {
           <div className="flex flex-col items-center justify-center h-full gap-6 pb-8">
             <div className="text-center">
               <span className="text-6xl block mb-4">🧢</span>
-              <h2 className="text-xl font-mono font-bold text-primary vault-glow mb-2">
+              <h2 className="text-xl font-serif font-bold text-primary mb-2">
                 Hey there! I&apos;m Smalls.
               </h2>
               <p className="text-sm font-mono text-muted-foreground max-w-md">

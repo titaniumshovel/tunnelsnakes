@@ -74,10 +74,10 @@ export function NavHeader() {
           <Link href="/" className="flex items-center gap-2 group">
             <span className="text-2xl">⚾</span>
             <div className="leading-tight">
-              <span className="text-lg font-bold text-primary vault-glow font-mono tracking-wider group-hover:text-primary/80 transition-colors">
+              <span className="text-lg font-display text-primary group-hover:text-primary/80 transition-colors">
                 THE SANDLOT
               </span>
-              <span className="hidden sm:block text-[10px] font-mono text-muted-foreground tracking-widest uppercase">
+              <span className="hidden sm:block text-[10px] text-muted-foreground tracking-wide">
                 Fantasy Baseball League Hub
               </span>
             </div>
@@ -95,10 +95,10 @@ export function NavHeader() {
                   <Link
                     key={link.href}
                     href={link.href}
-                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-mono font-bold uppercase tracking-wider transition-all duration-150 ${
+                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-semibold uppercase tracking-wide transition-all duration-150 ${
                       isActive
-                        ? 'bg-primary/15 text-primary vault-glow border border-primary/30'
-                        : 'text-muted-foreground hover:text-foreground hover:bg-secondary border border-transparent'
+                        ? 'bg-primary text-primary-foreground border border-primary'
+                        : 'text-muted-foreground hover:text-primary hover:bg-primary/10 border border-transparent'
                     }`}
                   >
                     <span>{link.icon}</span>
@@ -110,15 +110,15 @@ export function NavHeader() {
 
             {/* Auth section (desktop) */}
             {authLoaded && (
-              <div className="flex items-center gap-1 ml-2 pl-2 border-l border-primary/15">
+              <div className="flex items-center gap-1 ml-2 pl-2 border-l border-border">
                 {isLoggedIn ? (
                   <>
                     <Link
                       href="/dashboard"
-                      className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-mono font-bold uppercase tracking-wider transition-all duration-150 ${
+                      className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-semibold uppercase tracking-wide transition-all duration-150 ${
                         pathname === '/dashboard'
-                          ? 'bg-primary/15 text-primary vault-glow border border-primary/30'
-                          : 'text-muted-foreground hover:text-foreground hover:bg-secondary border border-transparent'
+                          ? 'bg-primary text-primary-foreground border border-primary'
+                          : 'text-muted-foreground hover:text-primary hover:bg-primary/10 border border-transparent'
                       }`}
                     >
                       <span>📊</span>
@@ -129,7 +129,7 @@ export function NavHeader() {
                     </Link>
                     <button
                       onClick={handleLogout}
-                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-mono font-bold uppercase tracking-wider text-muted-foreground hover:text-destructive hover:bg-destructive/10 border border-transparent transition-all duration-150"
+                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-semibold uppercase tracking-wide text-muted-foreground hover:text-destructive hover:bg-destructive/10 border border-transparent transition-all duration-150"
                     >
                       <span>🚪</span>
                       OUT
@@ -138,9 +138,9 @@ export function NavHeader() {
                 ) : (
                   <Link
                     href="/login"
-                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-mono font-bold uppercase tracking-wider transition-all duration-150 ${
+                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-semibold uppercase tracking-wide transition-all duration-150 ${
                       pathname === '/login'
-                        ? 'bg-primary/15 text-primary vault-glow border border-primary/30'
+                        ? 'bg-primary text-primary-foreground border border-primary'
                         : 'text-accent hover:text-accent/80 hover:bg-accent/10 border border-transparent'
                     }`}
                   >
@@ -157,9 +157,9 @@ export function NavHeader() {
             {authLoaded && !isLoggedIn && (
               <Link
                 href="/login"
-                className={`px-2.5 py-1 rounded-md text-xs font-mono font-bold uppercase tracking-wider transition-all duration-150 ${
+                className={`px-2.5 py-1 rounded-md text-xs font-semibold uppercase tracking-wide transition-all duration-150 ${
                   pathname === '/login'
-                    ? 'bg-primary/15 text-primary vault-glow border border-primary/30'
+                    ? 'bg-primary text-primary-foreground border border-primary'
                     : 'text-accent hover:text-accent/80 hover:bg-accent/10 border border-accent/30'
                 }`}
               >
@@ -169,9 +169,9 @@ export function NavHeader() {
             {authLoaded && isLoggedIn && (
               <Link
                 href="/dashboard"
-                className={`px-2.5 py-1 rounded-md text-xs font-mono font-bold uppercase tracking-wider transition-all duration-150 ${
+                className={`px-2.5 py-1 rounded-md text-xs font-semibold uppercase tracking-wide transition-all duration-150 ${
                   pathname === '/dashboard'
-                    ? 'bg-primary/15 text-primary vault-glow border border-primary/30'
+                    ? 'bg-primary text-primary-foreground border border-primary'
                     : 'text-primary hover:text-primary/80 hover:bg-primary/10 border border-primary/30'
                 }`}
               >
@@ -204,7 +204,7 @@ export function NavHeader() {
 
         {/* Mobile Dropdown Menu */}
         {menuOpen && (
-          <nav className="sm:hidden mt-2 pt-2 border-t border-primary/20 pb-1">
+          <nav className="sm:hidden mt-2 pt-2 border-t border-border pb-1">
             <div className="flex flex-col gap-1">
               {NAV_LINKS.map((link) => {
                 const isActive = link.href === '/'
@@ -215,10 +215,10 @@ export function NavHeader() {
                   <Link
                     key={link.href}
                     href={link.href}
-                    className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm font-mono font-bold uppercase tracking-wider transition-all duration-150 ${
+                    className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm font-semibold uppercase tracking-wide transition-all duration-150 ${
                       isActive
-                        ? 'bg-primary/15 text-primary vault-glow border border-primary/30'
-                        : 'text-muted-foreground hover:text-foreground hover:bg-secondary border border-transparent'
+                        ? 'bg-primary text-primary-foreground border border-primary'
+                        : 'text-muted-foreground hover:text-primary hover:bg-primary/10 border border-transparent'
                     }`}
                   >
                     <span>{link.icon}</span>
@@ -232,10 +232,10 @@ export function NavHeader() {
                 <>
                   <Link
                     href="/dashboard"
-                    className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm font-mono font-bold uppercase tracking-wider transition-all duration-150 ${
+                    className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm font-semibold uppercase tracking-wide transition-all duration-150 ${
                       pathname === '/dashboard'
-                        ? 'bg-primary/15 text-primary vault-glow border border-primary/30'
-                        : 'text-muted-foreground hover:text-foreground hover:bg-secondary border border-transparent'
+                        ? 'bg-primary text-primary-foreground border border-primary'
+                        : 'text-muted-foreground hover:text-primary hover:bg-primary/10 border border-transparent'
                     }`}
                   >
                     <span>📊</span>
@@ -243,7 +243,7 @@ export function NavHeader() {
                   </Link>
                   <button
                     onClick={handleLogout}
-                    className="flex items-center gap-2 px-3 py-2 rounded-md text-sm font-mono font-bold uppercase tracking-wider text-muted-foreground hover:text-destructive hover:bg-destructive/10 border border-transparent transition-all duration-150 text-left"
+                    className="flex items-center gap-2 px-3 py-2 rounded-md text-sm font-semibold uppercase tracking-wide text-muted-foreground hover:text-destructive hover:bg-destructive/10 border border-transparent transition-all duration-150 text-left"
                   >
                     <span>🚪</span>
                     LOGOUT
@@ -253,9 +253,9 @@ export function NavHeader() {
               {authLoaded && !isLoggedIn && (
                 <Link
                   href="/login"
-                  className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm font-mono font-bold uppercase tracking-wider transition-all duration-150 ${
+                  className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm font-semibold uppercase tracking-wide transition-all duration-150 ${
                     pathname === '/login'
-                      ? 'bg-primary/15 text-primary vault-glow border border-primary/30'
+                      ? 'bg-primary text-primary-foreground border border-primary'
                       : 'text-accent hover:text-accent/80 hover:bg-accent/10 border border-transparent'
                   }`}
                 >

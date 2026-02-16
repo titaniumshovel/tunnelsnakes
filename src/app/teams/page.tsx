@@ -15,7 +15,7 @@ export default function TeamsPage() {
       <div className="mx-auto max-w-[1400px] px-4 py-8">
         {/* Page Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-primary vault-glow font-mono tracking-wider">
+          <h1 className="text-3xl font-serif font-bold text-primary">
             👥 LEAGUE TEAMS
           </h1>
           <p className="mt-1 text-sm font-mono text-muted-foreground">
@@ -45,7 +45,7 @@ export default function TeamsPage() {
                 <div className="flex items-start gap-3">
                   <div className={`mt-1 h-4 w-4 rounded-full shrink-0 ${colors?.dot}`} />
                   <div className="min-w-0 flex-1">
-                    <h2 className={`text-lg font-bold font-mono tracking-wider ${colors?.text} group-hover:vault-glow`}>
+                    <h2 className={`text-lg font-serif font-bold ${colors?.text}`}>
                       {manager.teamName}
                     </h2>
                     <p className="text-sm text-muted-foreground font-mono mt-1">

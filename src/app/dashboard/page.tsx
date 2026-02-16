@@ -137,8 +137,8 @@ export default function DashboardPage() {
       <main className="min-h-[80vh] flex items-center justify-center">
         <div className="text-center">
           <div className="text-2xl mb-2">⚡</div>
-          <p className="text-sm font-mono text-primary vault-glow terminal-cursor">
-            Loading terminal
+          <p className="text-sm font-semibold text-primary">
+            Loading dashboard
           </p>
         </div>
       </main>
@@ -219,7 +219,7 @@ export default function DashboardPage() {
             <div>
               <div className="flex items-center gap-3 mb-2">
                 <div className={`h-4 w-4 rounded-full ${colors?.dot}`} />
-                <h1 className="text-2xl font-bold text-primary vault-glow font-mono">
+                <h1 className="text-2xl font-serif font-bold text-primary">
                   Welcome back, {manager.displayName}
                 </h1>
                 {manager.role === 'commissioner' && (
@@ -250,7 +250,7 @@ export default function DashboardPage() {
         {/* Stats Row */}
         <div className="grid grid-cols-3 sm:grid-cols-6 gap-4">
           <div className="dashboard-card p-4 text-center">
-            <div className="text-2xl font-bold text-primary vault-glow font-mono">{totalPicks}</div>
+            <div className="text-2xl font-bold text-primary font-mono">{totalPicks}</div>
             <div className="text-[10px] font-mono text-muted-foreground uppercase tracking-wider">Total Picks</div>
           </div>
           <div className="dashboard-card p-4 text-center">
@@ -278,7 +278,7 @@ export default function DashboardPage() {
         {/* Keeper Selections */}
         <div className="dashboard-card p-6">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-bold text-primary vault-glow font-mono">
+            <h2 className="text-lg font-serif font-bold text-primary">
               🔒 KEEPER SELECTIONS
             </h2>
             <div className="flex items-center gap-3 text-xs font-mono">
@@ -302,7 +302,7 @@ export default function DashboardPage() {
           </div>
 
           {rosterLoading ? (
-            <p className="text-sm font-mono text-muted-foreground terminal-cursor">Loading roster...</p>
+            <p className="text-sm text-muted-foreground">Loading roster...</p>
           ) : sortedRoster.length === 0 ? (
             <div className="text-center py-8">
               <div className="text-3xl mb-2">📋</div>
@@ -358,7 +358,7 @@ export default function DashboardPage() {
 
         {/* Draft Picks */}
         <div className="dashboard-card p-6">
-          <h2 className="text-lg font-bold text-primary vault-glow font-mono mb-4">
+          <h2 className="text-lg font-serif font-bold text-primary mb-4">
             🎯 YOUR DRAFT PICKS
           </h2>
 

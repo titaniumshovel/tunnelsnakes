@@ -38,7 +38,7 @@ export default function LoginPage() {
       <div className="w-full max-w-md">
         {/* Terminal header */}
         <div className="text-center mb-4 md:mb-8">
-          <h1 className="text-2xl md:text-3xl font-bold text-primary vault-glow font-mono">
+          <h1 className="text-2xl md:text-3xl font-serif font-bold text-primary">
             🔐 OWNER LOGIN
           </h1>
           <p className="mt-1 text-xs md:text-sm font-mono text-muted-foreground">
@@ -51,7 +51,7 @@ export default function LoginPage() {
             /* Success state */
             <div className="text-center space-y-4">
               <div className="text-4xl">📬</div>
-              <h2 className="text-lg font-bold text-primary font-mono vault-glow">
+              <h2 className="text-lg font-serif font-bold text-primary">
                 CHECK YOUR EMAIL
               </h2>
               <p className="text-sm font-mono text-muted-foreground">
@@ -100,7 +100,6 @@ export default function LoginPage() {
               >
                 {loading ? (
                   <span className="flex items-center justify-center gap-2">
-                    <span className="terminal-cursor" />
                     SENDING...
                   </span>
                 ) : (

@@ -110,7 +110,7 @@ export function KeepersUI() {
       <main className="min-h-[80vh] flex items-center justify-center">
         <div className="text-center">
           <div className="text-2xl mb-2">🔐</div>
-          <p className="text-sm font-mono text-primary vault-glow terminal-cursor">Loading keeper data</p>
+          <p className="text-sm font-semibold text-primary">Loading keeper data</p>
         </div>
       </main>
     )
@@ -123,7 +123,7 @@ export function KeepersUI() {
         <div className="dashboard-card p-6">
           <div className="flex items-start justify-between flex-wrap gap-4">
             <div>
-              <h1 className="text-2xl font-bold text-primary vault-glow font-mono flex items-center gap-3">
+              <h1 className="text-2xl font-serif font-bold text-primary flex items-center gap-3">
                 <span className="text-3xl">🔐</span>
                 KEEPER TRACKER
               </h1>
@@ -150,7 +150,7 @@ export function KeepersUI() {
                 { value: countdown.seconds, label: 'SEC' },
               ].map(({ value, label }) => (
                 <div key={label} className="text-center">
-                  <div className="text-3xl sm:text-4xl font-bold text-primary vault-glow font-mono">
+                  <div className="text-3xl sm:text-4xl font-bold text-primary font-mono">
                     {String(value).padStart(2, '0')}
                   </div>
                   <div className="text-[10px] font-mono text-muted-foreground tracking-widest">{label}</div>

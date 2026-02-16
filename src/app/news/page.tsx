@@ -157,7 +157,7 @@ function EditionCard({ edition, isLatest }: { edition: Edition; isLatest: boolea
             {edition.raw_items_count} sources
           </span>
         </div>
-        <h2 className="text-xl font-bold text-primary vault-glow font-mono uppercase tracking-wide">
+        <h2 className="text-xl font-serif font-bold text-primary">
           {edition.headline}
         </h2>
       </div>
@@ -311,7 +311,7 @@ export default function NewsPage() {
         <div className="inline-block mb-2">
           <span className="text-4xl">📰</span>
         </div>
-        <h1 className="text-3xl sm:text-4xl font-bold text-primary vault-glow font-mono tracking-widest pip-flicker">
+        <h1 className="text-3xl sm:text-4xl font-display font-bold text-primary">
           THE SANDLOT TIMES
         </h1>
         <p className="font-mono text-sm text-muted-foreground mt-2 tracking-wide">
@@ -330,8 +330,8 @@ export default function NewsPage() {
       {loading && (
         <div className="text-center py-16">
           <div className="inline-block animate-pulse">
-            <span className="font-mono text-primary vault-glow text-lg">
-              Loading editions<span className="terminal-cursor" />
+            <span className="text-primary text-lg">
+              Loading editions...
             </span>
           </div>
         </div>

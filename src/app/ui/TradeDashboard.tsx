@@ -346,7 +346,7 @@ export function TradeDashboard({ players }: { players: TradePlayer[] }) {
               🐍
             </div>
             <div>
-              <h1 className="text-xl font-extrabold tracking-wider leading-none vault-glow pip-flicker text-primary">
+              <h1 className="text-xl font-display font-extrabold text-primary">
                 TUNNEL SNAKES
               </h1>
               <p className="text-[10px] text-muted-foreground font-mono uppercase tracking-widest">
@@ -639,8 +639,8 @@ export function TradeDashboard({ players }: { players: TradePlayer[] }) {
                     <p className="text-muted-foreground text-sm font-mono px-4">
                       {vaultQuote}
                     </p>
-                    <p className="text-primary/30 text-xs font-mono mt-3 terminal-cursor">
-                      AWAITING INPUT
+                    <p className="text-primary/50 text-xs mt-3">
+                      Awaiting input
                     </p>
                   </motion.div>
                 ) : submitted ? (
