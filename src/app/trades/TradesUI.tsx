@@ -269,6 +269,20 @@ export function TradesUI() {
           </div>
         )}
 
+        {/* Propose Trade CTA */}
+        <button
+          onClick={() => setFilter('propose')}
+          className={`w-full py-3 px-4 rounded-lg text-sm font-bold uppercase tracking-wider transition-all duration-200 flex items-center justify-center gap-2 ${
+            filter === 'propose'
+              ? 'bg-accent text-white shadow-lg shadow-accent/25 border-2 border-accent'
+              : 'bg-gradient-to-r from-accent/15 to-accent/5 text-accent border-2 border-accent/40 hover:border-accent hover:bg-accent/20 hover:shadow-md'
+          }`}
+        >
+          <span className="text-lg">⚾</span>
+          Propose a Trade
+          <span className="text-lg">→</span>
+        </button>
+
         {/* Filter Tabs */}
         <div className="flex gap-2 flex-wrap">
           {([
@@ -277,7 +291,6 @@ export function TradesUI() {
             ['midseason', '2025 IN-SEASON'],
             ['pending', 'PENDING'],
             ['picktrail', '📍 PICK TRAIL'],
-            ['propose', '📝 PROPOSE'],
           ] as [FilterTab, string][]).map(([key, label]) => (
             <button
               key={key}
