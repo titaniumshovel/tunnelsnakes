@@ -34,19 +34,19 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="min-h-[80vh] flex items-center justify-center px-4">
+    <main className="min-h-[60vh] flex items-start md:items-center justify-center px-4 pt-6 md:pt-0">
       <div className="w-full max-w-md">
         {/* Terminal header */}
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-primary vault-glow font-mono">
+        <div className="text-center mb-4 md:mb-8">
+          <h1 className="text-2xl md:text-3xl font-bold text-primary vault-glow font-mono">
             🔐 OWNER LOGIN
           </h1>
-          <p className="mt-2 text-sm font-mono text-muted-foreground">
+          <p className="mt-1 text-xs md:text-sm font-mono text-muted-foreground">
             THE SANDLOT — SECURE TERMINAL ACCESS
           </p>
         </div>
 
-        <div className="dashboard-card p-6">
+        <div className="dashboard-card p-4 md:p-6">
           {sent ? (
             /* Success state */
             <div className="text-center space-y-4">
@@ -116,7 +116,7 @@ export default function LoginPage() {
         </div>
 
         {/* Back link */}
-        <div className="text-center mt-6">
+        <div className="text-center mt-4 md:mt-6">
           <Link href="/" className="text-xs font-mono text-muted-foreground hover:text-primary transition-colors">
             ← Back to The Sandlot
           </Link>
