@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { MANAGERS, TEAM_COLORS } from '@/data/managers'
 
-const NAV_CARDS = [
+const NAV_CARDS: Array<{ href: string; icon: string; title: string; desc: string; color: string; badge?: string }> = [
   {
     href: '/teams',
     icon: '👥',
@@ -38,12 +38,11 @@ const NAV_CARDS = [
     color: 'primary',
   },
   {
-    href: '#',
-    icon: '🧠',
+    href: '/ask-smalls',
+    icon: '🧢',
     title: 'ASK SMALLS',
-    desc: 'AI league assistant — coming soon',
-    color: 'muted',
-    badge: 'SOON',
+    desc: 'AI league expert — keepers, trades, draft strategy & more',
+    color: 'primary',
   },
 ]
 

@@ -12,6 +12,7 @@ const NAV_LINKS = [
   { href: '/draft-board', label: 'DRAFT', icon: '🎯' },
   { href: '/trades', label: 'TRADES', icon: '🤝' },
   { href: '/keepers', label: 'KEEPERS', icon: '🔐' },
+  { href: '/ask-smalls', label: 'SMALLS', icon: '🧢' },
 ]
 
 export function NavHeader() {
