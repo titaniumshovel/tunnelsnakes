@@ -362,7 +362,7 @@ export function TradesUI() {
                 <div>
                   <label className="block text-sm font-semibold uppercase tracking-wider text-primary/80">Your Team</label>
                   <select
-                    className="mt-1 w-full rounded-md border border-border bg-secondary px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary/50 font-mono"
+                    className="mt-1 w-full rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary/50 font-mono"
                     value={offerTeam}
                     onChange={(e) => setOfferTeam(e.target.value)}
                     required
@@ -379,7 +379,7 @@ export function TradesUI() {
                     Your Name <span className="normal-case text-muted-foreground font-normal">(optional)</span>
                   </label>
                   <input
-                    className="mt-1 w-full rounded-md border border-border bg-secondary px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary/50 font-mono"
+                    className="mt-1 w-full rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary/50 font-mono"
                     value={offerName}
                     onChange={(e) => setOfferName(e.target.value)}
                     placeholder="Your name"
@@ -391,7 +391,7 @@ export function TradesUI() {
                     Email <span className="normal-case text-muted-foreground font-normal">(optional)</span>
                   </label>
                   <input
-                    className="mt-1 w-full rounded-md border border-border bg-secondary px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary/50 font-mono"
+                    className="mt-1 w-full rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary/50 font-mono"
                     value={offerEmail}
                     onChange={(e) => setOfferEmail(e.target.value)}
                     type="email"
@@ -402,7 +402,7 @@ export function TradesUI() {
                 <div>
                   <label className="block text-sm font-semibold uppercase tracking-wider text-primary/80">Your Offer</label>
                   <textarea
-                    className="mt-1 w-full min-h-[120px] rounded-md border border-border bg-secondary px-3 py-2 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary/50 font-mono"
+                    className="mt-1 w-full min-h-[120px] rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary/50 font-mono"
                     value={offerText}
                     onChange={(e) => setOfferText(e.target.value)}
                     required
@@ -415,7 +415,7 @@ export function TradesUI() {
                     Additional Notes <span className="normal-case text-muted-foreground font-normal">(optional)</span>
                   </label>
                   <textarea
-                    className="mt-1 w-full min-h-[80px] rounded-md border border-border bg-secondary px-3 py-2 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary/50 font-mono"
+                    className="mt-1 w-full min-h-[80px] rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary/50 font-mono"
                     value={offerMessage}
                     onChange={(e) => setOfferMessage(e.target.value)}
                     placeholder="Anything else the Commissioner should know..."
