@@ -21,7 +21,7 @@ type RosterPlayer = {
   } | null
 }
 
-const KEEPER_DEADLINE = new Date('2026-03-01T23:59:59-05:00')
+const KEEPER_DEADLINE = new Date('2026-02-20T23:59:59-05:00')
 const MAX_KEEPERS = 6
 const MAX_NA = 4
 
@@ -159,7 +159,7 @@ export function KeepersUI() {
             </div>
           )}
           <div className="text-xs font-mono text-muted-foreground mt-2">
-            March 1, 2026 • {MAX_KEEPERS} keepers + {MAX_NA} NA slots per team
+            February 20, 2026 • {MAX_KEEPERS} keepers + {MAX_NA} NA slots per team
           </div>
         </div>
 
