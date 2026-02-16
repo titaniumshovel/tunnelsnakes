@@ -172,7 +172,14 @@ async function buildRostersSection(): Promise<string> {
       const manager = MANAGERS.find(m => m.displayName === managerName)
       const teamName = manager?.teamName ?? managerName
       const lines = players.map(p => {
-        const cost = p.keeperCostLabel ?? (p.keeperCostRound ? `Rd ${p.keeperCostRound}` : 'N/A')
+        // For ECR-based keepers (2nd+ year), compute the effective cost round from ECR rank
+        let cost: string
+        if (p.keeperCostLabel && p.keeperCostLabel.includes('ECR') && p.ecr) {
+          const effectiveRound = Math.ceil(p.ecr / 12)
+          cost = `Rd ${effectiveRound} (${p.keeperCostLabel})`
+        } else {
+          cost = p.keeperCostLabel ?? (p.keeperCostRound ? `Rd ${p.keeperCostRound}` : 'N/A')
+        }
         const ecr = p.ecr ? `ECR #${p.ecr}` : ''
         const status = p.keeperStatus !== 'undecided' ? ` [${p.keeperStatus.toUpperCase()}]` : ''
         return `  - ${p.name} (${p.position}) — Cost: ${cost}${ecr ? `, ${ecr}` : ''}${status}`
@@ -281,5 +288,6 @@ Rules:
 - If you don't know something, say so — don't make up stats
 - Be helpful for draft prep, trade analysis, and keeper decisions
 - When comparing keeper values, lower round = better value (Rd 23 keeper is a steal, Rd 1 is expensive)
-- For "best value" questions, compare keeper cost round vs ECR — big gaps = great value${personalNote}`
+- For "best value" questions, compare keeper cost round vs ECR — big gaps = great value
+- For ECR-based keepers (2nd+ year), their cost IS their ECR round: divide ECR rank by 12 (number of teams) and round up. ECR #18 = Round 2 cost, ECR #39 = Round 4 cost, ECR #61 = Round 6 cost. Always compute the value gap for these — they are NOT "unknown" cost.${personalNote}`
 }
