@@ -15,18 +15,18 @@ export type Manager = {
 }
 
 export const MANAGERS: Manager[] = [
-  { displayName: 'Pudge', teamName: 'Bleacher Creatures', teamSlug: 'bleacher-creatures', role: 'owner', draftPosition: 1, colorKey: 'Pudge' },
-  { displayName: 'Nick', teamName: 'Red Stagz', teamSlug: 'red-stagz', role: 'owner', draftPosition: 2, colorKey: 'Nick' },
-  { displayName: 'Web', teamName: 'Lollygaggers', teamSlug: 'lollygaggers', role: 'owner', draftPosition: 3, colorKey: 'Web' },
-  { displayName: 'Tom', teamName: "Goin' Yahdgoats", teamSlug: 'goin-yahdgoats', role: 'owner', draftPosition: 4, colorKey: 'Tom' },
-  { displayName: 'Tyler', teamName: "Tyler's Slugfest", teamSlug: 'tylers-slugfest', role: 'owner', draftPosition: 5, colorKey: 'Tyler' },
-  { displayName: 'Thomas', teamName: 'Lake Monsters', teamSlug: 'lake-monsters', role: 'owner', draftPosition: 6, colorKey: 'Thomas' },
-  { displayName: 'Chris', teamName: 'Tunnel Snakes', teamSlug: 'tunnel-snakes', role: 'commissioner', draftPosition: 7, colorKey: 'Chris' },
-  { displayName: 'Alex', teamName: 'Alex in Chains', teamSlug: 'alex-in-chains', role: 'owner', draftPosition: 8, colorKey: 'Alex' },
-  { displayName: 'Greasy', teamName: 'Greasy Cap Advisors', teamSlug: 'greasy-cap-advisors', role: 'owner', draftPosition: 9, colorKey: 'Greasy' },
-  { displayName: 'Bob', teamName: 'Runs-N-Roses', teamSlug: 'runs-n-roses', role: 'owner', draftPosition: 10, colorKey: 'Bob' },
-  { displayName: 'Mike', teamName: 'The Dirty Farm', teamSlug: 'the-dirty-farm', role: 'owner', draftPosition: 11, colorKey: 'Mike' },
-  { displayName: 'Sean', teamName: 'ClutchHutch', teamSlug: 'clutchhutch', role: 'owner', draftPosition: 12, colorKey: 'Sean' },
+  { displayName: 'Pudge', teamName: 'Bleacher Creatures', teamSlug: 'bleacher-creatures', role: 'owner', draftPosition: 1, colorKey: 'Pudge', email: 'michaeljcasey3@gmail.com' },
+  { displayName: 'Nick', teamName: 'Red Stagz', teamSlug: 'red-stagz', role: 'owner', draftPosition: 2, colorKey: 'Nick', email: 'gagliardi.nf@gmail.com' },
+  { displayName: 'Web', teamName: 'Lollygaggers', teamSlug: 'lollygaggers', role: 'owner', draftPosition: 3, colorKey: 'Web', email: 'web21spider@hotmail.com' },
+  { displayName: 'Tom', teamName: "Goin' Yahdgoats", teamSlug: 'goin-yahdgoats', role: 'owner', draftPosition: 4, colorKey: 'Tom', email: 'trward1990@gmail.com' },
+  { displayName: 'Tyler', teamName: "Tyler's Slugfest", teamSlug: 'tylers-slugfest', role: 'owner', draftPosition: 5, colorKey: 'Tyler', email: 'tyler.parkhurst@gmail.com' },
+  { displayName: 'Thomas', teamName: 'Lake Monsters', teamSlug: 'lake-monsters', role: 'owner', draftPosition: 6, colorKey: 'Thomas', email: 'tsoleary12@gmail.com' },
+  { displayName: 'Chris', teamName: 'Tunnel Snakes', teamSlug: 'tunnel-snakes', role: 'commissioner', draftPosition: 7, colorKey: 'Chris', email: 'cjm91792@gmail.com' },
+  { displayName: 'Alex', teamName: 'Alex in Chains', teamSlug: 'alex-in-chains', role: 'owner', draftPosition: 8, colorKey: 'Alex', email: 'alex.mclaughlin24@gmail.com' },
+  { displayName: 'Greasy', teamName: 'Greasy Cap Advisors', teamSlug: 'greasy-cap-advisors', role: 'owner', draftPosition: 9, colorKey: 'Greasy', email: 'cgmilanesi@gmail.com' },
+  { displayName: 'Bob', teamName: 'Runs-N-Roses', teamSlug: 'runs-n-roses', role: 'owner', draftPosition: 10, colorKey: 'Bob', email: 'brose@armadafinancial.com' },
+  { displayName: 'Mike', teamName: 'The Dirty Farm', teamSlug: 'the-dirty-farm', role: 'owner', draftPosition: 11, colorKey: 'Mike', email: 'mmacdonald1976@hotmail.com' },
+  { displayName: 'Sean', teamName: 'ClutchHutch', teamSlug: 'clutchhutch', role: 'owner', draftPosition: 12, colorKey: 'Sean', email: 'sean.hutchinson88@gmail.com' },
 ]
 
 /** Team colors — shared between draft board, teams page, etc. */
