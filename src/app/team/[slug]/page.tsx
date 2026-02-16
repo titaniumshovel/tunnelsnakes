@@ -268,7 +268,7 @@ export default async function TeamProfilePage({ params }: Props) {
 
                         {/* Keeper Status Badge */}
                         {rp.keeper_status === 'keeping' && (
-                          <span className="text-[10px] px-2 py-0.5 rounded-full bg-green-500/15 text-green-600 border border-green-500/30 font-semibold">
+                          <span className="text-[10px] px-2 py-0.5 rounded-full bg-secondary/15 text-secondary border border-secondary/30 font-semibold">
                             🔒 KEEPER
                           </span>
                         )}

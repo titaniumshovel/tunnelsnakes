@@ -44,8 +44,8 @@ type TradedPick = {
 
 const REACTION_EMOJI = ['🔥', '💀', '👍', '👎', '😂', '🤔'] as const
 const STATUS_CONFIG: Record<string, { label: string; color: string; bg: string }> = {
-  completed: { label: 'COMPLETED', color: 'text-green-400', bg: 'bg-green-500/15 border-green-500/30' },
-  approved: { label: 'APPROVED', color: 'text-green-400', bg: 'bg-green-500/15 border-green-500/30' },
+  completed: { label: 'COMPLETED', color: 'text-secondary', bg: 'bg-secondary/15 border-secondary/30' },
+  approved: { label: 'APPROVED', color: 'text-secondary', bg: 'bg-secondary/15 border-secondary/30' },
   pending: { label: 'PENDING', color: 'text-amber-400', bg: 'bg-amber-500/15 border-amber-500/30' },
   submitted: { label: 'SUBMITTED', color: 'text-amber-400', bg: 'bg-amber-500/15 border-amber-500/30' },
   rejected: { label: 'REJECTED', color: 'text-red-400', bg: 'bg-red-500/15 border-red-500/30' },
@@ -471,7 +471,7 @@ function PickOriginTrail() {
         {/* Quick stats */}
         {teamFilter !== 'all' && (
           <div className="mt-3 flex gap-4 text-xs font-mono">
-            <span className="text-green-400">
+            <span className="text-secondary">
               ↙ Acquired: {filteredPicks.filter(p => p.currentOwner === teamFilter).length}
             </span>
             <span className="text-red-400">
@@ -725,7 +725,7 @@ function TradeCard({
           <span className="text-xs font-mono text-amber-400 font-bold">⭐ COMMISSIONER:</span>
           <button
             onClick={() => onStatusChange(trade.id, 'approved')}
-            className="px-3 py-1 text-xs font-mono font-bold uppercase rounded bg-green-500/15 text-green-400 border border-green-500/30 hover:bg-green-500/25 transition-colors"
+            className="px-3 py-1 text-xs font-mono font-bold uppercase rounded bg-secondary/15 text-secondary border border-secondary/30 hover:bg-secondary/25 transition-colors"
           >
             ✓ Approve
           </button>

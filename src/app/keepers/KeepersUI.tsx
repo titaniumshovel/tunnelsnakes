@@ -26,7 +26,7 @@ const MAX_KEEPERS = 6
 const MAX_NA = 4
 
 const STATUS_DISPLAY: Record<string, { icon: string; label: string; color: string }> = {
-  keeping: { icon: '🔒', label: 'Locked', color: 'text-green-400' },
+  keeping: { icon: '🔒', label: 'Locked', color: 'text-secondary' },
   'keeping-na': { icon: '🔷', label: 'NA Keeper', color: 'text-blue-400' },
   undecided: { icon: '⏳', label: 'Undecided', color: 'text-amber-400' },
   'not-keeping': { icon: '❌', label: 'Not Keeping', color: 'text-red-400' },
@@ -209,7 +209,7 @@ export function KeepersUI() {
                   </Link>
                   {hasData && (
                     <div className="flex items-center gap-2 text-[10px] font-mono">
-                      <span className="text-green-400">🔒 {keepers.length}/{MAX_KEEPERS}</span>
+                      <span className="text-secondary">🔒 {keepers.length}/{MAX_KEEPERS}</span>
                       <span className="text-blue-400">🔷 {naKeepers.length}/{MAX_NA}</span>
                     </div>
                   )}

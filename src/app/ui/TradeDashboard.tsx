@@ -44,9 +44,9 @@ const LEAGUE_TEAMS = [
 /* Status-based styling — driven by DB keeper_status field */
 const STATUS_STYLES: Record<string, { border: string; bg: string; badge: string; badgeText: string; label: string; icon: string }> = {
   keeping: {
-    border: 'border-green-500/40',
-    bg: 'bg-green-500/8',
-    badge: 'bg-green-500/20 text-green-400',
+    border: 'border-secondary/40',
+    bg: 'bg-secondary/8',
+    badge: 'bg-secondary/20 text-secondary',
     badgeText: 'KEEPER',
     label: '🔒 LOCKED',
     icon: '🔒',
@@ -479,7 +479,7 @@ export function TradeDashboard({ players }: { players: TradePlayer[] }) {
                     className={`px-2.5 py-1 rounded-md text-xs font-bold transition-all tracking-wider ${
                       statusFilter === key
                         ? key === 'keeping'
-                          ? 'bg-green-500/20 text-green-400 shadow-[0_0_10px_rgba(34,197,94,0.3)]'
+                          ? 'bg-secondary/20 text-secondary shadow-[0_0_10px_hsl(var(--secondary)/0.3)]'
                           : key === 'high-value'
                           ? 'bg-amber-500/20 text-amber-400 shadow-[0_0_10px_rgba(245,158,11,0.3)]'
                           : 'bg-primary text-primary-foreground shadow-[0_0_10px_hsl(121_99%_54%/0.3)]'
@@ -586,7 +586,7 @@ export function TradeDashboard({ players }: { players: TradePlayer[] }) {
                       {/* Status badge (right side) */}
                       <div className="text-xs text-muted-foreground shrink-0">
                         {p.keeperStatus === 'keeping' ? (
-                          <span className="stat-badge bg-green-500/15 text-green-400 uppercase tracking-wider">
+                          <span className="stat-badge bg-secondary/15 text-secondary uppercase tracking-wider">
                             <Shield className="w-3 h-3" />
                             LOCKED
                           </span>

@@ -232,7 +232,7 @@ export function AskSmallsUI() {
           )}
           <span className={`px-2 py-1 rounded text-xs font-mono font-bold ${
             remaining > 5
-              ? 'bg-green-900/30 text-green-400 border border-green-500/20'
+              ? 'bg-secondary/15 text-secondary border border-secondary/30'
               : remaining > 0
               ? 'bg-yellow-900/30 text-yellow-400 border border-yellow-500/20'
               : 'bg-red-900/30 text-red-400 border border-red-500/20'
@@ -282,13 +282,13 @@ export function AskSmallsUI() {
               className={`max-w-[85%] sm:max-w-[75%] rounded-lg px-4 py-3 ${
                 msg.role === 'user'
                   ? 'bg-amber-900/40 border border-amber-500/30 text-amber-100'
-                  : 'bg-green-900/20 border border-green-500/20 text-green-100 shadow-[0_0_15px_hsl(121_80%_45%/0.05)]'
+                  : 'bg-secondary/10 border border-secondary/20 text-foreground shadow-[0_0_15px_hsl(var(--secondary)/0.05)]'
               }`}
             >
               {msg.role === 'assistant' && (
                 <div className="flex items-center gap-1.5 mb-1.5">
                   <span className="text-sm">🧢</span>
-                  <span className="text-xs font-mono font-bold text-green-400">Smalls</span>
+                  <span className="text-xs font-mono font-bold text-secondary">Smalls</span>
                 </div>
               )}
               {msg.role === 'assistant' ? (
@@ -367,9 +367,9 @@ export function AskSmallsUI() {
 function TypingIndicator() {
   return (
     <span className="inline-flex items-center gap-1">
-      <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-bounce" style={{ animationDelay: '0ms' }} />
-      <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-bounce" style={{ animationDelay: '150ms' }} />
-      <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-bounce" style={{ animationDelay: '300ms' }} />
+      <span className="w-1.5 h-1.5 rounded-full bg-secondary animate-bounce" style={{ animationDelay: '0ms' }} />
+      <span className="w-1.5 h-1.5 rounded-full bg-secondary animate-bounce" style={{ animationDelay: '150ms' }} />
+      <span className="w-1.5 h-1.5 rounded-full bg-secondary animate-bounce" style={{ animationDelay: '300ms' }} />
     </span>
   )
 }

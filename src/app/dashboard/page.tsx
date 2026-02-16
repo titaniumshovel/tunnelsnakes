@@ -43,7 +43,7 @@ const MAX_NA = 4
 
 const STATUS_CYCLE = ['undecided', 'keeping', 'not-keeping'] as const
 const STATUS_DISPLAY: Record<string, { icon: string; label: string; color: string; bg: string; border: string }> = {
-  keeping: { icon: '🔒', label: 'KEEPING', color: 'text-green-400', bg: 'bg-green-500/10', border: 'border-green-500/30' },
+  keeping: { icon: '🔒', label: 'KEEPING', color: 'text-secondary', bg: 'bg-secondary/10', border: 'border-secondary/30' },
   'keeping-na': { icon: '🔷', label: 'KEEPER (NA)', color: 'text-blue-400', bg: 'bg-blue-500/10', border: 'border-blue-500/30' },
   undecided: { icon: '⏳', label: 'UNDECIDED', color: 'text-amber-400', bg: 'bg-amber-500/5', border: 'border-amber-500/20' },
   'not-keeping': { icon: '❌', label: 'NOT KEEPING', color: 'text-red-400', bg: 'bg-red-500/5', border: 'border-red-500/20' },
@@ -262,7 +262,7 @@ export default function DashboardPage() {
             <div className="text-[10px] font-mono text-muted-foreground uppercase tracking-wider">Traded Away</div>
           </div>
           <div className="dashboard-card p-4 text-center">
-            <div className="text-2xl font-bold text-green-400 font-mono">{keepersSelected}</div>
+            <div className="text-2xl font-bold text-secondary font-mono">{keepersSelected}</div>
             <div className="text-[10px] font-mono text-muted-foreground uppercase tracking-wider">Keepers</div>
           </div>
           <div className="dashboard-card p-4 text-center">
@@ -282,7 +282,7 @@ export default function DashboardPage() {
               🔒 KEEPER SELECTIONS
             </h2>
             <div className="flex items-center gap-3 text-xs font-mono">
-              <span className="text-green-400">🔒 {keepersSelected}/{MAX_KEEPERS}</span>
+              <span className="text-secondary">🔒 {keepersSelected}/{MAX_KEEPERS}</span>
               <span className="text-blue-400">🔷 {naKeepers}/{MAX_NA}</span>
             </div>
           </div>
@@ -291,7 +291,7 @@ export default function DashboardPage() {
           <div className="mb-4">
             <div className="h-2 bg-secondary rounded-full overflow-hidden">
               <div
-                className="h-full bg-green-500/60 rounded-full transition-all duration-300"
+                className="h-full bg-secondary/60 rounded-full transition-all duration-300"
                 style={{ width: `${(keepersSelected / MAX_KEEPERS) * 100}%` }}
               />
             </div>

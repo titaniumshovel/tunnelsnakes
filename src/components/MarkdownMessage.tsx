@@ -15,10 +15,10 @@ const components: Components = {
     <h3 className="text-sm font-bold text-primary mt-2 mb-1">{children}</h3>
   ),
   strong: ({ children }) => (
-    <strong className="font-bold text-green-300">{children}</strong>
+    <strong className="font-bold text-primary">{children}</strong>
   ),
   em: ({ children }) => (
-    <em className="italic text-green-200/80">{children}</em>
+    <em className="italic text-accent">{children}</em>
   ),
   a: ({ href, children }) => (
     <a
@@ -43,13 +43,13 @@ const components: Components = {
     const isBlock = className?.includes('language-')
     if (isBlock) {
       return (
-        <code className="block bg-black/60 text-green-400 rounded px-3 py-2 text-xs overflow-x-auto border border-primary/10">
+        <code className="block bg-black/60 text-accent rounded px-3 py-2 text-xs overflow-x-auto border border-primary/10">
           {children}
         </code>
       )
     }
     return (
-      <code className="bg-black/40 text-green-300 rounded px-1.5 py-0.5 text-xs">
+      <code className="bg-black/40 text-accent rounded px-1.5 py-0.5 text-xs">
         {children}
       </code>
     )
@@ -76,7 +76,7 @@ const components: Components = {
     <td className="border border-primary/20 px-2 py-1">{children}</td>
   ),
   blockquote: ({ children }) => (
-    <blockquote className="border-l-2 border-amber-500/50 pl-3 my-2 text-green-200/70 italic">
+    <blockquote className="border-l-2 border-accent/50 pl-3 my-2 text-muted-foreground italic">
       {children}
     </blockquote>
   ),
