@@ -119,14 +119,14 @@ export default function Home() {
         <h2 className="text-lg font-serif font-bold text-primary section-header mb-4">
           League Roster — 12 Teams
         </h2>
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
           {MANAGERS.map((m) => {
             const colors = TEAM_COLORS[m.colorKey]
             return (
               <Link
                 key={m.teamSlug}
                 href={`/team/${m.teamSlug}`}
-                className={`flex items-center gap-3 rounded-lg px-3 py-2 border transition-all duration-150 hover:scale-[1.02] hover:shadow-md ${colors?.bg} ${colors?.border}`}
+                className={`flex flex-col items-center gap-2 rounded-lg px-3 py-4 border transition-all duration-150 hover:scale-[1.03] hover:shadow-lg ${colors?.bg} ${colors?.border}`}
               >
                 {/* Team Logo or Fallback Dot */}
                 {m.logo ? (
@@ -134,21 +134,21 @@ export default function Home() {
                     <Image
                       src={`/logos/${m.logo}`}
                       alt={`${m.teamName} logo`}
-                      width={40}
-                      height={40}
+                      width={72}
+                      height={72}
                       unoptimized
                       className="rounded-full object-cover"
                     />
                   </div>
                 ) : (
-                  <div className={`h-10 w-10 rounded-full shrink-0 ${colors?.dot} flex items-center justify-center`}>
-                    <span className="text-xs font-bold text-white">
+                  <div className={`h-[72px] w-[72px] rounded-full shrink-0 ${colors?.dot} flex items-center justify-center`}>
+                    <span className="text-lg font-bold text-white">
                       {m.teamName.charAt(0)}
                     </span>
                   </div>
                 )}
                 
-                <div className="min-w-0">
+                <div className="text-center min-w-0 w-full">
                   <div className={`text-xs font-semibold truncate ${colors?.text}`}>
                     {m.teamName}
                   </div>
