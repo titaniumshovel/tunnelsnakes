@@ -6,6 +6,7 @@ const NAV_LINKS = [
   { href: '/keepers', label: 'Keepers' },
   { href: '/trades', label: 'Trade Center' },
   { href: '/ask-smalls', label: 'Ask Smalls' },
+  { href: '/history', label: 'History' },
   { href: '/news', label: 'Sandlot Times' },
 ]
 

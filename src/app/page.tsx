@@ -38,6 +38,13 @@ const NAV_CARDS: Array<{ href: string; icon: string; title: string; desc: string
     desc: 'AI league expert — keepers, trades, draft strategy & more',
     color: 'primary',
   },
+  {
+    href: '/history',
+    icon: '📜',
+    title: 'HISTORY',
+    desc: 'League champions, milestones & the story so far',
+    color: 'primary',
+  },
 ]
 
 export default function Home() {

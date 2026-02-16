@@ -14,6 +14,7 @@ const NAV_LINKS = [
   { href: '/trades', label: 'TRADES', icon: '🤝' },
   { href: '/keepers', label: 'KEEPERS', icon: '🔐' },
   { href: '/news', label: 'NEWS', icon: '📰' },
+  { href: '/history', label: 'HISTORY', icon: '📜' },
   { href: '/ask-smalls', label: 'ASK SMALLS', icon: '🧢' },
 ]
 
