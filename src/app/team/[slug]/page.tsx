@@ -119,12 +119,12 @@ export default async function TeamProfilePage({ params }: Props) {
           <div className="flex items-center gap-4">
             {/* Team Logo */}
             {manager.logo && (
-              <div className="w-16 h-16 rounded-full bg-black/20 p-2 flex-shrink-0">
+              <div className="w-24 h-24 rounded-full bg-black/20 p-2 flex-shrink-0">
                 <Image
                   src={manager.logo}
                   alt={`${manager.teamName} logo`}
-                  width={64}
-                  height={64}
+                  width={96}
+                  height={96}
                   className="w-full h-full object-contain rounded-full"
                   unoptimized
                 />

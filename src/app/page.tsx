@@ -134,15 +134,15 @@ export default function Home() {
                     <Image
                       src={m.logo}
                       alt={`${m.teamName} logo`}
-                      width={72}
-                      height={72}
+                      width={96}
+                      height={96}
                       unoptimized
                       className="rounded-full object-cover"
                     />
                   </div>
                 ) : (
-                  <div className={`h-[72px] w-[72px] rounded-full shrink-0 ${colors?.dot} flex items-center justify-center`}>
-                    <span className="text-lg font-bold text-white">
+                  <div className={`h-[96px] w-[96px] rounded-full shrink-0 ${colors?.dot} flex items-center justify-center`}>
+                    <span className="text-xl font-bold text-white">
                       {m.teamName.charAt(0)}
                     </span>
                   </div>
