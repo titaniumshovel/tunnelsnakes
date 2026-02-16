@@ -4,6 +4,8 @@ import { notFound } from 'next/navigation'
 import { createClient } from '@supabase/supabase-js'
 import { MANAGERS, TEAM_COLORS, getManagerBySlug } from '@/data/managers'
 
+export const revalidate = 300 // Revalidate every 5 minutes
+
 type Props = {
   params: Promise<{ slug: string }>
 }

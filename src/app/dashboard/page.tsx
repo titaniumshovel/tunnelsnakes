@@ -29,12 +29,13 @@ type RosterPlayer = {
   keeper_cost_label: string | null
   high_value: boolean
   notes: string | null
+  yahoo_team_key: string
   players: {
     id: string
     full_name: string
-    position: string | null
+    primary_position: string | null
     mlb_team: string | null
-    ecr_overall: number | null
+    fantasypros_ecr: number | null
   } | null
 }
 
@@ -89,13 +90,16 @@ export default function DashboardPage() {
   }, [router])
 
   const fetchRoster = useCallback(async () => {
+    if (!manager) return
     const res = await fetch('/api/keepers')
     if (res.ok) {
       const data = await res.json()
-      setRoster(data)
+      // Filter to only this manager's team
+      const myPlayers = data.filter((rp: RosterPlayer) => rp.yahoo_team_key === manager.yahooTeamKey)
+      setRoster(myPlayers)
     }
     setRosterLoading(false)
-  }, [])
+  }, [manager])
 
   useEffect(() => {
     if (manager) {
@@ -335,14 +339,14 @@ export default function DashboardPage() {
                         </span>
                       </div>
                       <div className="text-[10px] font-mono text-muted-foreground">
-                        {rp.players.position ?? '—'} · {rp.players.mlb_team ?? '—'}
+                        {rp.players.primary_position ?? '—'} · {rp.players.mlb_team ?? '—'}
                         {rp.keeper_cost_round && ` · Cost: Rd ${rp.keeper_cost_round}`}
                         {rp.keeper_cost_label && !rp.keeper_cost_round && ` · ${rp.keeper_cost_label}`}
                       </div>
                     </div>
-                    {rp.players.ecr_overall && (
+                    {rp.players.fantasypros_ecr && (
                       <span className="text-xs font-mono text-accent shrink-0">
-                        ECR #{rp.players.ecr_overall}
+                        ECR #{rp.players.fantasypros_ecr}
                       </span>
                     )}
                   </div>
