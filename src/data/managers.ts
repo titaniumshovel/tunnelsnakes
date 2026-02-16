@@ -42,7 +42,7 @@ export const TEAM_COLORS: Record<string, { bg: string; border: string; text: str
   Alex:   { bg: 'bg-orange-900/40',  border: 'border-orange-500/50', text: 'text-orange-300',  dot: 'bg-orange-400',  hex: '#fb923c' },
   Greasy: { bg: 'bg-cyan-900/40',    border: 'border-cyan-500/50',   text: 'text-cyan-300',    dot: 'bg-cyan-400',    hex: '#22d3ee' },
   Bob:    { bg: 'bg-slate-700/40',   border: 'border-slate-400/50',  text: 'text-slate-300',   dot: 'bg-slate-400',   hex: '#94a3b8' },
-  Mike:   { bg: 'bg-indigo-900/40',  border: 'border-indigo-500/50', text: 'text-indigo-300',  dot: 'bg-indigo-400',  hex: '#818cf8' },
+  Mike:   { bg: 'bg-fuchsia-900/40', border: 'border-fuchsia-500/50',text: 'text-fuchsia-300', dot: 'bg-fuchsia-400', hex: '#e879f9' },
   Sean:   { bg: 'bg-emerald-900/40', border: 'border-emerald-500/50',text: 'text-emerald-300', dot: 'bg-emerald-400', hex: '#34d399' },
 }
 
