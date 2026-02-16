@@ -21,18 +21,18 @@ type DraftBoard = {
 }
 
 const TEAM_COLORS: Record<string, { bg: string; border: string; text: string; dot: string }> = {
-  Pudge:  { bg: 'bg-red-900/40',     border: 'border-red-500/50',    text: 'text-red-300',     dot: 'bg-red-400' },
-  Nick:   { bg: 'bg-blue-900/40',    border: 'border-blue-500/50',   text: 'text-blue-300',    dot: 'bg-blue-400' },
-  Web:    { bg: 'bg-green-900/40',   border: 'border-green-500/50',  text: 'text-green-300',   dot: 'bg-green-400' },
-  Tom:    { bg: 'bg-yellow-900/40',  border: 'border-yellow-500/50', text: 'text-yellow-300',  dot: 'bg-yellow-400' },
-  Tyler:  { bg: 'bg-purple-900/40',  border: 'border-purple-500/50', text: 'text-purple-300',  dot: 'bg-purple-400' },
-  Thomas: { bg: 'bg-pink-900/40',    border: 'border-pink-500/50',   text: 'text-pink-300',    dot: 'bg-pink-400' },
-  Chris:  { bg: 'bg-amber-900/40',   border: 'border-amber-500/50',  text: 'text-amber-300',   dot: 'bg-amber-400' },
-  Alex:   { bg: 'bg-orange-900/40',  border: 'border-orange-500/50', text: 'text-orange-300',  dot: 'bg-orange-400' },
-  Greasy: { bg: 'bg-cyan-900/40',    border: 'border-cyan-500/50',   text: 'text-cyan-300',    dot: 'bg-cyan-400' },
-  Bob:    { bg: 'bg-slate-700/40',   border: 'border-slate-400/50',  text: 'text-slate-300',   dot: 'bg-slate-400' },
-  Mike:   { bg: 'bg-fuchsia-900/40', border: 'border-fuchsia-500/50',text: 'text-fuchsia-300', dot: 'bg-fuchsia-400' },
-  Sean:   { bg: 'bg-emerald-900/40', border: 'border-emerald-500/50',text: 'text-emerald-300', dot: 'bg-emerald-400' },
+  Pudge:  { bg: 'bg-red-100',      border: 'border-red-400',      text: 'text-red-800',      dot: 'bg-red-500' },
+  Nick:   { bg: 'bg-blue-100',     border: 'border-blue-400',     text: 'text-blue-800',     dot: 'bg-blue-500' },
+  Web:    { bg: 'bg-green-100',    border: 'border-green-400',    text: 'text-green-800',    dot: 'bg-green-500' },
+  Tom:    { bg: 'bg-yellow-100',   border: 'border-yellow-400',   text: 'text-yellow-800',   dot: 'bg-yellow-500' },
+  Tyler:  { bg: 'bg-purple-100',   border: 'border-purple-400',   text: 'text-purple-800',   dot: 'bg-purple-500' },
+  Thomas: { bg: 'bg-pink-100',     border: 'border-pink-400',     text: 'text-pink-800',     dot: 'bg-pink-500' },
+  Chris:  { bg: 'bg-amber-100',    border: 'border-amber-400',    text: 'text-amber-800',    dot: 'bg-amber-500' },
+  Alex:   { bg: 'bg-orange-100',   border: 'border-orange-400',   text: 'text-orange-800',   dot: 'bg-orange-500' },
+  Greasy: { bg: 'bg-cyan-100',     border: 'border-cyan-400',     text: 'text-cyan-800',     dot: 'bg-cyan-500' },
+  Bob:    { bg: 'bg-slate-200',    border: 'border-slate-400',    text: 'text-slate-800',    dot: 'bg-slate-500' },
+  Mike:   { bg: 'bg-fuchsia-100',  border: 'border-fuchsia-400',  text: 'text-fuchsia-800',  dot: 'bg-fuchsia-500' },
+  Sean:   { bg: 'bg-emerald-100',  border: 'border-emerald-400',  text: 'text-emerald-800',  dot: 'bg-emerald-500' },
 }
 
 export default function DraftBoardPage() {
@@ -192,7 +192,7 @@ export default function DraftBoardPage() {
                   return (
                     <tr key={round} className={`${isNA ? 'bg-amber-950/20' : round % 2 === 0 ? 'bg-card/50' : ''} hover:bg-primary/5 transition-colors`}>
                       <td className={`sticky left-0 z-[5] p-2 text-center font-mono font-bold border-r border-primary/20 ${
-                        isNA ? 'bg-amber-950/40 text-amber-400' : round % 2 === 0 ? 'bg-card/90' : 'bg-background'
+                        isNA ? 'bg-amber-100 text-amber-700' : round % 2 === 0 ? 'bg-card/90' : 'bg-background'
                       }`} style={{ fontSize: `${fontSize * 1.1}rem` }}>
                         {isNA ? (
                           <div>
@@ -233,7 +233,7 @@ export default function DraftBoardPage() {
                                 {pick.currentOwner}
                               </div>
                               {isTraded && (
-                                <div className={`font-mono leading-tight ${isMultiHop ? 'text-yellow-400' : 'text-accent'}`} style={{ fontSize: `${fontSize * 0.75}rem` }}>
+                                <div className={`font-mono leading-tight ${isMultiHop ? 'text-yellow-700' : 'text-accent'}`} style={{ fontSize: `${fontSize * 0.75}rem` }}>
                                   {isMultiHop
                                     ? path.slice(0, -1).map((p, i) => (
                                         <span key={i}>
@@ -271,7 +271,7 @@ export default function DraftBoardPage() {
                     const isNA = data.naRounds.includes(round)
                     return (
                       <th key={round} className={`p-1.5 text-center border-b border-primary/20 min-w-[48px] ${isNA ? 'bg-amber-950/30' : ''}`}>
-                        <div className={`text-[10px] font-mono font-bold ${isNA ? 'text-amber-400' : 'text-foreground'}`}>
+                        <div className={`text-[10px] font-mono font-bold ${isNA ? 'text-amber-700' : 'text-foreground'}`}>
                           {round}
                         </div>
                         {isNA && <div className="text-[8px] font-mono text-amber-500">NA</div>}
@@ -308,7 +308,7 @@ export default function DraftBoardPage() {
                               title={`${owner} — No pick in round ${round}`}
                             >
                               <div className={`rounded h-full min-h-[32px] border border-dashed ${
-                                isNA ? 'border-amber-800/30 bg-amber-950/5' : 'border-muted-foreground/15 bg-muted/10'
+                                isNA ? 'border-amber-300 bg-amber-50' : 'border-muted-foreground/15 bg-muted/10'
                               }`} style={{
                                 backgroundImage: isNA
                                   ? 'repeating-linear-gradient(135deg, transparent, transparent 3px, rgba(180,83,9,0.06) 3px, rgba(180,83,9,0.06) 4px)'
@@ -404,7 +404,7 @@ export default function DraftBoardPage() {
                   return (
                     <tr key={round} className={`${isNA ? 'bg-amber-950/20' : round % 2 === 0 ? 'bg-card/50' : ''} hover:bg-primary/5 transition-colors`}>
                       <td className={`sticky left-0 z-[5] p-2 text-center font-mono font-bold text-sm border-r border-primary/20 ${
-                        isNA ? 'bg-amber-950/40 text-amber-400' : round % 2 === 0 ? 'bg-card/90' : 'bg-background'
+                        isNA ? 'bg-amber-100 text-amber-700' : round % 2 === 0 ? 'bg-card/90' : 'bg-background'
                       }`}>
                         {isNA ? (
                           <div>
@@ -432,7 +432,7 @@ export default function DraftBoardPage() {
                               title={`${owner} — No pick in round ${round}`}
                             >
                               <div className={`rounded min-h-[36px] border border-dashed ${
-                                isNA ? 'border-amber-800/30 bg-amber-950/5' : 'border-muted-foreground/15 bg-muted/10'
+                                isNA ? 'border-amber-300 bg-amber-50' : 'border-muted-foreground/15 bg-muted/10'
                               }`} style={{
                                 backgroundImage: isNA
                                   ? 'repeating-linear-gradient(135deg, transparent, transparent 3px, rgba(180,83,9,0.06) 3px, rgba(180,83,9,0.06) 4px)'
@@ -538,9 +538,9 @@ export default function DraftBoardPage() {
             <ul className="text-xs space-y-1.5 font-mono text-muted-foreground">
               <li>• <span className="text-foreground">Snake draft:</span> Odd rounds pick 1→12, even rounds 12→1</li>
               <li>• <span className="text-foreground">Rounds 1-23:</span> Regular players</li>
-              <li>• <span className="text-amber-400">Rounds 24-27:</span> NA/Minor League only</li>
+              <li>• <span className="text-amber-700">Rounds 24-27:</span> NA/Minor League only</li>
               <li>• <span className="text-accent">↔ symbol:</span> Pick was traded once (shows original owner)</li>
-              <li>• <span className="text-yellow-400">Multi-hop path:</span> Pick traded through multiple teams (e.g. Mike→Nick→Alex)</li>
+              <li>• <span className="text-yellow-700">Multi-hop path:</span> Pick traded through multiple teams (e.g. Mike→Nick→Alex)</li>
               <li>• <span className="text-foreground">← arrow:</span> Even rounds flow right-to-left</li>
               <li className="pt-2 border-t border-border">• <span className="text-foreground">Hover</span> any cell for full trade details</li>
             </ul>
