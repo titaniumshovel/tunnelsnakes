@@ -1,9 +1,10 @@
 'use client'
 
-import { useEffect, useState, useCallback } from 'react'
+import { useEffect, useState, useCallback, useMemo } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { MANAGERS, TEAM_COLORS, getManagerByEmail, type Manager } from '@/data/managers'
 import { motion, AnimatePresence } from 'framer-motion'
+import draftBoard from '@/data/draft-board.json'
 
 type TradePickInfo = {
   round: number
@@ -33,6 +34,14 @@ type TradeOffer = {
   comments: Array<{ id: string; user_email: string; user_name: string | null; comment: string; created_at: string }>
 }
 
+type TradedPick = {
+  round: number
+  slot: number
+  originalOwner: string
+  currentOwner: string
+  path: string[]
+}
+
 const REACTION_EMOJI = ['🔥', '💀', '👍', '👎', '😂', '🤔'] as const
 const STATUS_CONFIG: Record<string, { label: string; color: string; bg: string }> = {
   completed: { label: 'COMPLETED', color: 'text-green-400', bg: 'bg-green-500/15 border-green-500/30' },
@@ -41,7 +50,10 @@ const STATUS_CONFIG: Record<string, { label: string; color: string; bg: string }
   submitted: { label: 'SUBMITTED', color: 'text-amber-400', bg: 'bg-amber-500/15 border-amber-500/30' },
   rejected: { label: 'REJECTED', color: 'text-red-400', bg: 'bg-red-500/15 border-red-500/30' },
   declined: { label: 'DECLINED', color: 'text-red-400', bg: 'bg-red-500/15 border-red-500/30' },
+  vetoed: { label: 'VETOED', color: 'text-red-400', bg: 'bg-red-500/15 border-red-500/30' },
 }
+
+type FilterTab = 'all' | 'offseason' | 'midseason' | 'pending' | 'picktrail'
 
 function getManagerByTeamName(teamName: string): Manager | undefined {
   return MANAGERS.find(m => m.teamName === teamName)
@@ -67,12 +79,40 @@ function formatPickList(picks: TradePickInfo[]): string {
   return picks.map(p => `Rd ${p.round}.${p.slot}`).join(', ')
 }
 
+// Extract all traded picks from draft-board.json
+function getTradedPicks(): TradedPick[] {
+  const picks: TradedPick[] = []
+  const boardPicks = draftBoard.picks as Record<string, Array<{
+    slot: number
+    originalOwner: string
+    currentOwner: string
+    traded: boolean
+    path: string[]
+  }>>
+
+  for (const [roundStr, roundPicks] of Object.entries(boardPicks)) {
+    const round = parseInt(roundStr)
+    for (const p of roundPicks) {
+      if (p.traded && p.path.length > 1) {
+        picks.push({
+          round,
+          slot: p.slot,
+          originalOwner: p.originalOwner,
+          currentOwner: p.currentOwner,
+          path: p.path,
+        })
+      }
+    }
+  }
+  return picks
+}
+
 export function TradesUI() {
   const [trades, setTrades] = useState<TradeOffer[]>([])
   const [loading, setLoading] = useState(true)
   const [userEmail, setUserEmail] = useState<string | null>(null)
   const [manager, setManager] = useState<Manager | null>(null)
-  const [filter, setFilter] = useState<'all' | 'completed' | 'pending'>('all')
+  const [filter, setFilter] = useState<FilterTab>('all')
   const [showPropose, setShowPropose] = useState(false)
   const [expandedComments, setExpandedComments] = useState<Set<string>>(new Set())
 
@@ -164,10 +204,13 @@ export function TradesUI() {
     setPropSubmitting(false)
   }
 
+  const pendingCount = trades.filter(t => t.status === 'pending' || t.status === 'submitted').length
+
   const filtered = trades.filter(t => {
-    if (filter === 'completed') return t.status === 'completed' || t.status === 'approved'
+    if (filter === 'offseason') return t.trade_type === 'offseason'
+    if (filter === 'midseason') return t.trade_type === 'midseason'
     if (filter === 'pending') return t.status === 'pending' || t.status === 'submitted'
-    return true
+    return true // 'all' and 'picktrail' show all (picktrail handled separately)
   })
 
   const isCommissioner = manager?.role === 'commissioner'
@@ -286,8 +329,14 @@ export function TradesUI() {
         )}
 
         {/* Filter Tabs */}
-        <div className="flex gap-2">
-          {([['all', 'All Trades'], ['completed', 'Completed'], ['pending', 'Pending']] as const).map(([key, label]) => (
+        <div className="flex gap-2 flex-wrap">
+          {([
+            ['all', 'ALL'],
+            ['offseason', '2026 OFFSEASON'],
+            ['midseason', '2025 IN-SEASON'],
+            ['pending', 'PENDING'],
+            ['picktrail', '📍 PICK TRAIL'],
+          ] as [FilterTab, string][]).map(([key, label]) => (
             <button
               key={key}
               onClick={() => setFilter(key)}
@@ -298,50 +347,222 @@ export function TradesUI() {
               }`}
             >
               {label}
-              {key === 'pending' && trades.filter(t => t.status === 'pending' || t.status === 'submitted').length > 0 && (
+              {key === 'pending' && pendingCount > 0 && (
                 <span className="ml-1.5 px-1.5 py-0.5 bg-amber-500/20 text-amber-400 rounded text-[10px]">
-                  {trades.filter(t => t.status === 'pending' || t.status === 'submitted').length}
+                  {pendingCount}
+                </span>
+              )}
+              {key === 'midseason' && (
+                <span className="ml-1.5 px-1.5 py-0.5 bg-blue-500/20 text-blue-400 rounded text-[10px]">
+                  {trades.filter(t => t.trade_type === 'midseason').length}
                 </span>
               )}
             </button>
           ))}
         </div>
 
-        {/* Trade Feed */}
-        <div className="space-y-4">
-          {filtered.length === 0 ? (
-            <div className="dashboard-card p-8 text-center">
-              <div className="text-4xl mb-3">📦</div>
-              <p className="text-sm font-mono text-muted-foreground">No trades found</p>
-            </div>
-          ) : (
-            filtered.map((trade) => (
-              <TradeCard
-                key={trade.id}
-                trade={trade}
-                userEmail={userEmail}
-                isCommissioner={isCommissioner}
-                expandedComments={expandedComments}
-                toggleComments={(id) => {
-                  setExpandedComments(prev => {
-                    const next = new Set(prev)
-                    if (next.has(id)) next.delete(id)
-                    else next.add(id)
-                    return next
-                  })
-                }}
-                onReact={handleReaction}
-                onComment={handleComment}
-                onStatusChange={handleStatusChange}
-              />
-            ))
-          )}
-        </div>
+        {/* Content: either trade feed or pick trail */}
+        {filter === 'picktrail' ? (
+          <PickOriginTrail />
+        ) : (
+          <div className="space-y-4">
+            {filtered.length === 0 ? (
+              <div className="dashboard-card p-8 text-center">
+                <div className="text-4xl mb-3">📦</div>
+                <p className="text-sm font-mono text-muted-foreground">No trades found</p>
+              </div>
+            ) : (
+              filtered.map((trade) => (
+                <TradeCard
+                  key={trade.id}
+                  trade={trade}
+                  userEmail={userEmail}
+                  isCommissioner={isCommissioner}
+                  expandedComments={expandedComments}
+                  toggleComments={(id) => {
+                    setExpandedComments(prev => {
+                      const next = new Set(prev)
+                      if (next.has(id)) next.delete(id)
+                      else next.add(id)
+                      return next
+                    })
+                  }}
+                  onReact={handleReaction}
+                  onComment={handleComment}
+                  onStatusChange={handleStatusChange}
+                />
+              ))
+            )}
+          </div>
+        )}
       </div>
     </main>
   )
 }
 
+// ============================================
+// Pick Origin Trail Component
+// ============================================
+function PickOriginTrail() {
+  const tradedPicks = useMemo(() => getTradedPicks(), [])
+  const [teamFilter, setTeamFilter] = useState<string>('all')
+  const [expandedPick, setExpandedPick] = useState<string | null>(null)
+
+  const owners = useMemo(() => {
+    const set = new Set<string>()
+    for (const p of tradedPicks) {
+      set.add(p.currentOwner)
+      set.add(p.originalOwner)
+      for (const name of p.path) set.add(name)
+    }
+    return Array.from(set).sort()
+  }, [tradedPicks])
+
+  const filteredPicks = useMemo(() => {
+    if (teamFilter === 'all') return tradedPicks
+    return tradedPicks.filter(p =>
+      p.currentOwner === teamFilter ||
+      p.originalOwner === teamFilter ||
+      p.path.includes(teamFilter)
+    )
+  }, [tradedPicks, teamFilter])
+
+  // Group by current owner
+  const grouped = useMemo(() => {
+    const map = new Map<string, TradedPick[]>()
+    for (const p of filteredPicks) {
+      const key = p.currentOwner
+      if (!map.has(key)) map.set(key, [])
+      map.get(key)!.push(p)
+    }
+    // Sort groups by owner name, sort picks within each group
+    const entries = Array.from(map.entries()).sort(([a], [b]) => a.localeCompare(b))
+    for (const [, picks] of entries) {
+      picks.sort((a, b) => a.round - b.round || a.slot - b.slot)
+    }
+    return entries
+  }, [filteredPicks])
+
+  return (
+    <div className="space-y-4">
+      {/* Header */}
+      <div className="dashboard-card p-5">
+        <div className="flex items-start justify-between flex-wrap gap-3">
+          <div>
+            <h2 className="text-lg font-bold text-primary font-mono flex items-center gap-2">
+              📍 Pick Origin Trail
+            </h2>
+            <p className="text-xs font-mono text-muted-foreground mt-1">
+              {tradedPicks.length} picks changed hands across the offseason. Click any pick to trace its journey.
+            </p>
+          </div>
+          <select
+            value={teamFilter}
+            onChange={(e) => setTeamFilter(e.target.value)}
+            className="rounded-md border border-border bg-secondary px-3 py-1.5 text-xs font-mono focus:outline-none focus:ring-1 focus:ring-primary/50"
+          >
+            <option value="all">All Teams</option>
+            {owners.map(name => (
+              <option key={name} value={name}>{name}</option>
+            ))}
+          </select>
+        </div>
+
+        {/* Quick stats */}
+        {teamFilter !== 'all' && (
+          <div className="mt-3 flex gap-4 text-xs font-mono">
+            <span className="text-green-400">
+              ↙ Acquired: {filteredPicks.filter(p => p.currentOwner === teamFilter).length}
+            </span>
+            <span className="text-red-400">
+              ↗ Traded away: {filteredPicks.filter(p => p.originalOwner === teamFilter && p.currentOwner !== teamFilter).length}
+            </span>
+            <span className="text-blue-400">
+              ↔ Passed through: {filteredPicks.filter(p => p.path.includes(teamFilter) && p.originalOwner !== teamFilter && p.currentOwner !== teamFilter).length}
+            </span>
+          </div>
+        )}
+      </div>
+
+      {/* Pick Grid by Owner */}
+      {grouped.map(([owner, picks]) => {
+        const ownerColors = TEAM_COLORS[owner]
+        return (
+          <div key={owner} className="dashboard-card p-4">
+            <div className="flex items-center gap-2 mb-3">
+              <span className={`w-3 h-3 rounded-full ${ownerColors?.dot ?? 'bg-muted-foreground'}`} />
+              <span className={`text-sm font-mono font-bold ${ownerColors?.text ?? 'text-foreground'}`}>
+                {owner}
+              </span>
+              <span className="text-xs font-mono text-muted-foreground">
+                — {picks.length} pick{picks.length !== 1 ? 's' : ''}
+              </span>
+            </div>
+
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2">
+              {picks.map(pick => {
+                const pickKey = `${pick.round}.${pick.slot}`
+                const isExpanded = expandedPick === pickKey
+                const origColors = TEAM_COLORS[pick.originalOwner]
+
+                return (
+                  <button
+                    key={pickKey}
+                    onClick={() => setExpandedPick(isExpanded ? null : pickKey)}
+                    className={`text-left rounded-md border p-2 transition-all ${
+                      isExpanded
+                        ? `${ownerColors?.bg ?? 'bg-secondary'} ${ownerColors?.border ?? 'border-border'}`
+                        : 'bg-secondary/50 border-border hover:border-primary/30'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-mono font-bold text-foreground">
+                        Rd {pick.round}.{pick.slot}
+                      </span>
+                      <span className={`w-2 h-2 rounded-full ${origColors?.dot ?? 'bg-muted-foreground'}`}
+                        title={`Originally: ${pick.originalOwner}`} />
+                    </div>
+                    {isExpanded && (
+                      <div className="mt-2 space-y-1">
+                        <div className="flex items-center gap-1 flex-wrap">
+                          {pick.path.map((name, i) => {
+                            const colors = TEAM_COLORS[name]
+                            return (
+                              <span key={i} className="flex items-center gap-1">
+                                {i > 0 && <span className="text-muted-foreground text-[10px]">→</span>}
+                                <span className={`text-[11px] font-mono font-bold ${colors?.text ?? 'text-foreground'}`}>
+                                  {name}
+                                </span>
+                              </span>
+                            )
+                          })}
+                        </div>
+                        <div className="text-[10px] font-mono text-muted-foreground">
+                          {pick.path.length - 1} trade{pick.path.length - 1 !== 1 ? 's' : ''}
+                        </div>
+                      </div>
+                    )}
+                  </button>
+                )
+              })}
+            </div>
+          </div>
+        )
+      })}
+
+      {filteredPicks.length === 0 && (
+        <div className="dashboard-card p-8 text-center">
+          <div className="text-4xl mb-3">📭</div>
+          <p className="text-sm font-mono text-muted-foreground">No traded picks found for this filter</p>
+        </div>
+      )}
+    </div>
+  )
+}
+
+// ============================================
+// Trade Card Component
+// ============================================
 function TradeCard({
   trade,
   userEmail,
@@ -369,7 +590,7 @@ function TradeCard({
     : [trade.from_team_name, trade.target_team].filter(Boolean) as string[]
 
   const hasDetails = (trade.offering_picks?.length > 0 || trade.requesting_picks?.length > 0 || trade.offering_players?.length > 0 || trade.requesting_players?.length > 0)
-  const isLegacyOffer = trade.trade_type !== 'offseason' && !hasDetails && trade.offer_text
+  const isLegacyOffer = trade.trade_type !== 'offseason' && trade.trade_type !== 'midseason' && !hasDetails && trade.offer_text
 
   // Count reactions by emoji
   const reactionCounts: Record<string, { count: number; userReacted: boolean }> = {}
@@ -409,6 +630,11 @@ function TradeCard({
               OFFSEASON
             </span>
           )}
+          {trade.trade_type === 'midseason' && (
+            <span className="px-2 py-0.5 text-[10px] font-mono font-bold uppercase tracking-wider bg-purple-500/15 border border-purple-500/30 text-purple-400 rounded">
+              IN-SEASON
+            </span>
+          )}
         </div>
       </div>
 
@@ -433,13 +659,39 @@ function TradeCard({
         </div>
       )}
 
+      {/* Player Details */}
+      {(trade.offering_players?.length > 0 || trade.requesting_players?.length > 0) && (
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
+          {trade.offering_players?.length > 0 && (
+            <div className="bg-secondary/50 p-3 rounded-md border border-border">
+              <div className="text-[10px] font-mono text-muted-foreground uppercase tracking-wider mb-1">
+                {teams[0] ?? 'Team A'} sends →
+              </div>
+              <div className="text-sm font-mono text-foreground">
+                {trade.offering_players.join(', ')}
+              </div>
+            </div>
+          )}
+          {trade.requesting_players?.length > 0 && (
+            <div className="bg-secondary/50 p-3 rounded-md border border-border">
+              <div className="text-[10px] font-mono text-muted-foreground uppercase tracking-wider mb-1">
+                ← {teams[1] ?? 'Team B'} sends
+              </div>
+              <div className="text-sm font-mono text-foreground">
+                {trade.requesting_players.join(', ')}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
       {/* Pick Details */}
-      {hasDetails && (
+      {(trade.offering_picks?.length > 0 || trade.requesting_picks?.length > 0) && (
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
           {trade.offering_picks?.length > 0 && (
             <div className="bg-secondary/50 p-3 rounded-md border border-border">
               <div className="text-[10px] font-mono text-muted-foreground uppercase tracking-wider mb-1">
-                {teams[0] ?? 'Team A'} sends →
+                {teams[0] ?? 'Team A'} sends picks →
               </div>
               <div className="text-sm font-mono text-foreground">
                 {formatPickList(trade.offering_picks)}
@@ -449,7 +701,7 @@ function TradeCard({
           {trade.requesting_picks?.length > 0 && (
             <div className="bg-secondary/50 p-3 rounded-md border border-border">
               <div className="text-[10px] font-mono text-muted-foreground uppercase tracking-wider mb-1">
-                ← {teams[1] ?? 'Team B'} sends
+                ← {teams[1] ?? 'Team B'} sends picks
               </div>
               <div className="text-sm font-mono text-foreground">
                 {formatPickList(trade.requesting_picks)}
@@ -462,7 +714,7 @@ function TradeCard({
       {/* Date + From Info */}
       <div className="flex items-center justify-between text-xs font-mono text-muted-foreground mb-3">
         <span>{formatDate(trade.created_at)}</span>
-        {trade.from_name && trade.trade_type !== 'offseason' && (
+        {trade.from_name && trade.trade_type !== 'offseason' && trade.trade_type !== 'midseason' && (
           <span>from {trade.from_name}</span>
         )}
       </div>
