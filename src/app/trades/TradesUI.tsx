@@ -75,9 +75,14 @@ function formatDate(dateStr: string): string {
   return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
 }
 
-function formatPickList(picks: TradePickInfo[]): string {
+function formatPickList(picks: (TradePickInfo | string)[]): string {
   if (!picks || picks.length === 0) return ''
-  return picks.map(p => `Rd ${p.round}.${p.slot}`).join(', ')
+  return picks.map(p => {
+    if (typeof p === 'string') return p
+    if (p.round && p.slot) return `Rd ${p.round}.${p.slot}`
+    if (p.round) return `Rd ${p.round}`
+    return String(p)
+  }).join(', ')
 }
 
 // Extract all traded picks from draft-board.json
