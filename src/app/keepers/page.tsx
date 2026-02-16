@@ -1,7 +1,7 @@
 import { KeepersUI } from './KeepersUI'
 
 export const metadata = {
-  title: 'Keeper Tracker — The Sandlot',
+  title: 'Keepers',
   description: 'All 12 teams keeper selections and deadline countdown.',
 }
 

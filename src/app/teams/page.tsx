@@ -2,8 +2,8 @@ import Link from 'next/link'
 import { MANAGERS, TEAM_COLORS } from '@/data/managers'
 
 export const metadata = {
-  title: 'Teams — The Sandlot',
-  description: 'All 12 teams in The Sandlot fantasy baseball league.',
+  title: 'Teams',
+  description: 'All 12 Sandlot league teams, managers, and draft positions.',
 }
 
 export default function TeamsPage() {
