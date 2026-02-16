@@ -81,9 +81,25 @@ export function AskSmallsUI() {
     setUsage(getUsageToday())
   }, [])
 
-  // Auto-scroll
+  // Auto-scroll only if user is near the bottom (not scrolling up to read)
+  const chatContainerRef = useRef<HTMLDivElement>(null)
+  const userScrolledUp = useRef(false)
+
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+    const container = chatContainerRef.current
+    if (!container) return
+    const handleScroll = () => {
+      const { scrollTop, scrollHeight, clientHeight } = container
+      userScrolledUp.current = scrollHeight - scrollTop - clientHeight > 150
+    }
+    container.addEventListener('scroll', handleScroll)
+    return () => container.removeEventListener('scroll', handleScroll)
+  }, [])
+
+  useEffect(() => {
+    if (!userScrolledUp.current) {
+      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+    }
   }, [messages])
 
   const sendMessage = useCallback(async (text: string) => {
@@ -243,7 +259,7 @@ export function AskSmallsUI() {
       </div>
 
       {/* Messages Area */}
-      <div className="flex-1 overflow-y-auto px-4 py-4 space-y-4">
+      <div ref={chatContainerRef} className="flex-1 overflow-y-auto px-4 py-4 space-y-4">
         {messages.length === 0 && (
           <div className="flex flex-col items-center justify-center h-full gap-6 pb-8">
             <div className="text-center">
