@@ -104,7 +104,7 @@ export async function POST(req: Request) {
   const token = process.env.TELEGRAM_BOT_TOKEN
   const chatId = process.env.TELEGRAM_CHAT_ID
   if (token && chatId) {
-    const text = `🤝 <b>NEW TRADE PROPOSAL</b>\n\n<b>From:</b> ${from_team_name}\n<b>To:</b> ${target_team}\n${description ? `<b>Details:</b> ${description}\n` : ''}\n<i>tunnelsnakes.vercel.app/trades</i>`
+    const text = `🤝 <b>NEW TRADE PROPOSAL</b>\n\n<b>From:</b> ${from_team_name}\n<b>To:</b> ${target_team}\n${description ? `<b>Details:</b> ${description}\n` : ''}\n<i>thesandlot.app/trades</i>`
     try {
       await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
         method: 'POST',

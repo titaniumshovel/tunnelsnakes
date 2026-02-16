@@ -85,7 +85,7 @@ export async function POST(req: Request) {
     `<b>Offer:</b> ${offerText}`,
   ]
   if (message) lines.push(`<b>Message:</b> ${message}`)
-  lines.push(``, `<i>tunnelsnakes.vercel.app</i>`)
+  lines.push(``, `<i>thesandlot.app</i>`)
 
   await notifyTelegram(lines.join('\n'))
 

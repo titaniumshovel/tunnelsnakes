@@ -10,7 +10,7 @@ export const metadata: Metadata = {
     template: '%s | The Sandlot',
   },
   description: 'The Sandlot fantasy baseball league hub. 12 teams, 27 rounds, bad trades, and questionable decisions since 2020.',
-  metadataBase: new URL('https://tunnelsnakes.vercel.app'),
+  metadataBase: new URL('https://thesandlot.app'),
   openGraph: {
     title: 'The Sandlot — Fantasy Baseball League Hub',
     description: '12 teams. 27 rounds. Bad trades and questionable decisions since 2020.',
