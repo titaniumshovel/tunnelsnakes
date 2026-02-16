@@ -127,11 +127,10 @@ export function NavHeader() {
                           : 'text-muted-foreground hover:text-primary hover:bg-primary/10 border border-transparent'
                       }`}
                     >
-                      <span>📊</span>
                       {manager ? (
                         <span className="hidden md:inline">{manager.teamName}</span>
                       ) : null}
-                      <span className={manager ? 'md:hidden' : ''}>DASH</span>
+                      <span className={manager ? 'md:hidden' : ''}>DASHBOARD</span>
                     </Link>
                     <button
                       onClick={handleLogout}
@@ -181,7 +180,7 @@ export function NavHeader() {
                     : 'text-primary hover:text-primary/80 hover:bg-primary/10 border border-primary/30'
                 }`}
               >
-                📊 DASH
+                DASHBOARD
               </Link>
             )}
             <button
@@ -252,7 +251,6 @@ export function NavHeader() {
                         : 'text-muted-foreground hover:text-primary hover:bg-primary/10 border border-transparent'
                     }`}
                   >
-                    <span>📊</span>
                     {manager ? manager.teamName : 'DASHBOARD'}
                   </Link>
                   <button
