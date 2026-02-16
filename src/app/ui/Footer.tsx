@@ -25,7 +25,7 @@ export function Footer() {
           </a>
         </div>
         <p className="text-xs">
-          THE SANDLOT — Est. 2019 • 12 Teams • $200 Buy-in • Powered by ⚾️ and bad trades
+          THE SANDLOT — Est. 2020 • 12 Teams • $200 Buy-in • Powered by ⚾️ and bad trades
         </p>
       </div>
     </footer>

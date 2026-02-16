@@ -61,7 +61,7 @@ export default function Home() {
             "Heroes get remembered, but legends never die"
           </p>
           <p className="mt-2 text-sm sm:text-base text-muted-foreground">
-            Fantasy Baseball League Hub • Est. 2019 • 12 Teams
+            Fantasy Baseball League Hub • Est. 2020 • 12 Teams
           </p>
 
           {/* Quick Stats Bar */}

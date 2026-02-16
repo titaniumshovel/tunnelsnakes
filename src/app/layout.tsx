@@ -6,7 +6,7 @@ import { Footer } from '@/app/ui/Footer'
 
 export const metadata: Metadata = {
   title: 'The Sandlot — Fantasy Baseball League Hub',
-  description: 'The Sandlot fantasy baseball league hub. 12 teams, 27 rounds, bad trades, and questionable decisions since 2019.',
+  description: 'The Sandlot fantasy baseball league hub. 12 teams, 27 rounds, bad trades, and questionable decisions since 2020.',
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
