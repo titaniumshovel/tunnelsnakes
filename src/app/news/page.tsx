@@ -49,22 +49,22 @@ interface Edition {
 // ─── Manager Color Badges ────────────────────────────────────────
 
 const MANAGER_COLORS: Record<string, string> = {
-  Chris: 'bg-emerald-600/30 text-emerald-400 border-emerald-500/40',
-  Alex: 'bg-blue-600/30 text-blue-400 border-blue-500/40',
-  Pudge: 'bg-red-600/30 text-red-400 border-red-500/40',
-  Sean: 'bg-purple-600/30 text-purple-400 border-purple-500/40',
-  Tom: 'bg-orange-600/30 text-orange-400 border-orange-500/40',
-  Greasy: 'bg-yellow-600/30 text-yellow-400 border-yellow-500/40',
-  Web: 'bg-cyan-600/30 text-cyan-400 border-cyan-500/40',
-  Nick: 'bg-pink-600/30 text-pink-400 border-pink-500/40',
-  Bob: 'bg-lime-600/30 text-lime-400 border-lime-500/40',
-  Mike: 'bg-indigo-600/30 text-indigo-400 border-indigo-500/40',
-  Thomas: 'bg-teal-600/30 text-teal-400 border-teal-500/40',
-  Tyler: 'bg-amber-600/30 text-amber-400 border-amber-500/40',
+  Chris: 'bg-amber-100 text-amber-800 border-amber-300',
+  Alex: 'bg-orange-100 text-orange-800 border-orange-300',
+  Pudge: 'bg-red-100 text-red-800 border-red-300',
+  Sean: 'bg-emerald-100 text-emerald-800 border-emerald-300',
+  Tom: 'bg-yellow-100 text-yellow-800 border-yellow-300',
+  Greasy: 'bg-cyan-100 text-cyan-800 border-cyan-300',
+  Web: 'bg-green-100 text-green-800 border-green-300',
+  Nick: 'bg-blue-100 text-blue-800 border-blue-300',
+  Bob: 'bg-slate-100 text-slate-800 border-slate-300',
+  Mike: 'bg-fuchsia-100 text-fuchsia-800 border-fuchsia-300',
+  Thomas: 'bg-pink-100 text-pink-800 border-pink-300',
+  Tyler: 'bg-purple-100 text-purple-800 border-purple-300',
 }
 
 function ManagerBadge({ name }: { name: string }) {
-  const color = MANAGER_COLORS[name] || 'bg-gray-600/30 text-gray-400 border-gray-500/40'
+  const color = MANAGER_COLORS[name] || 'bg-gray-100 text-gray-700 border-gray-300'
   return (
     <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-mono font-bold border ${color}`}>
       {name}
@@ -95,7 +95,7 @@ function ExpandableSection({
     <div className="border border-primary/15 rounded-lg overflow-hidden">
       <button
         onClick={() => setOpen(!open)}
-        className="w-full flex items-center justify-between px-4 py-3 bg-card hover:bg-secondary/50 transition-colors text-left"
+        className="w-full flex items-center justify-between px-4 py-3 bg-card hover:bg-muted transition-colors text-left"
       >
         <div className="flex items-center gap-2">
           <span>{icon}</span>
@@ -186,7 +186,7 @@ function EditionCard({ edition, isLatest }: { edition: Edition; isLatest: boolea
               {item.tags && item.tags.length > 0 && (
                 <div className="flex gap-1 mt-1.5 flex-wrap">
                   {item.tags.map((tag) => (
-                    <span key={tag} className="font-mono text-[10px] px-1.5 py-0.5 bg-secondary text-muted-foreground rounded">
+                    <span key={tag} className="font-mono text-[10px] px-1.5 py-0.5 bg-muted text-muted-foreground rounded">
                       {tag}
                     </span>
                   ))}
