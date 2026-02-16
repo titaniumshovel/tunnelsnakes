@@ -13,7 +13,7 @@ const NAV_LINKS = [
   { href: '/trades', label: 'TRADES', icon: '🤝' },
   { href: '/keepers', label: 'KEEPERS', icon: '🔐' },
   { href: '/news', label: 'NEWS', icon: '📰' },
-  { href: '/ask-smalls', label: 'SMALLS', icon: '🧢' },
+  { href: '/ask-smalls', label: 'ASK SMALLS', icon: '🧢' },
 ]
 
 export function NavHeader() {
