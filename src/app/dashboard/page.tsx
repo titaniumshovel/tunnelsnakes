@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
@@ -22,11 +22,41 @@ type DraftBoard = {
   picks: Record<string, DraftPick[]>
 }
 
+type RosterPlayer = {
+  id: string
+  keeper_status: string
+  keeper_cost_round: number | null
+  keeper_cost_label: string | null
+  high_value: boolean
+  notes: string | null
+  players: {
+    id: string
+    full_name: string
+    position: string | null
+    mlb_team: string | null
+    ecr_overall: number | null
+  } | null
+}
+
+const MAX_KEEPERS = 6
+const MAX_NA = 4
+
+const STATUS_CYCLE = ['undecided', 'keeping', 'not-keeping'] as const
+const STATUS_DISPLAY: Record<string, { icon: string; label: string; color: string; bg: string; border: string }> = {
+  keeping: { icon: '🔒', label: 'KEEPING', color: 'text-green-400', bg: 'bg-green-500/10', border: 'border-green-500/30' },
+  'keeping-na': { icon: '🔷', label: 'KEEPER (NA)', color: 'text-blue-400', bg: 'bg-blue-500/10', border: 'border-blue-500/30' },
+  undecided: { icon: '⏳', label: 'UNDECIDED', color: 'text-amber-400', bg: 'bg-amber-500/5', border: 'border-amber-500/20' },
+  'not-keeping': { icon: '❌', label: 'NOT KEEPING', color: 'text-red-400', bg: 'bg-red-500/5', border: 'border-red-500/20' },
+}
+
 export default function DashboardPage() {
   const [manager, setManager] = useState<Manager | null>(null)
   const [userEmail, setUserEmail] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
   const [notFound, setNotFound] = useState(false)
+  const [roster, setRoster] = useState<RosterPlayer[]>([])
+  const [rosterLoading, setRosterLoading] = useState(true)
+  const [updatingId, setUpdatingId] = useState<string | null>(null)
   const router = useRouter()
 
   useEffect(() => {
@@ -57,6 +87,50 @@ export default function DashboardPage() {
 
     loadUser()
   }, [router])
+
+  const fetchRoster = useCallback(async () => {
+    const res = await fetch('/api/keepers')
+    if (res.ok) {
+      const data = await res.json()
+      setRoster(data)
+    }
+    setRosterLoading(false)
+  }, [])
+
+  useEffect(() => {
+    if (manager) {
+      fetchRoster()
+    }
+  }, [manager, fetchRoster])
+
+  async function cycleKeeperStatus(rp: RosterPlayer) {
+    // Determine next status in cycle
+    const currentIdx = STATUS_CYCLE.indexOf(rp.keeper_status as typeof STATUS_CYCLE[number])
+    const nextIdx = (currentIdx + 1) % STATUS_CYCLE.length
+    const nextStatus = STATUS_CYCLE[nextIdx]
+
+    // Check limits before allowing "keeping"
+    if (nextStatus === 'keeping') {
+      const currentKeepers = roster.filter(r => r.keeper_status === 'keeping').length
+      if (currentKeepers >= MAX_KEEPERS) {
+        // Can't add more keepers
+        return
+      }
+    }
+
+    setUpdatingId(rp.id)
+    const res = await fetch('/api/keepers', {
+      method: 'PATCH',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ roster_player_id: rp.id, keeper_status: nextStatus }),
+    })
+
+    if (res.ok) {
+      // Update local state immediately
+      setRoster(prev => prev.map(r => r.id === rp.id ? { ...r, keeper_status: nextStatus } : r))
+    }
+    setUpdatingId(null)
+  }
 
   if (loading) {
     return (
@@ -122,6 +196,20 @@ export default function DashboardPage() {
     ).length
   }, 0)
 
+  // Keeper counts
+  const keepersSelected = roster.filter(r => r.keeper_status === 'keeping').length
+  const naKeepers = roster.filter(r => r.keeper_status === 'keeping-na').length
+  const notKeepingCount = roster.filter(r => r.keeper_status === 'not-keeping').length
+
+  // Sort roster: keepers first, then NA, then undecided, then not-keeping
+  const sortOrder: Record<string, number> = { 'keeping': 0, 'keeping-na': 1, 'undecided': 2, 'not-keeping': 3 }
+  const sortedRoster = [...roster].sort((a, b) => {
+    const aOrder = sortOrder[a.keeper_status] ?? 2
+    const bOrder = sortOrder[b.keeper_status] ?? 2
+    if (aOrder !== bOrder) return aOrder - bOrder
+    return (a.keeper_cost_round ?? 99) - (b.keeper_cost_round ?? 99)
+  })
+
   return (
     <main className="min-h-[80vh]">
       <div className="mx-auto max-w-[1000px] px-4 py-8 space-y-6">
@@ -160,7 +248,7 @@ export default function DashboardPage() {
         </div>
 
         {/* Stats Row */}
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-3 sm:grid-cols-6 gap-4">
           <div className="dashboard-card p-4 text-center">
             <div className="text-2xl font-bold text-primary vault-glow font-mono">{totalPicks}</div>
             <div className="text-[10px] font-mono text-muted-foreground uppercase tracking-wider">Total Picks</div>
@@ -172,6 +260,99 @@ export default function DashboardPage() {
           <div className="dashboard-card p-4 text-center">
             <div className="text-2xl font-bold text-destructive font-mono">{tradedAway}</div>
             <div className="text-[10px] font-mono text-muted-foreground uppercase tracking-wider">Traded Away</div>
+          </div>
+          <div className="dashboard-card p-4 text-center">
+            <div className="text-2xl font-bold text-green-400 font-mono">{keepersSelected}</div>
+            <div className="text-[10px] font-mono text-muted-foreground uppercase tracking-wider">Keepers</div>
+          </div>
+          <div className="dashboard-card p-4 text-center">
+            <div className="text-2xl font-bold text-blue-400 font-mono">{naKeepers}</div>
+            <div className="text-[10px] font-mono text-muted-foreground uppercase tracking-wider">NA Slots</div>
+          </div>
+          <div className="dashboard-card p-4 text-center">
+            <div className="text-2xl font-bold text-red-400 font-mono">{notKeepingCount}</div>
+            <div className="text-[10px] font-mono text-muted-foreground uppercase tracking-wider">Returning</div>
+          </div>
+        </div>
+
+        {/* Keeper Selections */}
+        <div className="dashboard-card p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg font-bold text-primary vault-glow font-mono">
+              🔒 KEEPER SELECTIONS
+            </h2>
+            <div className="flex items-center gap-3 text-xs font-mono">
+              <span className="text-green-400">🔒 {keepersSelected}/{MAX_KEEPERS}</span>
+              <span className="text-blue-400">🔷 {naKeepers}/{MAX_NA}</span>
+            </div>
+          </div>
+
+          {/* Keeper limit bar */}
+          <div className="mb-4">
+            <div className="h-2 bg-secondary rounded-full overflow-hidden">
+              <div
+                className="h-full bg-green-500/60 rounded-full transition-all duration-300"
+                style={{ width: `${(keepersSelected / MAX_KEEPERS) * 100}%` }}
+              />
+            </div>
+            <div className="flex justify-between text-[10px] font-mono text-muted-foreground mt-1">
+              <span>{keepersSelected} of {MAX_KEEPERS} keeper slots used</span>
+              <span>{MAX_KEEPERS - keepersSelected} remaining</span>
+            </div>
+          </div>
+
+          {rosterLoading ? (
+            <p className="text-sm font-mono text-muted-foreground terminal-cursor">Loading roster...</p>
+          ) : sortedRoster.length === 0 ? (
+            <div className="text-center py-8">
+              <div className="text-3xl mb-2">📋</div>
+              <p className="text-sm font-mono text-muted-foreground">
+                No roster data yet. Roster import happens during keeper setup.
+              </p>
+            </div>
+          ) : (
+            <div className="space-y-1.5">
+              {sortedRoster.map(rp => {
+                if (!rp.players) return null
+                const statusInfo = STATUS_DISPLAY[rp.keeper_status] ?? STATUS_DISPLAY.undecided
+                const isUpdating = updatingId === rp.id
+
+                return (
+                  <div
+                    key={rp.id}
+                    className={`flex items-center gap-3 px-3 py-2.5 rounded-md border transition-all cursor-pointer hover:scale-[1.005] active:scale-[0.995] ${statusInfo.bg} ${statusInfo.border} ${isUpdating ? 'opacity-60' : ''}`}
+                    onClick={() => !isUpdating && cycleKeeperStatus(rp)}
+                    title="Click to cycle: Undecided → Keeping → Not Keeping"
+                  >
+                    <span className="text-lg shrink-0">{statusInfo.icon}</span>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="text-sm font-mono font-bold text-foreground truncate">
+                          {rp.players.full_name}
+                        </span>
+                        <span className={`text-[10px] font-mono font-bold uppercase tracking-wider ${statusInfo.color}`}>
+                          {statusInfo.label}
+                        </span>
+                      </div>
+                      <div className="text-[10px] font-mono text-muted-foreground">
+                        {rp.players.position ?? '—'} · {rp.players.mlb_team ?? '—'}
+                        {rp.keeper_cost_round && ` · Cost: Rd ${rp.keeper_cost_round}`}
+                        {rp.keeper_cost_label && !rp.keeper_cost_round && ` · ${rp.keeper_cost_label}`}
+                      </div>
+                    </div>
+                    {rp.players.ecr_overall && (
+                      <span className="text-xs font-mono text-accent shrink-0">
+                        ECR #{rp.players.ecr_overall}
+                      </span>
+                    )}
+                  </div>
+                )
+              })}
+            </div>
+          )}
+
+          <div className="mt-3 text-xs font-mono text-muted-foreground/60 text-center">
+            Click any player to cycle: ⏳ Undecided → 🔒 Keeping → ❌ Not Keeping
           </div>
         </div>
 
@@ -244,21 +425,6 @@ export default function DashboardPage() {
           )}
         </div>
 
-        {/* Keeper Selection Placeholder */}
-        <div className="dashboard-card p-6">
-          <div className="flex items-center justify-between mb-2">
-            <h2 className="text-lg font-bold text-primary vault-glow font-mono">
-              🔒 KEEPER SELECTIONS
-            </h2>
-            <span className="px-2 py-0.5 text-[10px] font-mono font-bold uppercase tracking-wider bg-primary/10 text-primary/60 border border-primary/20 rounded">
-              Phase 2
-            </span>
-          </div>
-          <p className="text-sm font-mono text-muted-foreground">
-            Keeper selections coming soon. You&apos;ll be able to lock in your keepers and see cost analysis here.
-          </p>
-        </div>
-
         {/* Quick Links */}
         <div className="flex items-center justify-center gap-4 py-4">
           <Link href="/teams" className="text-xs font-mono text-muted-foreground hover:text-primary transition-colors">
@@ -269,8 +435,12 @@ export default function DashboardPage() {
             🎯 Draft Board
           </Link>
           <span className="text-muted-foreground/30">•</span>
-          <Link href="/offer" className="text-xs font-mono text-muted-foreground hover:text-primary transition-colors">
-            🤝 Trade Block
+          <Link href="/trades" className="text-xs font-mono text-muted-foreground hover:text-primary transition-colors">
+            🤝 Trades
+          </Link>
+          <span className="text-muted-foreground/30">•</span>
+          <Link href="/keepers" className="text-xs font-mono text-muted-foreground hover:text-primary transition-colors">
+            🔐 Keepers
           </Link>
         </div>
       </div>

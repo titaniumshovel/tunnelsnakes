@@ -10,7 +10,8 @@ const NAV_LINKS = [
   { href: '/', label: 'HOME', icon: '⚾' },
   { href: '/teams', label: 'TEAMS', icon: '👥' },
   { href: '/draft-board', label: 'DRAFT', icon: '🎯' },
-  { href: '/offer', label: 'TRADE', icon: '🤝' },
+  { href: '/trades', label: 'TRADES', icon: '🤝' },
+  { href: '/keepers', label: 'KEEPERS', icon: '🔐' },
 ]
 
 export function NavHeader() {
