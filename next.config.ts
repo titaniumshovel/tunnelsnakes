@@ -8,6 +8,11 @@ const nextConfig: NextConfig = {
         hostname: 's.yimg.com',
         pathname: '/iu/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'jfmonkthavktqyvtdhtr.supabase.co',
+        pathname: '/storage/v1/object/public/**',
+      },
     ],
   },
 };
