@@ -1,10 +1,10 @@
-# 🐍 TUNNEL SNAKES
+# The Sandlot ⚾
 
-> *"We're the Tunnel Snakes. And we rule!"* — Butch DeLoria, Vault 101
+> *"Heroes get remembered, but legends never die."*
 
-A Fallout-themed fantasy baseball trade portal for **The Sandlot** keeper league on Yahoo Fantasy. Built so your leaguemates can browse your trade block, see what you're willing to move, and submit offers — all wrapped in a Pip-Boy terminal aesthetic.
+Fantasy baseball league hub for **The Sandlot** — a 12-team keeper league, Est. 2020. Built with Next.js 16, Tailwind 4, and Supabase.
 
-**Live:** [tunnelsnakes.vercel.app](https://tunnelsnakes.vercel.app)
+**🌐 Live at [thesandlot.app](https://thesandlot.app)**
 
 ![Next.js](https://img.shields.io/badge/Next.js-16-black?logo=next.js) ![Supabase](https://img.shields.io/badge/Supabase-postgres-3ECF8E?logo=supabase) ![Tailwind](https://img.shields.io/badge/Tailwind-4-38BDF8?logo=tailwindcss) ![Vercel](https://img.shields.io/badge/Deployed-Vercel-000?logo=vercel)
 
@@ -12,39 +12,52 @@ A Fallout-themed fantasy baseball trade portal for **The Sandlot** keeper league
 
 ## ⚡ Features
 
-- **Trade Block Dashboard** — Browse all players with headshots, positions, keeper status, and 2025 stats
-- **Keeper Cost Tracking** — Every player shows their keeper round cost (drafted, traded, FA, ECR, minor leaguer)
-- **Smart Sorting** — Sort by name, FantasyPros ECR ranking, or keeper cost value
-- **Position Filters** — Filter by C, 1B, 2B, 3B, SS, OF, SP, RP
-- **Trade Offers** — Leaguemates can submit trade proposals with draft pick packages
-- **Vault-Tec Aesthetic** — Pip-Boy green, CRT scanlines, amber accents, vault flavor text, the whole deal
+- **12-Team Roster Management** — Full rosters for all 12 teams with keeper tracking (6 keepers + 4 NA slots per team)
+- **Ask Smalls 🧢** — AI chatbot powered by Claude/GPT via RDSec LiteLLM proxy. Knows everything about the league — keepers, trades, rosters, rules, and rankings. Ask it anything.
+- **The Sandlot Times 📰** — AI-generated daily digest with hero images. MLB news filtered through a Sandlot lens, with league-specific callouts for affected managers.
+- **Trade Center** — Full trade proposal form with reactions, comments, and pick trail visualization. See every deal, vote on it, talk trash about it.
+- **Draft Board** — 27-round snake draft (March 6, 2026) with keeper slots auto-populated and pick ownership tracking.
+- **FantasyPros ECR Integration** — Expert Consensus Rankings updated daily via cron. See keeper value at a glance.
+- **Magic Link Auth** — Supabase-powered email authentication. No passwords, no friction.
+- **Night Game 🌙** — Dark mode toggle for late-night roster tinkering.
+- **AI-Generated Team Logos** — 12 unique logos generated via Gemini, one for each team.
+- **Custom Domain** — [thesandlot.app](https://thesandlot.app) via Porkbun
 
-## 🎨 The Aesthetic
-
-This isn't your average fantasy baseball site. It's a **Vault-Tec terminal**.
-
-- **Colors:** Pip-Boy green (`#14fe17`) primary, amber accents, dark vault backgrounds
-- **Fonts:** Roboto Condensed (bold industrial headings) + Share Tech Mono (terminal text)
-- **Effects:** CRT scanline overlay, neon glow shadows, terminal cursor animations
-- **Flavor:** Random vault quotes, Fallout terminology throughout ("wasteland", "faction", "assets")
+---
 
 ## 🏗 Tech Stack
 
 | Layer | Tech |
 |-------|------|
-| Framework | [Next.js 16](https://nextjs.org) (App Router, Turbopack) |
-| Database | [Supabase](https://supabase.com) (Postgres + Row Level Security) |
-| Styling | [Tailwind CSS 4](https://tailwindcss.com) + tailwindcss-animate |
-| Animation | [Framer Motion](https://www.framer.com/motion/) |
-| Validation | [Zod](https://zod.dev) |
-| Toasts | [Sonner](https://sonner.emilkowal.dev/) |
-| Icons | [Lucide React](https://lucide.dev) |
-| Deploy | [Vercel](https://vercel.com) |
-| Data | [Yahoo Fantasy API](https://developer.yahoo.com/fantasysports/) |
+| Framework | [Next.js 16](https://nextjs.org) (App Router, React Server Components) |
+| Styling | [Tailwind CSS 4](https://tailwindcss.com) |
+| Database | [Supabase](https://supabase.com) (PostgreSQL, Auth, Storage) |
+| AI | [RDSec LiteLLM Proxy](https://litellm.ai) (Claude, GPT, Gemini) |
+| Hosting | [Vercel](https://vercel.com) |
+| Cron | [OpenClaw](https://openclaw.com) (daily digest + ECR updates) |
 
-## 🚀 Quick Start
+---
 
-### 1. Clone & install
+## 📄 Pages
+
+| Route | Description |
+|-------|-------------|
+| `/` | Landing page — league overview, news highlights |
+| `/teams` | All 12 teams with logos, records, and links |
+| `/team/[slug]` | Individual team page — roster, keepers, draft picks |
+| `/trades` | Trade Center — proposals, reactions, comments, pick trail |
+| `/keepers` | League-wide keeper tracker with deadline countdown |
+| `/draft-board` | 27-round draft board with keeper slots filled |
+| `/ask-smalls` | AI chatbot — ask anything about the league |
+| `/news` | The Sandlot Times — daily AI-generated digest |
+| `/dashboard` | Owner dashboard (authenticated) — manage your team |
+| `/login` | Magic link authentication |
+
+---
+
+## 🚀 Getting Started
+
+### 1. Clone & Install
 
 ```bash
 git clone https://github.com/titaniumshovel/tunnelsnakes.git
@@ -52,129 +65,85 @@ cd tunnelsnakes
 npm install
 ```
 
-### 2. Create a Supabase project
-
-1. Go to [supabase.com](https://supabase.com) and create a new project
-2. Open the **SQL Editor** and run the schema file:
-   ```sql
-   -- Paste contents of supabase/schema.sql
-   ```
-3. Run migrations in order:
-   ```
-   supabase/migrations/0002_fantasypros.sql
-   supabase/migrations/0003_yahoo_stats_2025.sql
-   supabase/migrations/0004_easy_offers.sql
-   supabase/migrations/0005_keeper_cost.sql
-   ```
-
-### 3. Set up Yahoo Developer App
-
-1. Go to [developer.yahoo.com/apps](https://developer.yahoo.com/apps/)
-2. Create a new app with **Fantasy Sports** API access
-3. Note your Client ID and Client Secret
-4. Get a refresh token via OAuth2 flow
-
-### 4. Configure environment
+### 2. Configure Environment
 
 ```bash
 cp .env.example .env.local
 ```
 
-Fill in your Supabase credentials, Yahoo API keys, and an admin secret.
+Required environment variables:
 
-### 5. Run it
+| Variable | Description |
+|----------|-------------|
+| `NEXT_PUBLIC_SUPABASE_URL` | Supabase project URL |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase anonymous key (public) |
+| `SUPABASE_SERVICE_ROLE_KEY` | Supabase service role key (server-side only) |
+| `RDSEC_API_KEY` | RDSec LiteLLM proxy key (for Ask Smalls + Sandlot Times) |
+
+### 3. Run
 
 ```bash
 npm run dev
 ```
 
-Open [localhost:3000](http://localhost:3000) 🐍
-
-## 📄 Pages
-
-| Route | Description |
-|-------|-------------|
-| `/` | Trade block dashboard — browse players, sort, filter |
-| `/offer` | Full trade proposal form for leaguemates |
-
-## 🔧 Admin Endpoints
-
-All admin endpoints require the `x-import-secret` header matching your `IMPORT_SECRET` env var.
-
-### Import players from Yahoo
-
-Seeds the database with your team's roster from the Yahoo Fantasy API.
-
-```bash
-curl -X POST http://localhost:3000/api/admin/import-keepers \
-  -H "x-import-secret: YOUR_SECRET"
-```
-
-### Run keeper cost migration
-
-Adds keeper cost columns and populates costs for all players based on draft history, trades, and FA pickups.
-
-```bash
-curl -X POST http://localhost:3000/api/admin/run-migration \
-  -H "x-import-secret: YOUR_SECRET"
-```
-
-### Enrich with FantasyPros ECR
-
-Scrapes FantasyPros Expert Consensus Rankings and updates player records.
-
-```bash
-curl -X POST http://localhost:3000/api/admin/enrich-fantasypros \
-  -H "x-import-secret: YOUR_SECRET"
-```
-
-### Enrich with Yahoo 2025 stats
-
-Pulls 2025 season stats from Yahoo Fantasy API for all rostered players.
-
-```bash
-curl -X POST http://localhost:3000/api/admin/enrich-yahoo-stats-2025 \
-  -H "x-import-secret: YOUR_SECRET"
-```
-
-### Import draft costs from text
-
-Parse draft results text and assign keeper costs by round.
-
-```bash
-curl -X POST http://localhost:3000/api/admin/import-draft-costs \
-  -H "x-import-secret: YOUR_SECRET" \
-  -H "content-type: application/json" \
-  -d '{"text": "<paste draft results>"}'
-```
-
-## 🗃 Database Schema
-
-**`players`** — All MLB players on your roster
-- `yahoo_player_id`, `full_name`, `mlb_team`, `primary_position`, `eligible_positions`
-- `headshot_url`, `fantasypros_ecr`, `stats_2025`
-- `keeper_cost_round`, `keeper_cost_label`, `keeper_cost_source`
-
-**`my_roster_players`** — Your roster entries with keeper decisions
-- `player_id` → players, `keeper_status` (keeping/available/undecided), `notes`
-
-**`managers`** — League teams/managers
-
-**`trade_offers`** — Submitted trade proposals
-- `team_name`, `requested_player_id`, `offer_text`, `message`, `status`
-
-## 🏈 League Info
-
-- **League:** The Sandlot (Yahoo Fantasy Baseball)
-- **Format:** 12-team H2H 5x5 Categories
-- **Keepers:** Up to 6 + 4 minor leaguers (NA)
-- **Categories:** HR, OBP, RBI, R, SB / W, ERA, WHIP, K, SV+H
-- **Draft:** Snake draft, 23 rounds
-
-## 📜 Credits
-
-Inspired by [Red Stagz](https://github.com/nickgag626/redstagz) by Nick Gagliardi. Same league, different vault.
+Open [localhost:3000](http://localhost:3000) ⚾
 
 ---
 
-*War. War never changes. But your fantasy roster should.* 🐍
+## 🔧 Scripts
+
+| Script | Description |
+|--------|-------------|
+| `scripts/sandlot-times-pipeline.py` | Daily digest generation — gathers MLB news, cross-references league rosters, generates editorial + hero image, writes to Supabase |
+| `scripts/update-ecr-daily.sh` | FantasyPros ECR scraper — updates expert consensus rankings for all rostered players |
+| `scripts/enrich-ecr-all.py` | Bulk ECR enrichment — backfill ECR data for all players |
+| `scripts/populate-keeper-costs.py` | Keeper cost calculator — computes keeper round costs based on draft history, trades, and FA rules |
+
+---
+
+## 🏟 League Info
+
+| Detail | Value |
+|--------|-------|
+| **League** | The Sandlot |
+| **Platform** | Yahoo Fantasy Baseball |
+| **Yahoo League ID** | `469.l.24701` |
+| **Format** | 12-team H2H 5×5 Categories |
+| **Buy-in** | $200 |
+| **Est.** | 2020 |
+| **Draft** | March 6, 2026 (27 rounds, snake) |
+| **Keeper Deadline** | February 20, 2026 |
+| **Keepers** | 6 per team + 4 NA (minor league) slots |
+
+### Categories
+- **Offense:** HR, OBP, RBI, Runs, SB
+- **Pitching:** Wins, ERA, WHIP, K's, Saves+Holds
+
+### Teams
+
+| # | Team | Manager |
+|---|------|---------|
+| 1 | Tunnel Snakes | Chris *(commissioner)* |
+| 2 | Alex in Chains | Alex |
+| 3 | Bleacher Creatures | Pudge |
+| 4 | ClutchHutch | Sean |
+| 5 | Goin' Yahdgoats | Tom |
+| 6 | Greasy Cap Advisors | Greasy |
+| 7 | Lollygaggers | Web |
+| 8 | Red Stagz | Nick |
+| 9 | Runs-N-Roses | Bob |
+| 10 | The Dirty Farm | Mike |
+| 11 | Lake Monsters | Thomas *(new 2026)* |
+| 12 | Tyler's Slugfest | Tyler *(new 2026)* |
+
+---
+
+## 📜 Credits
+
+Inspired by [Red Stagz](https://github.com/nickgag626/redstagz) by Nick Gagliardi — same league, different vibe.
+
+Built with ❤️ and way too much time that should've been spent on actual draft prep.
+
+---
+
+*"You're killing me, Smalls!"* 🧢
