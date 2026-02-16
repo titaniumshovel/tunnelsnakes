@@ -1,5 +1,6 @@
 import { MANAGERS } from '@/data/managers'
 import draftBoard from '@/data/draft-board.json'
+import ecrTop500 from '@/data/ecr-top500.json'
 import { createClient } from '@supabase/supabase-js'
 
 // ─── Cache ───────────────────────────────────────────────
@@ -225,6 +226,30 @@ ${offseasonLines.length > 0 ? offseasonLines.join('\n') : 'None'}
 ${midseasonLines.length > 0 ? midseasonLines.join('\n') : 'None'}`
 }
 
+function buildEcrSection(): string {
+  const players = ecrTop500 as Array<{
+    rank: number
+    name: string
+    team: string
+    position: string
+    pos_rank: string
+  }>
+
+  if (!players || players.length === 0) {
+    return '## FantasyPros ECR Rankings\n(No ECR data available)'
+  }
+
+  const lines = players.map(p =>
+    `${p.rank}. ${p.name} (${p.position || '?'}, ${p.team}) — ${p.pos_rank}`
+  )
+
+  return `## Top ${players.length} FantasyPros ECR Rankings (2026 Preseason)
+Use these to evaluate keeper costs, trade values, and draft targets.
+Players NOT on any Sandlot roster are available in the March 6 draft.
+
+${lines.join('\n')}`
+}
+
 function getSupabase() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
@@ -257,6 +282,8 @@ export async function buildLeagueContext(): Promise<string> {
     rostersSection,
     '\n',
     tradesSection,
+    '\n',
+    buildEcrSection(),
   ].join('\n')
 
   cachedContext = context

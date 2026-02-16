@@ -1,21 +1,27 @@
 {
   "total_supabase": 287,
   "total_fp": 1597,
-  "matched": 277,
-  "unmatched_count": 10,
+  "matched": 281,
+  "unmatched_count": 6,
   "unmatched_names": [
     "Clayton Kershaw",
     "Druw Jones",
     "George Lombard Jr.",
     "Jurrangelo Cijntje",
-    "Luis Garc\u00eda Jr.",
     "Luis Pe\u00f1a",
-    "Nestor Cortes",
-    "Shohei Ohtani (Batter)",
-    "Shohei Ohtani (Pitcher)",
     "Zyhir Hope"
   ],
   "top10": [
+    [
+      "Shohei Ohtani (Pitcher)",
+      1,
+      "DH1"
+    ],
+    [
+      "Shohei Ohtani (Batter)",
+      1,
+      "DH1"
+    ],
     [
       "Aaron Judge",
       2,
@@ -55,16 +61,6 @@
       "Julio Rodr\u00edguez",
       9,
       "OF4"
-    ],
-    [
-      "Paul Skenes",
-      10,
-      "SP2"
-    ],
-    [
-      "Kyle Tucker",
-      11,
-      "OF5"
     ]
   ],
   "chase_burns": [

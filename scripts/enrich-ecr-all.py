@@ -39,6 +39,17 @@ HEADERS_SB = {
     "Prefer": "return=minimal",
 }
 
+# Manual name aliases for players whose Supabase names don't match FantasyPros
+NAME_ALIASES = {
+    "shohei ohtani batter": "shohei ohtani",
+    "shohei ohtani pitcher": "shohei ohtani",
+    "luis garcia jr": "luis garcia",
+    "george lombard jr": "george lombard",
+}
+
+# Path for ECR top-500 JSON export
+ECR_TOP500_PATH = os.path.join(os.path.dirname(__file__), "..", "src", "data", "ecr-top500.json")
+
 
 # ── Helpers ─────────────────────────────────────────────────────────────────
 def normalize(s: str) -> str:
@@ -46,6 +57,29 @@ def normalize(s: str) -> str:
     s = "".join(c for c in s if not unicodedata.combining(c))
     s = re.sub(r"[^a-z0-9]+", " ", s).strip()
     return s
+
+
+def resolve_fp(key: str, fp_map: dict) -> dict | None:
+    """Try multiple matching strategies to find a FantasyPros entry."""
+    # 1. Exact normalized name
+    if key in fp_map:
+        return fp_map[key]
+    # 2. Alias lookup
+    alias = NAME_ALIASES.get(key)
+    if alias:
+        norm_alias = normalize(alias)
+        if norm_alias in fp_map:
+            return fp_map[norm_alias]
+    # 3. Try adding "jr" (e.g., "nestor cortes" → "nestor cortes jr")
+    jr_key = key + " jr"
+    if jr_key in fp_map:
+        return fp_map[jr_key]
+    # 4. Try removing "jr" (e.g., "luis garcia jr" → "luis garcia")
+    if key.endswith(" jr"):
+        without_jr = key[:-3].strip()
+        if without_jr in fp_map:
+            return fp_map[without_jr]
+    return None
 
 
 def extract_ecr_data(html: str) -> dict:
@@ -108,6 +142,25 @@ while True:
 print(f"  Got {len(sb_players)} players from Supabase")
 
 
+# ── Step 2.5: Export top-500 ECR to JSON ────────────────────────────────────
+print("→ Exporting top-500 ECR to JSON…")
+fp_sorted = sorted(fp_players, key=lambda p: p.get("rank_ecr", 9999))
+top500 = []
+for p in fp_sorted[:500]:
+    top500.append({
+        "rank": p.get("rank_ecr"),
+        "name": p.get("player_name", ""),
+        "team": p.get("player_team_id", ""),
+        "position": p.get("player_positions", p.get("primary_position", "")),
+        "pos_rank": p.get("pos_rank", ""),
+    })
+
+os.makedirs(os.path.dirname(ECR_TOP500_PATH), exist_ok=True)
+with open(ECR_TOP500_PATH, "w") as f:
+    json.dump(top500, f, indent=2)
+print(f"  Wrote {len(top500)} players to {ECR_TOP500_PATH}")
+
+
 # ── Step 3: Match & update ──────────────────────────────────────────────────
 print("→ Matching and updating…")
 now = datetime.now(timezone.utc).isoformat()
@@ -117,7 +170,7 @@ match_details = []  # (player_name, ecr_rank)
 
 for sp in sb_players:
     key = normalize(sp["full_name"])
-    fp = fp_map.get(key)
+    fp = resolve_fp(key, fp_map)
     if not fp:
         unmatched.append(sp["full_name"])
         continue
