@@ -38,12 +38,12 @@ export function Footer() {
 
         {/* External Links */}
         <div className="flex justify-center items-center gap-4 text-sm mb-4">
-          <a
-            href="#"
+          <Link
+            href="/rules"
             className="hover:text-amber-200 dark:hover:text-slate-100 transition-colors"
           >
             League Rules
-          </a>
+          </Link>
           <span className="text-amber-400/40 dark:text-slate-500">|</span>
           <a
             href="https://baseball.fantasysports.yahoo.com/b1/24701"
