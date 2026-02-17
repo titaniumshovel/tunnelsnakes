@@ -171,3 +171,68 @@ describe('Snake draft order logic', () => {
     expect(slots).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12])
   })
 })
+
+describe('snakePickInRound display logic', () => {
+  // Import the exported helper
+  // slot = draft order position (1-12, same every round)
+  // snakePickInRound returns the pick-in-round number (1=first pick, 12=last)
+  function snakePickInRound(round: number, slot: number): number {
+    return round % 2 === 0 ? 13 - slot : slot
+  }
+
+  it('odd rounds: pick-in-round equals slot', () => {
+    // Pudge (slot 1) picks 1st in odd rounds
+    expect(snakePickInRound(1, 1)).toBe(1)
+    expect(snakePickInRound(3, 1)).toBe(1)
+    // Sean (slot 12) picks 12th (last) in odd rounds
+    expect(snakePickInRound(1, 12)).toBe(12)
+    expect(snakePickInRound(5, 12)).toBe(12)
+    // Nick (slot 2) picks 2nd
+    expect(snakePickInRound(1, 2)).toBe(2)
+  })
+
+  it('even rounds: pick-in-round is reversed (13 - slot)', () => {
+    // Pudge (slot 1) picks 12th (last) in even rounds
+    expect(snakePickInRound(2, 1)).toBe(12)
+    expect(snakePickInRound(4, 1)).toBe(12)
+    // Sean (slot 12) picks 1st in even rounds
+    expect(snakePickInRound(2, 12)).toBe(1)
+    expect(snakePickInRound(6, 12)).toBe(1)
+    // Nick (slot 2) picks 11th in even rounds
+    expect(snakePickInRound(2, 2)).toBe(11)
+  })
+
+  it('snake produces correct overall pick numbers', () => {
+    // Overall pick = (round - 1) * 12 + pickInRound
+    // Pudge (slot 1): round 1 pick 1 (overall 1), round 2 pick 12 (overall 24)
+    const pudgeR1 = (1 - 1) * 12 + snakePickInRound(1, 1)
+    expect(pudgeR1).toBe(1)
+    const pudgeR2 = (2 - 1) * 12 + snakePickInRound(2, 1)
+    expect(pudgeR2).toBe(24)
+    const pudgeR3 = (3 - 1) * 12 + snakePickInRound(3, 1)
+    expect(pudgeR3).toBe(25)
+
+    // Sean (slot 12): round 1 pick 12 (overall 12), round 2 pick 1 (overall 13)
+    const seanR1 = (1 - 1) * 12 + snakePickInRound(1, 12)
+    expect(seanR1).toBe(12)
+    const seanR2 = (2 - 1) * 12 + snakePickInRound(2, 12)
+    expect(seanR2).toBe(13)
+  })
+
+  it('owners view should show snake-adjusted picks per round', () => {
+    // Verify data: Pudge has slot 1 in every round (draft order position)
+    // But display should show alternating 1, 12, 1, 12...
+    for (let round = 1; round <= 5; round++) {
+      const roundPicks = data.picks[round.toString()]
+      const pudgePick = roundPicks.find(p => p.originalOwner === 'Pudge' || p.currentOwner === 'Pudge')
+      if (pudgePick) {
+        const displaySlot = snakePickInRound(round, pudgePick.slot)
+        if (round % 2 === 1) {
+          expect(displaySlot).toBe(1) // Pudge picks first in odd rounds
+        } else {
+          expect(displaySlot).toBe(12) // Pudge picks last in even rounds
+        }
+      }
+    }
+  })
+})

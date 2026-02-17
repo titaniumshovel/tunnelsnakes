@@ -35,6 +35,16 @@ const TEAM_COLORS: Record<string, { bg: string; border: string; text: string; do
   Sean:   { bg: 'bg-emerald-100',  border: 'border-emerald-400',  text: 'text-emerald-800',  dot: 'bg-emerald-500' },
 }
 
+/**
+ * Snake-adjust a draft-order slot to the pick-in-round number.
+ * In odd rounds, slot N picks Nth. In even rounds, slot N picks (13-N)th.
+ * slot = draft order position (1=first in draft order, 12=last)
+ * returns: pick position within the round (1=first pick, 12=last pick)
+ */
+export function snakePickInRound(round: number, slot: number): number {
+  return round % 2 === 0 ? 13 - slot : slot
+}
+
 export default function DraftBoardPage() {
   const [showTrades, setShowTrades] = useState(false)
   const [viewMode, setViewMode] = useState<'board' | 'owner' | 'clicky'>('board')
@@ -184,10 +194,9 @@ export default function DraftBoardPage() {
                     slotMap.set(p.slot, p)
                   }
 
-                  // For snake display, even rounds go 12→1
-                  const displaySlots = isEven
-                    ? [12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1]
-                    : [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+                  // Always display slots in draft-order position (1→12).
+                  // The ← arrow on even rounds indicates read direction (right-to-left).
+                  const displaySlots = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 
                   return (
                     <tr key={round} className={`${isNA ? 'bg-amber-950/20' : round % 2 === 0 ? 'bg-card/50' : ''} hover:bg-primary/5 transition-colors`}>
@@ -223,8 +232,8 @@ export default function DraftBoardPage() {
                             key={slot}
                             className="p-0.5 text-center border border-border/10"
                             title={isTraded
-                              ? `Pick ${round}.${slot} — Path: ${pathDisplay}`
-                              : `Pick ${round}.${slot} — ${pick.currentOwner}`}
+                              ? `Pick ${round}.${snakePickInRound(round, slot)} — Path: ${pathDisplay}`
+                              : `Pick ${round}.${snakePickInRound(round, slot)} — ${pick.currentOwner}`}
                           >
                             <div className={`rounded px-1 py-1.5 border ${
                               colors ? `${colors.bg} ${colors.border}` : 'bg-muted border-border'
@@ -325,11 +334,11 @@ export default function DraftBoardPage() {
                             <td
                               key={round}
                               className={`p-0.5 text-center border border-border/10 ${isNA ? 'bg-amber-950/10' : ''}`}
-                              title={`${owner} — Round ${round}, Slot ${pick.slot}${isTraded ? ` (from ${pick.originalOwner})` : ''}`}
+                              title={`${owner} — Round ${round}, Pick ${snakePickInRound(round, pick.slot)}${isTraded ? ` (from ${pick.originalOwner})` : ''}`}
                             >
                               <div className={`rounded px-0.5 py-1 border ${colors?.bg} ${colors?.border} ${isTraded ? 'ring-1 ring-accent/30' : ''}`}>
                                 <div className={`font-mono font-bold leading-tight ${colors?.text}`} style={{ fontSize: `${Math.max(fontSize * 0.85, 0.55)}rem` }}>
-                                  {pick.slot}
+                                  {snakePickInRound(round, pick.slot)}
                                 </div>
                                 {isTraded && (
                                   <div className="text-accent leading-tight" style={{ fontSize: `${Math.max(fontSize * 0.6, 0.45)}rem` }}>↔</div>
@@ -344,14 +353,14 @@ export default function DraftBoardPage() {
                           <td
                             key={round}
                             className={`p-0.5 text-center border border-border/10 ${isNA ? 'bg-amber-950/10' : ''}`}
-                            title={`${owner} — Round ${round}: ${pickCount} picks (slots ${picks.map(p => p.slot).join(', ')})`}
+                            title={`${owner} — Round ${round}: ${pickCount} picks (picks ${picks.map(p => snakePickInRound(round, p.slot)).sort((a, b) => a - b).join(', ')})`}
                           >
                             <div className={`rounded px-0.5 py-1 border relative ${colors?.bg} ${colors?.border}`}>
                               <div className={`font-mono font-bold leading-tight ${colors?.text}`} style={{ fontSize: `${Math.max(fontSize * 0.75, 0.5)}rem` }}>
-                                {picks.sort((a, b) => a.slot - b.slot).map((p, i) => (
+                                {picks.sort((a, b) => snakePickInRound(round, a.slot) - snakePickInRound(round, b.slot)).map((p, i) => (
                                   <span key={p.slot}>
                                     {i > 0 && ','}
-                                    {p.slot}
+                                    {snakePickInRound(round, p.slot)}
                                   </span>
                                 ))}
                               </div>
@@ -450,11 +459,11 @@ export default function DraftBoardPage() {
                             <td
                               key={owner}
                               className={`p-0.5 text-center border border-border/10 ${isNA ? 'bg-amber-950/10' : ''}`}
-                              title={`Pick ${round}.${pick.slot} — ${owner}${isTraded ? ` (from ${pick.originalOwner})` : ''}`}
+                              title={`Pick ${round}.${snakePickInRound(round, pick.slot)} — ${owner}${isTraded ? ` (from ${pick.originalOwner})` : ''}`}
                             >
                               <div className={`rounded px-1 py-2 border ${colors?.bg} ${colors?.border} ${isTraded ? 'ring-1 ring-accent/30' : ''}`}>
                                 <div className={`font-mono font-bold leading-tight ${colors?.text}`} style={{ fontSize: `${Math.max(fontSize * 1, 0.65)}rem` }}>
-                                  {round}.{pick.slot}
+                                  {round}.{snakePickInRound(round, pick.slot)}
                                 </div>
                                 {isTraded && (
                                   <div className="text-accent leading-tight mt-0.5" style={{ fontSize: `${Math.max(fontSize * 0.7, 0.45)}rem` }}>
@@ -471,7 +480,7 @@ export default function DraftBoardPage() {
                           <td
                             key={owner}
                             className={`p-0.5 text-center border border-border/10 ${isNA ? 'bg-amber-950/10' : ''}`}
-                            title={`${owner} — Round ${round}: ${pickCount} picks (${picks.map(p => `${round}.${p.slot}`).join(', ')})`}
+                            title={`${owner} — Round ${round}: ${pickCount} picks (${picks.map(p => `${round}.${snakePickInRound(round, p.slot)}`).join(', ')})`}
                           >
                             <div className={`rounded px-1 py-1 border relative ${colors?.bg} ${colors?.border}`}
                               style={{
@@ -484,7 +493,7 @@ export default function DraftBoardPage() {
                                   return (
                                     <div key={pi}>
                                       <div className={`font-mono font-bold leading-tight ${colors?.text}`} style={{ fontSize: `${Math.max(fontSize * 0.9, 0.55)}rem` }}>
-                                        {round}.{pick.slot}
+                                        {round}.{snakePickInRound(round, pick.slot)}
                                         {isTraded && <span className="text-accent ml-0.5" style={{ fontSize: `${Math.max(fontSize * 0.6, 0.4)}rem` }}>↔</span>}
                                       </div>
                                     </div>
