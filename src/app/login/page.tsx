@@ -1,9 +1,11 @@
 'use client'
 
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, useCallback } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
+
+const CODE_LENGTH = 6
 
 export default function LoginPage() {
   const [email, setEmail] = useState('')
@@ -11,14 +13,15 @@ export default function LoginPage() {
   const [step, setStep] = useState<'email' | 'code'>('email')
   const [error, setError] = useState<string | null>(null)
   const [verifying, setVerifying] = useState(false)
-  const [code, setCode] = useState('')
-  const codeInputRef = useRef<HTMLInputElement>(null)
+  const [digits, setDigits] = useState<string[]>(Array(CODE_LENGTH).fill(''))
+  const inputRefs = useRef<(HTMLInputElement | null)[]>([])
   const router = useRouter()
+  const submittedRef = useRef(false)
 
-  // Auto-focus code input when step changes
+  // Auto-focus first box when step changes
   useEffect(() => {
     if (step === 'code') {
-      setTimeout(() => codeInputRef.current?.focus(), 100)
+      setTimeout(() => inputRefs.current[0]?.focus(), 100)
     }
   }, [step])
 
@@ -45,7 +48,9 @@ export default function LoginPage() {
     }
   }
 
-  async function handleVerifyOtp(token: string) {
+  const handleVerifyOtp = useCallback(async (token: string) => {
+    if (submittedRef.current) return
+    submittedRef.current = true
     setVerifying(true)
     setError(null)
 
@@ -58,26 +63,95 @@ export default function LoginPage() {
     })
 
     setVerifying(false)
+    submittedRef.current = false
 
     if (error) {
       setError('Invalid or expired code. Please try again.')
-      setCode('')
-      setTimeout(() => codeInputRef.current?.focus(), 100)
+      setDigits(Array(CODE_LENGTH).fill(''))
+      setTimeout(() => inputRefs.current[0]?.focus(), 100)
     } else {
       router.push('/dashboard')
       router.refresh()
     }
+  }, [email, router])
+
+  // Fill digits from a string (typed or pasted) starting at an index
+  const fillDigits = useCallback((value: string, startIdx: number) => {
+    const cleaned = value.replace(/\D/g, '')
+    if (!cleaned) return
+
+    setDigits(prev => {
+      const next = [...prev]
+      for (let i = 0; i < cleaned.length && startIdx + i < CODE_LENGTH; i++) {
+        next[startIdx + i] = cleaned[i]
+      }
+      // If all filled, auto-submit
+      if (next.every(d => d !== '')) {
+        setTimeout(() => handleVerifyOtp(next.join('')), 50)
+      } else {
+        // Focus next empty box
+        const nextEmpty = startIdx + cleaned.length
+        if (nextEmpty < CODE_LENGTH) {
+          setTimeout(() => inputRefs.current[nextEmpty]?.focus(), 0)
+        }
+      }
+      return next
+    })
+  }, [handleVerifyOtp])
+
+  function handleBoxChange(idx: number, value: string) {
+    // If pasting multiple digits
+    if (value.length > 1) {
+      fillDigits(value, idx)
+      return
+    }
+    const digit = value.replace(/\D/g, '')
+    if (!digit) return
+
+    setDigits(prev => {
+      const next = [...prev]
+      next[idx] = digit
+      if (next.every(d => d !== '')) {
+        setTimeout(() => handleVerifyOtp(next.join('')), 50)
+      }
+      return next
+    })
+    // Advance to next box
+    if (idx < CODE_LENGTH - 1) {
+      inputRefs.current[idx + 1]?.focus()
+    }
   }
 
-  function handleCodeChange(value: string) {
-    // Only allow digits, max 8
-    const digits = value.replace(/\D/g, '').slice(0, 8)
-    setCode(digits)
-
-    // Auto-submit when 6 or 8 digits entered
-    if (digits.length === 6 || digits.length === 8) {
-      handleVerifyOtp(digits)
+  function handleBoxKeyDown(idx: number, e: React.KeyboardEvent<HTMLInputElement>) {
+    if (e.key === 'Backspace') {
+      e.preventDefault()
+      setDigits(prev => {
+        const next = [...prev]
+        if (next[idx]) {
+          next[idx] = ''
+        } else if (idx > 0) {
+          next[idx - 1] = ''
+          setTimeout(() => inputRefs.current[idx - 1]?.focus(), 0)
+        }
+        return next
+      })
+    } else if (e.key === 'ArrowLeft' && idx > 0) {
+      inputRefs.current[idx - 1]?.focus()
+    } else if (e.key === 'ArrowRight' && idx < CODE_LENGTH - 1) {
+      inputRefs.current[idx + 1]?.focus()
     }
+  }
+
+  function handlePaste(e: React.ClipboardEvent) {
+    e.preventDefault()
+    const pasted = e.clipboardData.getData('text')
+    fillDigits(pasted, 0)
+  }
+
+  function resetCode() {
+    setDigits(Array(CODE_LENGTH).fill(''))
+    setError(null)
+    submittedRef.current = false
   }
 
   return (
@@ -95,7 +169,7 @@ export default function LoginPage() {
 
         <div className="dashboard-card p-4 md:p-6">
           {step === 'code' ? (
-            /* OTP Code Entry */
+            /* OTP Code Entry — 6 boxes */
             <div className="space-y-5">
               <div className="text-center">
                 <div className="text-4xl mb-3">📬</div>
@@ -103,27 +177,36 @@ export default function LoginPage() {
                   ENTER YOUR CODE
                 </h2>
                 <p className="text-sm font-mono text-muted-foreground mt-2">
-                  We sent a code to{' '}
+                  We sent a 6-digit code to{' '}
                   <span className="text-primary">{email}</span>
                 </p>
                 <p className="text-xs font-mono text-muted-foreground/60 mt-1">
-                  Check your inbox — from &quot;The Sandlot&quot;
+                  Check your inbox — paste or type the code below
                 </p>
               </div>
 
-              {/* Single code input — paste-friendly, mobile-friendly */}
-              <div className="flex justify-center">
-                <input
-                  ref={codeInputRef}
-                  type="text"
-                  inputMode="numeric"
-                  autoComplete="one-time-code"
-                  value={code}
-                  onChange={(e) => handleCodeChange(e.target.value)}
-                  disabled={verifying}
-                  placeholder="Enter code"
-                  className="w-full max-w-[280px] h-16 text-center text-3xl font-mono font-bold tracking-[0.4em] rounded-lg border-2 bg-background text-foreground transition-all duration-150 focus:outline-none border-primary/20 focus:border-primary focus:ring-2 focus:ring-primary/20 disabled:opacity-50 placeholder:text-muted-foreground/30 placeholder:text-lg placeholder:tracking-normal"
-                />
+              {/* 6 individual digit boxes */}
+              <div className="flex justify-center gap-2 sm:gap-3" onPaste={handlePaste}>
+                {digits.map((digit, idx) => (
+                  <input
+                    key={idx}
+                    ref={(el) => { inputRefs.current[idx] = el }}
+                    type="text"
+                    inputMode="numeric"
+                    autoComplete={idx === 0 ? 'one-time-code' : 'off'}
+                    value={digit}
+                    onChange={(e) => handleBoxChange(idx, e.target.value)}
+                    onKeyDown={(e) => handleBoxKeyDown(idx, e)}
+                    onFocus={(e) => e.target.select()}
+                    disabled={verifying}
+                    maxLength={CODE_LENGTH}
+                    className={`w-11 h-14 sm:w-13 sm:h-16 text-center text-2xl sm:text-3xl font-mono font-bold rounded-lg border-2 bg-background text-foreground transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-primary/20 disabled:opacity-50 ${
+                      digit
+                        ? 'border-primary/50 bg-primary/5'
+                        : 'border-primary/20 focus:border-primary'
+                    }`}
+                  />
+                ))}
               </div>
 
               {verifying && (
@@ -140,13 +223,13 @@ export default function LoginPage() {
 
               <div className="flex items-center justify-between pt-2">
                 <button
-                  onClick={() => { setStep('email'); setCode(''); setError(null) }}
+                  onClick={() => { setStep('email'); resetCode() }}
                   className="text-xs font-mono text-primary/60 hover:text-primary transition-colors"
                 >
                   ← Different email
                 </button>
                 <button
-                  onClick={() => { setCode(''); setError(null); handleEmailSubmit(new Event('submit') as unknown as React.FormEvent) }}
+                  onClick={() => { resetCode(); handleEmailSubmit(new Event('submit') as unknown as React.FormEvent) }}
                   disabled={loading}
                   className="text-xs font-mono text-accent hover:text-accent/80 transition-colors disabled:opacity-50"
                 >
