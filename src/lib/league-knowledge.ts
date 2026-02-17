@@ -205,11 +205,18 @@ async function buildRostersSection(): Promise<string> {
       const manager = MANAGERS.find(m => m.displayName === managerName)
       const teamName = manager?.teamName ?? managerName
       const lines = players.map(p => {
-        // For ECR-based keepers (2nd+ year), compute the effective cost round from ECR rank
+        // Build cost string with explicit keeper year annotation
+        // This prevents the AI from misidentifying 1st-year keepers as 2nd-year
         let cost: string
         if (p.keeperCostLabel && p.keeperCostLabel.includes('ECR') && p.ecr) {
+          // Already labeled "2nd yr keeper — ECR" etc.
           const effectiveRound = Math.ceil(p.ecr / 12)
           cost = `Rd ${effectiveRound} (${p.keeperCostLabel})`
+        } else if (p.keeperCostLabel && (p.keeperCostLabel.startsWith('Drafted') || p.keeperCostLabel.startsWith('FA') || p.keeperCostLabel.startsWith('Trade'))) {
+          // Explicitly mark as 1st year keeper so the AI doesn't assume 2nd year
+          cost = `${p.keeperCostLabel} (1st yr keeper — next yr becomes ECR)`
+        } else if (p.keeperCostLabel === 'NA (minor leaguer)') {
+          cost = p.keeperCostLabel
         } else {
           cost = p.keeperCostLabel ?? (p.keeperCostRound ? `Rd ${p.keeperCostRound}` : 'N/A')
         }
