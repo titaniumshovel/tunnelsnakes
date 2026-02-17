@@ -37,10 +37,14 @@ type RosterPlayer = {
     mlb_team: string | null
     fantasypros_ecr: number | null
     eligible_positions: string[] | null
+    is_na_eligible: boolean | null
+    na_eligibility_reason: string | null
   } | null
 }
 
 function isNAEligible(rp: RosterPlayer): boolean {
+  // Prefer the auto-detected is_na_eligible flag; fall back to Yahoo eligible_positions
+  if (rp.players?.is_na_eligible === true) return true
   return rp.players?.eligible_positions?.includes('NA') ?? false
 }
 
@@ -396,6 +400,14 @@ export default function DashboardPage() {
                         <span className="text-sm font-mono font-bold text-foreground truncate">
                           {rp.players.full_name}
                         </span>
+                        {isNAEligible(rp) && (
+                          <span
+                            className="px-1.5 py-0.5 text-[9px] font-mono font-bold uppercase bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded"
+                            title={rp.players.na_eligibility_reason ?? 'NA eligible'}
+                          >
+                            NA
+                          </span>
+                        )}
                         <span className={`text-[10px] font-mono font-bold uppercase tracking-wider ${statusInfo.color}`}>
                           {statusInfo.label}
                         </span>

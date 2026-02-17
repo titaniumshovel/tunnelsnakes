@@ -26,6 +26,10 @@ type RosterPlayer = {
     fantasypros_ecr: number | null
     keeper_cost_round: number | null
     keeper_cost_label: string | null
+    is_na_eligible: boolean | null
+    na_eligibility_reason: string | null
+    career_ab: number | null
+    career_ip: number | null
   } | null
 }
 
@@ -94,7 +98,7 @@ async function getTeamRoster(yahooTeamKey: string): Promise<RosterPlayer[]> {
   const supabase = createClient(supabaseUrl, supabaseKey)
   const { data, error } = await supabase
     .from('my_roster_players')
-    .select('id, keeper_status, keeper_cost_round, keeper_cost_label, players(id, full_name, primary_position, eligible_positions, mlb_team, headshot_url, fantasypros_ecr, keeper_cost_round, keeper_cost_label)')
+    .select('id, keeper_status, keeper_cost_round, keeper_cost_label, players(id, full_name, primary_position, eligible_positions, mlb_team, headshot_url, fantasypros_ecr, keeper_cost_round, keeper_cost_label, is_na_eligible, na_eligibility_reason, career_ab, career_ip)')
     .eq('yahoo_team_key', yahooTeamKey)
     .order('keeper_cost_round', { ascending: true })
 
@@ -279,8 +283,20 @@ export default async function TeamProfilePage({ params }: Props) {
 
                         {/* Player Info */}
                         <div className="flex-1 min-w-0">
-                          <div className="text-sm font-semibold text-foreground truncate">
-                            {p.full_name}
+                          <div className="flex items-center gap-1.5 text-sm font-semibold text-foreground">
+                            <span className="truncate">{p.full_name}</span>
+                            {p.is_na_eligible && (
+                              <span
+                                className="shrink-0 px-1.5 py-0.5 text-[9px] font-mono font-bold uppercase bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30 rounded leading-none"
+                                title={[
+                                  p.na_eligibility_reason ?? 'NA eligible',
+                                  p.career_ab != null && p.career_ab > 0 ? `${p.career_ab} career AB` : null,
+                                  p.career_ip != null && p.career_ip > 0 ? `${p.career_ip} career IP` : null,
+                                ].filter(Boolean).join(' · ')}
+                              >
+                                NA
+                              </span>
+                            )}
                           </div>
                           <div className="text-[10px] text-muted-foreground flex items-center gap-2 flex-wrap">
                             <span>{p.primary_position ?? '—'}</span>

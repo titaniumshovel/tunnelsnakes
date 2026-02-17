@@ -140,7 +140,7 @@ async function buildRostersSection(): Promise<string> {
 
   const { data: rosterData, error } = await supabase
     .from('my_roster_players')
-    .select('yahoo_team_key, keeper_status, players(full_name, primary_position, keeper_cost_round, keeper_cost_label, fantasypros_ecr)')
+    .select('yahoo_team_key, keeper_status, players(full_name, primary_position, keeper_cost_round, keeper_cost_label, fantasypros_ecr, is_na_eligible, na_eligibility_reason)')
     .order('keeper_cost_round', { ascending: true })
 
   if (error || !rosterData) {
@@ -155,6 +155,8 @@ async function buildRostersSection(): Promise<string> {
     keeperCostLabel: string | null
     ecr: number | null
     keeperStatus: string
+    isNAEligible: boolean
+    naReason: string | null
   }>> = {}
 
   for (const row of rosterData) {
@@ -166,6 +168,8 @@ async function buildRostersSection(): Promise<string> {
       keeper_cost_round: number | null
       keeper_cost_label: string | null
       fantasypros_ecr: number | null
+      is_na_eligible: boolean | null
+      na_eligibility_reason: string | null
     } | null
     if (!player) continue
 
@@ -181,6 +185,8 @@ async function buildRostersSection(): Promise<string> {
       keeperCostLabel: player.keeper_cost_label,
       ecr: player.fantasypros_ecr,
       keeperStatus: row.keeper_status ?? 'undecided',
+      isNAEligible: player.is_na_eligible ?? false,
+      naReason: player.na_eligibility_reason ?? null,
     })
   }
 
@@ -200,7 +206,8 @@ async function buildRostersSection(): Promise<string> {
         }
         const ecr = p.ecr ? `ECR #${p.ecr}` : ''
         const status = p.keeperStatus !== 'undecided' ? ` [${p.keeperStatus.toUpperCase()}]` : ''
-        return `  - ${p.name} (${p.position}) — Cost: ${cost}${ecr ? `, ${ecr}` : ''}${status}`
+        const naTag = p.isNAEligible ? ` [NA: ${p.naReason ?? 'eligible'}]` : ''
+        return `  - ${p.name} (${p.position}) — Cost: ${cost}${ecr ? `, ${ecr}` : ''}${status}${naTag}`
       })
       return `### ${managerName} — ${teamName}\n${lines.join('\n')}`
     })
@@ -389,6 +396,9 @@ IMPORTANT — Retired Players:
 - Clayton Kershaw (LAD) officially retired after the 2024 season. If anyone asks about him or he appears in any data, note that he's retired and NOT a viable fantasy option for 2026.
 
 When identifying a player, ALWAYS mention their real MLB team and position from the ECR data (e.g., "Chase Burns, SP for the Cincinnati Reds"). Don't just reference their fantasy team ownership — users want to know the real-world player info too.
+
+NA ELIGIBILITY — Auto-Detected:
+Players with is_na_eligible=true in the database qualify for NA keeper slots based on MLB rookie thresholds (<130 career AB for hitters, <50 career IP for pitchers, or no MLB debut). The na_eligibility_reason field explains why (e.g., "No MLB debut", "Rookie: 26 AB", "Rookie: 20.2 IP"). When giving keeper advice, reference is_na_eligible to identify which players can use NA slots — these are FREE keepers that don't count against the 6-keeper limit. Highlight NA-eligible players as valuable keeper assets since they occupy the 4 bonus NA slots.
 
 CRITICAL: ALWAYS verify which team a player is actually on before answering. If someone asks about Player X on Team Y but your roster data shows Player X is on Team Z, CORRECT them immediately: 'Actually, [Player] is on [correct team], not [wrong team].' Never assume the user is right about team ownership — check the data.
 

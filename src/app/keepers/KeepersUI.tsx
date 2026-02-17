@@ -18,6 +18,8 @@ type RosterPlayer = {
     fantasypros_ecr: number | null
     keeper_cost_round: number | null
     keeper_cost_label: string | null
+    is_na_eligible: boolean | null
+    na_eligibility_reason: string | null
   } | null
 }
 
@@ -242,8 +244,16 @@ export function KeepersUI() {
                         <div key={rp.id} className="flex items-center gap-2 px-2 py-1.5 rounded-md bg-background/30">
                           <span className="text-sm">{statusInfo.icon}</span>
                           <div className="flex-1 min-w-0">
-                            <div className="text-xs font-mono font-bold text-foreground truncate">
-                              {rp.players.full_name}
+                            <div className="flex items-center gap-1.5 text-xs font-mono font-bold text-foreground truncate">
+                              <span className="truncate">{rp.players.full_name}</span>
+                              {rp.players.is_na_eligible && (
+                                <span
+                                  className="shrink-0 px-1 py-0.5 text-[8px] font-mono font-bold uppercase bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded leading-none"
+                                  title={rp.players.na_eligibility_reason ?? 'NA eligible'}
+                                >
+                                  NA
+                                </span>
+                              )}
                             </div>
                             <div className="text-[10px] font-mono text-muted-foreground">
                               {rp.players.primary_position ?? '—'} · {rp.players.mlb_team ?? '—'}
@@ -276,8 +286,16 @@ export function KeepersUI() {
                         <div key={rp.id} className="flex items-center gap-2 px-2 py-1.5 rounded-md bg-background/30">
                           <span className="text-sm">⏳</span>
                           <div className="flex-1 min-w-0">
-                            <div className="text-xs font-mono font-bold text-foreground truncate">
-                              {rp.players.full_name}
+                            <div className="flex items-center gap-1.5 text-xs font-mono font-bold text-foreground truncate">
+                              <span className="truncate">{rp.players.full_name}</span>
+                              {rp.players.is_na_eligible && (
+                                <span
+                                  className="shrink-0 px-1 py-0.5 text-[8px] font-mono font-bold uppercase bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded leading-none"
+                                  title={rp.players.na_eligibility_reason ?? 'NA eligible'}
+                                >
+                                  NA
+                                </span>
+                              )}
                             </div>
                             <div className="text-[10px] font-mono text-muted-foreground">
                               {rp.players.primary_position ?? '—'} · {rp.players.mlb_team ?? '—'}
@@ -337,8 +355,16 @@ export function KeepersUI() {
                 return (
                   <div key={rp.id} className="flex items-center gap-2 px-3 py-2 rounded-md bg-red-500/5 border border-red-500/15">
                     <div className="flex-1 min-w-0">
-                      <div className="text-xs font-mono font-bold text-foreground truncate">
-                        {rp.players.full_name}
+                      <div className="flex items-center gap-1.5 text-xs font-mono font-bold text-foreground truncate">
+                        <span className="truncate">{rp.players.full_name}</span>
+                        {rp.players.is_na_eligible && (
+                          <span
+                            className="shrink-0 px-1 py-0.5 text-[8px] font-mono font-bold uppercase bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded leading-none"
+                            title={rp.players.na_eligibility_reason ?? 'NA eligible'}
+                          >
+                            NA
+                          </span>
+                        )}
                       </div>
                       <div className="text-[10px] font-mono text-muted-foreground">
                         {rp.players.primary_position} · {rp.players.mlb_team}
