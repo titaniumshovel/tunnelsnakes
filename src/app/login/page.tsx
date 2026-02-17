@@ -11,7 +11,8 @@ export default function LoginPage() {
   const [step, setStep] = useState<'email' | 'code'>('email')
   const [error, setError] = useState<string | null>(null)
   const [verifying, setVerifying] = useState(false)
-  const [otp, setOtp] = useState(['', '', '', '', '', ''])
+  const OTP_LENGTH = 8
+  const [otp, setOtp] = useState(Array(8).fill(''))
   const inputRefs = useRef<(HTMLInputElement | null)[]>([])
   const router = useRouter()
 
@@ -61,7 +62,7 @@ export default function LoginPage() {
 
     if (error) {
       setError('Invalid or expired code. Please try again.')
-      setOtp(['', '', '', '', '', ''])
+      setOtp(Array(OTP_LENGTH).fill(''))
       setTimeout(() => inputRefs.current[0]?.focus(), 100)
     } else {
       // Success — redirect to dashboard
@@ -78,14 +79,14 @@ export default function LoginPage() {
     setOtp(newOtp)
 
     // Auto-advance to next input
-    if (digit && index < 5) {
+    if (digit && index < OTP_LENGTH - 1) {
       inputRefs.current[index + 1]?.focus()
     }
 
-    // Auto-submit when all 6 digits entered
-    if (digit && index === 5) {
+    // Auto-submit when all digits entered
+    if (digit && index === OTP_LENGTH - 1) {
       const fullCode = newOtp.join('')
-      if (fullCode.length === 6) {
+      if (fullCode.length === OTP_LENGTH) {
         handleVerifyOtp(fullCode)
       }
     }
@@ -99,11 +100,11 @@ export default function LoginPage() {
 
   function handleOtpPaste(e: React.ClipboardEvent) {
     e.preventDefault()
-    const pasted = e.clipboardData.getData('text').replace(/\D/g, '').slice(0, 6)
+    const pasted = e.clipboardData.getData('text').replace(/\D/g, '').slice(0, OTP_LENGTH)
     if (pasted.length === 0) return
 
     const newOtp = [...otp]
-    for (let i = 0; i < 6; i++) {
+    for (let i = 0; i < OTP_LENGTH; i++) {
       newOtp[i] = pasted[i] || ''
     }
     setOtp(newOtp)
@@ -113,7 +114,7 @@ export default function LoginPage() {
     inputRefs.current[nextEmpty === -1 ? 5 : nextEmpty]?.focus()
 
     // Auto-submit if full
-    if (pasted.length === 6) {
+    if (pasted.length === OTP_LENGTH) {
       handleVerifyOtp(pasted)
     }
   }
@@ -141,11 +142,11 @@ export default function LoginPage() {
                   ENTER YOUR CODE
                 </h2>
                 <p className="text-sm font-mono text-muted-foreground mt-2">
-                  We sent a 6-digit code to{' '}
+                  We sent a code to{' '}
                   <span className="text-primary">{email}</span>
                 </p>
                 <p className="text-xs font-mono text-muted-foreground/60 mt-1">
-                  Check your inbox (and spam folder)
+                  Check your inbox — from &quot;The Sandlot&quot;
                 </p>
               </div>
 
@@ -162,7 +163,7 @@ export default function LoginPage() {
                     onChange={(e) => handleOtpChange(i, e.target.value)}
                     onKeyDown={(e) => handleOtpKeyDown(i, e)}
                     disabled={verifying}
-                    className={`w-11 h-14 sm:w-12 sm:h-16 text-center text-2xl font-mono font-bold rounded-lg border-2 bg-background text-foreground transition-all duration-150 focus:outline-none ${
+                    className={`w-9 h-12 sm:w-11 sm:h-14 text-center text-xl sm:text-2xl font-mono font-bold rounded-lg border-2 bg-background text-foreground transition-all duration-150 focus:outline-none ${
                       digit
                         ? 'border-primary/50 bg-primary/5'
                         : 'border-primary/20'
@@ -185,7 +186,7 @@ export default function LoginPage() {
 
               <div className="flex items-center justify-between pt-2">
                 <button
-                  onClick={() => { setStep('email'); setOtp(['', '', '', '', '', '']); setError(null) }}
+                  onClick={() => { setStep('email'); setOtp(Array(OTP_LENGTH).fill('')); setError(null) }}
                   className="text-xs font-mono text-primary/60 hover:text-primary transition-colors"
                 >
                   ← Different email
@@ -239,7 +240,7 @@ export default function LoginPage() {
               </button>
 
               <p className="text-center text-[10px] font-mono text-muted-foreground/50 leading-relaxed">
-                League members only — we&apos;ll email you a 6-digit code
+                League members only — we&apos;ll email you a login code
               </p>
             </form>
           )}
