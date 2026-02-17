@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { MANAGERS, TEAM_COLORS } from '@/data/managers'
+import TeamLogo from '@/components/TeamLogo'
 
 const NAV_CARDS: Array<{ href: string; icon: string; title: string; desc: string; color: string; badge?: string }> = [
   {
@@ -131,12 +132,10 @@ export default function Home() {
                 {/* Team Logo or Fallback Dot */}
                 {m.logo ? (
                   <div className="relative shrink-0">
-                    <Image
+                    <TeamLogo
                       src={m.logo}
                       alt={`${m.teamName} logo`}
-                      width={96}
-                      height={96}
-                      unoptimized
+                      size={96}
                       className="rounded-full object-cover"
                     />
                   </div>

@@ -3,6 +3,7 @@ import Image from 'next/image'
 import { notFound } from 'next/navigation'
 import { createClient } from '@supabase/supabase-js'
 import { MANAGERS, TEAM_COLORS, getManagerBySlug } from '@/data/managers'
+import TeamLogo from '@/components/TeamLogo'
 
 export const revalidate = 300 // Revalidate every 5 minutes
 
@@ -156,13 +157,11 @@ export default async function TeamProfilePage({ params }: Props) {
             {/* Team Logo */}
             {manager.logo && (
               <div className="w-24 h-24 rounded-full bg-black/20 p-2 flex-shrink-0">
-                <Image
+                <TeamLogo
                   src={manager.logo}
                   alt={`${manager.teamName} logo`}
-                  width={96}
-                  height={96}
+                  size={96}
                   className="w-full h-full object-contain rounded-full"
-                  unoptimized
                 />
               </div>
             )}

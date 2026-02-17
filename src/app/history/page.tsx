@@ -1,5 +1,5 @@
-import Image from 'next/image'
 import { TEAM_COLORS } from '@/data/managers'
+import TeamLogo from '@/components/TeamLogo'
 
 import standings2020 from '@/data/historical/standings-2020.json'
 import standings2021 from '@/data/historical/standings-2021.json'
@@ -220,10 +220,9 @@ export default function HistoryPage() {
 
                   {/* Champion */}
                   <div className={`flex items-center gap-3 p-2 rounded-lg ${champColors.bg}`}>
-                    <Image
+                    <TeamLogo
                       src={`/logos/${getSlug(season.champion)}.png`}
-                      width={48}
-                      height={48}
+                      size={48}
                       alt={`${season.championTeam} logo`}
                       className="rounded-full"
                     />
@@ -239,10 +238,9 @@ export default function HistoryPage() {
 
                   {/* Runner-up */}
                   <div className="flex items-center gap-3 px-2">
-                    <Image
+                    <TeamLogo
                       src={`/logos/${getSlug(season.runnerUp)}.png`}
-                      width={28}
-                      height={28}
+                      size={28}
                       alt={`${season.runnerUpTeam} logo`}
                       className="rounded-full"
                     />
@@ -255,10 +253,9 @@ export default function HistoryPage() {
 
                   {/* Third place */}
                   <div className="flex items-center gap-3 px-2">
-                    <Image
+                    <TeamLogo
                       src={`/logos/${getSlug(season.third)}.png`}
-                      width={28}
-                      height={28}
+                      size={28}
                       alt={`${season.thirdTeam} logo`}
                       className="rounded-full"
                     />
@@ -309,11 +306,10 @@ export default function HistoryPage() {
                     <td className="py-2.5 pr-2">
                       <div className="flex items-center gap-2">
                         <span className={`w-2.5 h-2.5 rounded-full shrink-0 ${colors.dot}`} />
-                        <Image
+                        <TeamLogo
                           src={`/logos/${getSlug(m.manager)}.png`}
-                          width={24}
-                          height={24}
-                          alt=""
+                          size={24}
+                          alt={`${m.manager} logo`}
                           className="rounded-full hidden sm:block"
                         />
                         <span className={colors.text}>{m.manager}</span>
@@ -371,11 +367,10 @@ export default function HistoryPage() {
                 <div className="mt-4 space-y-4">
                   {/* Champion banner */}
                   <div className={`flex items-center gap-3 p-3 rounded-lg ${champColors.bg} ${champColors.border} border`}>
-                    <Image
+                    <TeamLogo
                       src={`/logos/${getSlug(season.champion)}.png`}
-                      width={40}
-                      height={40}
-                      alt=""
+                      size={40}
+                      alt={`${season.champion} logo`}
                       className="rounded-full"
                     />
                     <div>
