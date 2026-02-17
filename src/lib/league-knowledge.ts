@@ -211,13 +211,36 @@ async function buildTradesSection(): Promise<string> {
   function formatTrade(t: Record<string, unknown>): string {
     const status = t.status === 'vetoed' ? ' [VETOED]' : ''
     const date = t.created_at ? new Date(t.created_at as string).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : ''
-    return `- ${date}${status}: ${t.description ?? 'No description'}`
+    const teams = Array.isArray(t.teams_involved) && t.teams_involved.length > 0
+      ? ` [${(t.teams_involved as string[]).join(' ↔ ')}]`
+      : ''
+    return `- ${date}${teams}${status}: ${t.description ?? 'No description'}`
+  }
+
+  // Build trade count summary for accurate stats
+  const teamCounts: Record<string, { offseason: number; midseason: number }> = {}
+  for (const t of trades) {
+    if (t.status === 'vetoed') continue
+    const teams = Array.isArray(t.teams_involved) ? t.teams_involved as string[] : []
+    const type = t.trade_type === 'offseason' ? 'offseason' : 'midseason'
+    for (const team of teams) {
+      if (!teamCounts[team]) teamCounts[team] = { offseason: 0, midseason: 0 }
+      teamCounts[team][type]++
+    }
   }
 
   const offseasonLines = offseason.map(formatTrade)
   const midseasonLines = midseason.map(formatTrade)
 
+  // Build trade count summary table
+  const countLines = Object.entries(teamCounts)
+    .sort((a, b) => (b[1].offseason + b[1].midseason) - (a[1].offseason + a[1].midseason))
+    .map(([team, c]) => `- ${team}: ${c.offseason + c.midseason} total (${c.offseason} offseason, ${c.midseason} midseason)`)
+
   return `## Trade History
+
+### Trade Activity Summary (Completed Trades)
+${countLines.join('\n')}
 
 ### Offseason Trades (Draft Pick Swaps)
 ${offseasonLines.length > 0 ? offseasonLines.join('\n') : 'None'}
