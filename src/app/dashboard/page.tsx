@@ -43,15 +43,16 @@ type RosterPlayer = {
 }
 
 function isNAEligible(rp: RosterPlayer): boolean {
-  // Prefer the auto-detected is_na_eligible flag; fall back to Yahoo eligible_positions
+  // If our auto-detection ran (is_na_eligible is not null), trust it over Yahoo
   if (rp.players?.is_na_eligible === true) return true
+  if (rp.players?.is_na_eligible === false) return false
+  // Fallback to Yahoo positions only if we haven't checked yet (is_na_eligible is null)
   return rp.players?.eligible_positions?.includes('NA') ?? false
 }
 
 const MAX_KEEPERS = 6
 const MAX_NA = 4
 
-const STATUS_CYCLE = ['undecided', 'keeping', 'keeping-7th', 'keeping-na', 'not-keeping'] as const
 const STATUS_DISPLAY: Record<string, { icon: string; label: string; color: string; bg: string; border: string }> = {
   keeping: { icon: '🔒', label: 'KEEPING', color: 'text-secondary', bg: 'bg-secondary/10', border: 'border-secondary/30' },
   'keeping-7th': { icon: '⭐', label: '7TH KEEPER', color: 'text-amber-400', bg: 'bg-amber-500/10', border: 'border-amber-500/30' },
@@ -68,7 +69,7 @@ export default function DashboardPage() {
   const [roster, setRoster] = useState<RosterPlayer[]>([])
   const [rosterLoading, setRosterLoading] = useState(true)
   const [updatingId, setUpdatingId] = useState<string | null>(null)
-  const [limitWarning, setLimitWarning] = useState<string | null>(null)
+  const [openPopoverId, setOpenPopoverId] = useState<string | null>(null)
   const router = useRouter()
 
   useEffect(() => {
@@ -118,59 +119,38 @@ export default function DashboardPage() {
     }
   }, [manager, fetchRoster])
 
-  async function cycleKeeperStatus(rp: RosterPlayer) {
-    // Determine next status in cycle, skipping any that are at limit
-    const currentIdx = STATUS_CYCLE.indexOf(rp.keeper_status as typeof STATUS_CYCLE[number])
-    const currentKeepers = roster.filter(r => r.id !== rp.id && r.keeper_status === 'keeping').length
-    const currentSeventhKeeper = roster.filter(r => r.id !== rp.id && r.keeper_status === 'keeping-7th').length
-    const currentNA = roster.filter(r => r.id !== rp.id && r.keeper_status === 'keeping-na').length
+  function getStatusOptions(rp: RosterPlayer) {
+    const others = roster.filter(r => r.id !== rp.id)
+    const keepingCount = others.filter(r => r.keeper_status === 'keeping').length
+    const has7th = others.some(r => r.keeper_status === 'keeping-7th')
+    const naCount = others.filter(r => r.keeper_status === 'keeping-na').length
+    const naEligible = isNAEligible(rp)
 
-    let nextStatus: typeof STATUS_CYCLE[number] | null = null
-    for (let i = 1; i <= STATUS_CYCLE.length; i++) {
-      const candidateIdx = (currentIdx + i) % STATUS_CYCLE.length
-      const candidate = STATUS_CYCLE[candidateIdx]
+    return [
+      { status: 'keeping', available: keepingCount < MAX_KEEPERS, reason: keepingCount >= MAX_KEEPERS ? 'Keeper limit reached' : undefined },
+      { status: 'keeping-7th', available: !naEligible && !has7th, reason: naEligible ? 'NA-eligible players use NA slots' : has7th ? '7th slot taken' : undefined },
+      { status: 'keeping-na', available: naEligible && naCount < MAX_NA, reason: !naEligible ? 'Not NA eligible' : naCount >= MAX_NA ? 'NA limit reached' : undefined },
+      { status: 'undecided', available: true },
+      { status: 'not-keeping', available: true },
+    ]
+  }
 
-      if (candidate === 'keeping' && currentKeepers >= MAX_KEEPERS) {
-        // Show warning and skip
-        setLimitWarning(`Keeper limit reached (${MAX_KEEPERS}/${MAX_KEEPERS}). Remove a keeper first.`)
-        setTimeout(() => setLimitWarning(null), 3000)
-        continue
-      }
-      if (candidate === 'keeping-7th' && isNAEligible(rp)) {
-        // NA players use NA slots, not 7th keeper — skip this state
-        continue
-      }
-      if (candidate === 'keeping-7th' && currentSeventhKeeper >= 1) {
-        setLimitWarning(`7th Keeper slot already used. Only 1 per team.`)
-        setTimeout(() => setLimitWarning(null), 3000)
-        continue
-      }
-      if (candidate === 'keeping-na' && !isNAEligible(rp)) {
-        // Player doesn't have NA eligibility — skip this state entirely
-        continue
-      }
-      if (candidate === 'keeping-na' && currentNA >= MAX_NA) {
-        setLimitWarning(`NA limit reached (${MAX_NA}/${MAX_NA}). Remove an NA keeper first.`)
-        setTimeout(() => setLimitWarning(null), 3000)
-        continue
-      }
-      nextStatus = candidate
-      break
+  async function setKeeperStatus(rp: RosterPlayer, newStatus: string) {
+    if (newStatus === rp.keeper_status) {
+      setOpenPopoverId(null)
+      return
     }
 
-    if (!nextStatus || nextStatus === rp.keeper_status) return
-
-    setLimitWarning(null)
+    setOpenPopoverId(null)
     setUpdatingId(rp.id)
     const res = await fetch('/api/keepers', {
       method: 'PATCH',
       headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ roster_player_id: rp.id, keeper_status: nextStatus }),
+      body: JSON.stringify({ roster_player_id: rp.id, keeper_status: newStatus }),
     })
 
     if (res.ok) {
-      // Update local state immediately
-      setRoster(prev => prev.map(r => r.id === rp.id ? { ...r, keeper_status: nextStatus } : r))
+      setRoster(prev => prev.map(r => r.id === rp.id ? { ...r, keeper_status: newStatus } : r))
     }
     setUpdatingId(null)
   }
@@ -253,6 +233,53 @@ export default function DashboardPage() {
     if (aOrder !== bOrder) return aOrder - bOrder
     return (a.keeper_cost_round ?? 99) - (b.keeper_cost_round ?? 99)
   })
+
+  // Compute keeper-to-draft-pick assignments (display only)
+  const keeperPickAssignments: Record<string, RosterPlayer> = {} // key: "round-slot"
+  {
+    // Regular keepers (keeping + keeping-7th) — assign to their keeper_cost_round
+    const regularKeepers = roster.filter(
+      r => (r.keeper_status === 'keeping' || r.keeper_status === 'keeping-7th') && r.keeper_cost_round
+    )
+    // Group by round
+    const byRound: Record<number, RosterPlayer[]> = {}
+    for (const k of regularKeepers) {
+      const rd = k.keeper_cost_round!
+      if (!byRound[rd]) byRound[rd] = []
+      byRound[rd].push(k)
+    }
+    // For each round, assign to highest slot numbers (worst pick rule)
+    for (const [rdStr, keepers] of Object.entries(byRound)) {
+      const rd = Number(rdStr)
+      const roundPicks = (data.picks[rdStr] ?? []) as DraftPick[]
+      const myRoundPicks = roundPicks
+        .filter(p => p.currentOwner === manager.displayName)
+        .sort((a, b) => b.slot - a.slot) // highest slot first
+      // Sort keepers by cost round (they're same round so just assign in order)
+      for (let i = 0; i < keepers.length && i < myRoundPicks.length; i++) {
+        keeperPickAssignments[`${rd}-${myRoundPicks[i].slot}`] = keepers[i]
+      }
+    }
+
+    // NA keepers — assign to NA rounds 24-27, highest available slot
+    const naKeepersRoster = roster.filter(r => r.keeper_status === 'keeping-na')
+    const naRoundSlots: { round: number; slot: number }[] = []
+    for (const naRd of data.naRounds) {
+      const roundPicks = (data.picks[naRd.toString()] ?? []) as DraftPick[]
+      const myNaPicks = roundPicks
+        .filter(p => p.currentOwner === manager.displayName)
+        .sort((a, b) => b.slot - a.slot) // highest slot first
+      for (const p of myNaPicks) {
+        naRoundSlots.push({ round: naRd, slot: p.slot })
+      }
+    }
+    // Sort all NA slots: highest round first, then highest slot
+    naRoundSlots.sort((a, b) => b.round - a.round || b.slot - a.slot)
+    for (let i = 0; i < naKeepersRoster.length && i < naRoundSlots.length; i++) {
+      const { round, slot } = naRoundSlots[i]
+      keeperPickAssignments[`${round}-${slot}`] = naKeepersRoster[i]
+    }
+  }
 
   return (
     <main className="min-h-[80vh]">
@@ -364,13 +391,6 @@ export default function DashboardPage() {
             </div>
           </div>
 
-          {/* Limit warning */}
-          {limitWarning && (
-            <div className="mb-3 px-3 py-2 rounded-md bg-amber-100 dark:bg-amber-900/30 border border-amber-300 dark:border-amber-500/30 text-amber-800 dark:text-amber-300 text-xs font-mono animate-fade-in-up">
-              ⚠️ {limitWarning}
-            </div>
-          )}
-
           {rosterLoading ? (
             <p className="text-sm text-muted-foreground">Loading roster...</p>
           ) : sortedRoster.length === 0 ? (
@@ -381,57 +401,98 @@ export default function DashboardPage() {
               </p>
             </div>
           ) : (
-            <div className="space-y-1.5">
+            <div className="space-y-1.5 relative">
+              {/* Click-outside overlay when popover is open */}
+              {openPopoverId && (
+                <div className="fixed inset-0 z-40" onClick={() => setOpenPopoverId(null)} />
+              )}
               {sortedRoster.map(rp => {
                 if (!rp.players) return null
                 const statusInfo = STATUS_DISPLAY[rp.keeper_status] ?? STATUS_DISPLAY.undecided
                 const isUpdating = updatingId === rp.id
+                const isPopoverOpen = openPopoverId === rp.id
 
                 return (
-                  <div
-                    key={rp.id}
-                    className={`flex items-center gap-3 px-3 py-2.5 rounded-md border transition-all cursor-pointer hover:scale-[1.005] active:scale-[0.995] ${statusInfo.bg} ${statusInfo.border} ${isUpdating ? 'opacity-60' : ''}`}
-                    onClick={() => !isUpdating && cycleKeeperStatus(rp)}
-                    title="Click to cycle: Undecided → Keeping → NA Keeper → Not Keeping"
-                  >
-                    <span className="text-lg shrink-0">{statusInfo.icon}</span>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <span className="text-sm font-mono font-bold text-foreground truncate">
-                          {rp.players.full_name}
-                        </span>
-                        {isNAEligible(rp) && (
-                          <span
-                            className="px-1.5 py-0.5 text-[9px] font-mono font-bold uppercase bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded"
-                            title={rp.players.na_eligibility_reason ?? 'NA eligible'}
-                          >
-                            NA
+                  <div key={rp.id} className="relative">
+                    <div
+                      className={`flex items-center gap-3 px-3 py-2.5 rounded-md border transition-all cursor-pointer hover:scale-[1.005] active:scale-[0.995] ${statusInfo.bg} ${statusInfo.border} ${isUpdating ? 'opacity-60' : ''} ${isPopoverOpen ? 'ring-2 ring-primary/40' : ''}`}
+                      onClick={() => !isUpdating && setOpenPopoverId(isPopoverOpen ? null : rp.id)}
+                    >
+                      <span className="text-lg shrink-0">{statusInfo.icon}</span>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <span className="text-sm font-mono font-bold text-foreground truncate">
+                            {rp.players.full_name}
                           </span>
-                        )}
-                        <span className={`text-[10px] font-mono font-bold uppercase tracking-wider ${statusInfo.color}`}>
-                          {statusInfo.label}
+                          {isNAEligible(rp) && (
+                            <span
+                              className="px-1.5 py-0.5 text-[9px] font-mono font-bold uppercase bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded"
+                              title={rp.players.na_eligibility_reason ?? 'NA eligible'}
+                            >
+                              NA
+                            </span>
+                          )}
+                          <span className={`text-[10px] font-mono font-bold uppercase tracking-wider ${statusInfo.color}`}>
+                            {statusInfo.label}
+                          </span>
+                        </div>
+                        <div className="text-[10px] font-mono text-muted-foreground">
+                          {rp.players.primary_position ?? '—'} · {rp.players.mlb_team ?? '—'}
+                          {rp.keeper_cost_round && ` · Cost: Rd ${rp.keeper_cost_round}`}
+                          {rp.keeper_cost_label && !rp.keeper_cost_round && ` · ${rp.keeper_cost_label}`}
+                        </div>
+                      </div>
+                      {rp.players.fantasypros_ecr && (
+                        <span className="text-xs font-mono text-accent shrink-0">
+                          ECR #{rp.players.fantasypros_ecr}
                         </span>
-                      </div>
-                      <div className="text-[10px] font-mono text-muted-foreground">
-                        {rp.players.primary_position ?? '—'} · {rp.players.mlb_team ?? '—'}
-                        {rp.keeper_cost_round && ` · Cost: Rd ${rp.keeper_cost_round}`}
-                        {rp.keeper_cost_label && !rp.keeper_cost_round && ` · ${rp.keeper_cost_label}`}
-                      </div>
+                      )}
                     </div>
-                    {rp.players.fantasypros_ecr && (
-                      <span className="text-xs font-mono text-accent shrink-0">
-                        ECR #{rp.players.fantasypros_ecr}
-                      </span>
+                    {isPopoverOpen && (
+                      <div className="absolute z-50 left-0 right-0 mt-1 rounded-md border border-border bg-card shadow-xl overflow-hidden">
+                        {getStatusOptions(rp).map(opt => {
+                          const display = STATUS_DISPLAY[opt.status] ?? STATUS_DISPLAY.undecided
+                          const isCurrent = rp.keeper_status === opt.status
+                          return (
+                            <button
+                              key={opt.status}
+                              disabled={!opt.available && !isCurrent}
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                if (opt.available || isCurrent) setKeeperStatus(rp, opt.status)
+                              }}
+                              className={`w-full flex items-center gap-3 px-3 py-2 text-left transition-colors ${
+                                isCurrent
+                                  ? `${display.bg} ${display.border} border-l-2`
+                                  : opt.available
+                                    ? 'hover:bg-muted/50 border-l-2 border-transparent'
+                                    : 'opacity-40 cursor-not-allowed border-l-2 border-transparent'
+                              }`}
+                            >
+                              <span className="text-base shrink-0">{display.icon}</span>
+                              <div className="flex-1 min-w-0">
+                                <span className={`text-xs font-mono font-bold uppercase tracking-wider ${isCurrent ? display.color : opt.available ? 'text-foreground' : 'text-muted-foreground'}`}>
+                                  {display.label}
+                                </span>
+                                {!opt.available && !isCurrent && opt.reason && (
+                                  <span className="text-[10px] font-mono text-muted-foreground/60 ml-2">
+                                    — {opt.reason}
+                                  </span>
+                                )}
+                              </div>
+                              {isCurrent && (
+                                <span className="text-[10px] font-mono text-primary shrink-0">✓ current</span>
+                              )}
+                            </button>
+                          )
+                        })}
+                      </div>
                     )}
                   </div>
                 )
               })}
             </div>
           )}
-
-          <div className="mt-3 text-xs font-mono text-muted-foreground/60 text-center">
-            Click to cycle: ⏳ Undecided → 🔒 Keeping → ⭐ 7th Keeper → 🔷 NA Keeper → ❌ Not Keeping
-          </div>
 
           <ValidateKeepers roster={roster} />
         </div>
@@ -452,14 +513,17 @@ export default function DashboardPage() {
                 const isNA = data.naRounds.includes(round)
                 const isTraded = pick.traded && pick.originalOwner !== manager.displayName
                 const originalColors = isTraded ? TEAM_COLORS[pick.originalOwner] : null
+                const assignedKeeper = keeperPickAssignments[`${round}-${pick.slot}`]
 
                 return (
                   <div
                     key={`${round}-${pick.slot}`}
                     className={`flex items-center gap-3 px-4 py-2.5 rounded-md border transition-colors ${
-                      isNA
-                        ? 'border-amber-500/20 bg-amber-950/10'
-                        : `${colors?.border} ${colors?.bg}`
+                      assignedKeeper
+                        ? 'border-secondary/30 bg-secondary/5 opacity-80'
+                        : isNA
+                          ? 'border-amber-500/20 bg-amber-950/10'
+                          : `${colors?.border} ${colors?.bg}`
                     } ${isTraded ? 'ring-1 ring-accent/20' : ''}`}
                   >
                     {/* Round number */}
@@ -471,22 +535,40 @@ export default function DashboardPage() {
                     </div>
 
                     {/* Pick info */}
-                    <div className="flex-1">
-                      <span className="text-xs font-mono text-foreground">
-                        Pick {round}.{pick.slot}
-                      </span>
-                      {isTraded && (
-                        <span className="text-xs font-mono text-accent ml-2">
-                          ↔ from{' '}
-                          <span className={originalColors?.text ?? 'text-muted-foreground'}>
-                            {pick.originalOwner}
-                          </span>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="text-xs font-mono text-foreground">
+                          Pick {round}.{pick.slot}
                         </span>
+                        {isTraded && (
+                          <span className="text-xs font-mono text-accent">
+                            ↔ from{' '}
+                            <span className={originalColors?.text ?? 'text-muted-foreground'}>
+                              {pick.originalOwner}
+                            </span>
+                          </span>
+                        )}
+                      </div>
+                      {assignedKeeper && assignedKeeper.players && (
+                        <div className="text-[11px] font-mono text-secondary mt-0.5">
+                          🔒 {assignedKeeper.players.full_name}
+                          {assignedKeeper.keeper_status === 'keeping-7th' && (
+                            <span className="text-amber-400 ml-1">⭐</span>
+                          )}
+                          {assignedKeeper.keeper_status === 'keeping-na' && (
+                            <span className="text-blue-400 ml-1">🔷</span>
+                          )}
+                        </div>
                       )}
                     </div>
 
                     {/* Badges */}
                     <div className="flex items-center gap-2 shrink-0">
+                      {assignedKeeper && (
+                        <span className="px-1.5 py-0.5 text-[9px] font-mono font-bold uppercase bg-secondary/15 text-secondary border border-secondary/20 rounded">
+                          Keeper
+                        </span>
+                      )}
                       {isTraded && (
                         <span className="px-1.5 py-0.5 text-[9px] font-mono font-bold uppercase bg-accent/15 text-accent border border-accent/20 rounded">
                           Traded

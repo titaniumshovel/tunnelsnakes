@@ -59,7 +59,7 @@ export async function PATCH(req: Request) {
   if (keeper_status === 'keeping-na') {
     const players = rosterPlayer as { players?: { eligible_positions?: string[]; is_na_eligible?: boolean } }
     const eligible = players.players?.eligible_positions ?? []
-    const isNAEligible = players.players?.is_na_eligible === true || eligible.includes('NA')
+    const isNAEligible = players.players?.is_na_eligible === true || (players.players?.is_na_eligible == null && eligible.includes('NA'))
     if (!isNAEligible) {
       return NextResponse.json({ error: 'This player is not minor league (NA) eligible' }, { status: 400 })
     }
