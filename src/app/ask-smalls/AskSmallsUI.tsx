@@ -94,6 +94,27 @@ export function AskSmallsUI() {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null)
   const [loadingConversations, setLoadingConversations] = useState(false)
+  const [copiedMessageId, setCopiedMessageId] = useState<string | null>(null)
+
+  const handleCopyMessage = useCallback(async (messageId: string, content: string) => {
+    try {
+      await navigator.clipboard.writeText(content)
+      setCopiedMessageId(messageId)
+      setTimeout(() => setCopiedMessageId(null), 1500)
+    } catch {
+      // Fallback for older browsers
+      const textarea = document.createElement('textarea')
+      textarea.value = content
+      textarea.style.position = 'fixed'
+      textarea.style.opacity = '0'
+      document.body.appendChild(textarea)
+      textarea.select()
+      document.execCommand('copy')
+      document.body.removeChild(textarea)
+      setCopiedMessageId(messageId)
+      setTimeout(() => setCopiedMessageId(null), 1500)
+    }
+  }, [])
 
   const isLoggedIn = !!userId
 

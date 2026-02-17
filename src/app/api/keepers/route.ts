@@ -39,7 +39,7 @@ export async function PATCH(req: Request) {
     return NextResponse.json({ error: 'Missing fields' }, { status: 400 })
   }
 
-  const validStatuses = ['undecided', 'keeping', 'not-keeping', 'keeping-na']
+  const validStatuses = ['undecided', 'keeping', 'keeping-7th', 'not-keeping', 'keeping-na']
   if (!validStatuses.includes(keeper_status)) {
     return NextResponse.json({ error: 'Invalid keeper status' }, { status: 400 })
   }

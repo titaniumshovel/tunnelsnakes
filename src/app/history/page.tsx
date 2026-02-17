@@ -47,7 +47,7 @@ const MANAGER_SLUGS: Record<string, string> = {
   Bob: 'runs-n-roses',
   Mike: 'the-dirty-farm',
   Thomas: 'lake-monsters',
-  Tyler: 'tylers-slugfest',
+  Tyler: 'i-fielder-boobs',
 }
 
 const CURRENT_TEAM_NAMES: Record<string, string> = {
@@ -62,7 +62,7 @@ const CURRENT_TEAM_NAMES: Record<string, string> = {
   Bob: 'Runs-N-Roses',
   Mike: 'The Dirty Farm',
   Thomas: 'Lake Monsters',
-  Tyler: "Tyler's Slugfest",
+  Tyler: "I Fielder Boobs",
 }
 
 /** Original 10 managers (excludes 2026 expansion teams) */

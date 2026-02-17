@@ -38,7 +38,7 @@ const LEAGUE_TEAMS = [
   'Runs-N-Roses',
   'The Dirty Farm',
   'Lake Monsters',
-  "Tyler's Slugfest",
+  "I Fielder Boobs",
 ]
 
 /* Status-based styling — driven by DB keeper_status field */

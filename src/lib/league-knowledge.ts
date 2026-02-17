@@ -66,7 +66,7 @@ C, 1B, 2B, 3B, SS, OF(3), Util(2), SP(4), RP(2), Util P(2), IL(4), Bench(5), NA(
 
 ## League History
 - Founded: 2020 (originally 10 teams, expanded to 12 in 2026)
-- 2026 Expansion Teams: Thomas (Lake Monsters) and Tyler (Tyler's Slugfest) are NEW teams joining in 2026. They were not in the league from 2020-2025.
+- 2026 Expansion Teams: Thomas (Lake Monsters) and Tyler (I Fielder Boobs) are NEW teams joining in 2026. They were not in the league from 2020-2025.
 
 ### Championship History
 | Year | Champion | Runner-up | 3rd Place |

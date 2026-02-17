@@ -283,10 +283,10 @@ describe('Category 1: Data Integrity', () => {
       expect(thomas!.teamName).toBe('Lake Monsters')
     })
 
-    it('should have Tyler (Tyler\'s Slugfest) as expansion team', () => {
+    it('should have Tyler (I Fielder Boobs) as expansion team', () => {
       const tyler = MANAGERS.find(m => m.displayName === 'Tyler')
       expect(tyler).toBeDefined()
-      expect(tyler!.teamName).toBe("Tyler's Slugfest")
+      expect(tyler!.teamName).toBe("I Fielder Boobs")
     })
 
     it('should look up managers by email', () => {
@@ -1118,7 +1118,7 @@ describe.skipIf(!HAS_API)('Category 9: AI Response Accuracy (requires running AP
       const evaluation = await evaluateResponse({
         question: 'Who are the new teams this year?',
         expectedFacts: [
-          'Thomas (Lake Monsters) and Tyler (Tyler\'s Slugfest) are the new expansion teams'
+          'Thomas (Lake Monsters) and Tyler (I Fielder Boobs) are the new expansion teams'
         ],
         actualResponse: response
       })

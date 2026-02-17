@@ -13,7 +13,7 @@ const ALL_TEAM_SLUGS = [
   'red-stagz',
   'lollygaggers',
   'goin-yahdgoats',
-  'tylers-slugfest',
+  'i-fielder-boobs',
   'lake-monsters',
   'tunnel-snakes',
   'alex-in-chains',
@@ -69,7 +69,7 @@ describe('Team slugs and data', () => {
   })
 
   it('expansion teams are Tyler and Thomas', () => {
-    const tyler = getManagerBySlug('tylers-slugfest')!
+    const tyler = getManagerBySlug('i-fielder-boobs')!
     const thomas = getManagerBySlug('lake-monsters')!
     // Expansion teams have team keys ending in .t.11 or .t.12
     expect(tyler.yahooTeamKey.endsWith('.t.12')).toBe(true)

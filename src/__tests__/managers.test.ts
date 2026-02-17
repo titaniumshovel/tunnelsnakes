@@ -60,7 +60,7 @@ describe('MANAGERS data', () => {
       'red-stagz',
       'lollygaggers',
       'goin-yahdgoats',
-      'tylers-slugfest',
+      'i-fielder-boobs',
       'lake-monsters',
       'tunnel-snakes',
       'alex-in-chains',
