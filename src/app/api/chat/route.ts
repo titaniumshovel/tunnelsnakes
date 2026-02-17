@@ -82,7 +82,7 @@ export async function POST(req: NextRequest) {
           Authorization: `Bearer ${apiKey}`,
         },
         body: JSON.stringify({
-          model: 'claude-4.5-haiku',
+          model: 'claude-4.5-sonnet',
           messages: [
             { role: 'system', content: systemPrompt },
             ...messages.slice(-10), // Keep last 10 messages for context
