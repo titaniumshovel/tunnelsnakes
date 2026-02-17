@@ -58,6 +58,17 @@ export default function DraftBoardPage() {
     }
   }
 
+  // Compute worst picks: for each team, in rounds with 2+ picks, highest slot = worst (must trade first)
+  const worstPickSet = new Set<string>()
+  for (const [, roundMap] of ownerRoundMap) {
+    for (const [round, picks] of roundMap) {
+      if (picks.length > 1) {
+        const worst = Math.max(...picks.map(p => p.slot))
+        worstPickSet.add(`${round}.${worst}`)
+      }
+    }
+  }
+
   return (
     <main className="min-h-screen bg-background">
       {/* Page Header (nav is in layout) */}
@@ -141,6 +152,12 @@ export default function DraftBoardPage() {
               A+
             </button>
           </div>
+        </div>
+
+        {/* Worst Pick Rule Legend */}
+        <div className="flex items-center gap-2 text-xs font-mono text-amber-700 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/10 border border-amber-300/30 rounded-md px-3 py-1.5">
+          <span className="text-amber-600 font-bold">▼</span>
+          <span><span className="font-bold">Worst Pick Rule:</span> When a team has multiple picks in a round, the highest slot (▼) must be traded first.</span>
         </div>
 
         {showTrades && (
@@ -228,9 +245,12 @@ export default function DraftBoardPage() {
                           >
                             <div className={`rounded px-1 py-1.5 border ${
                               colors ? `${colors.bg} ${colors.border}` : 'bg-muted border-border'
-                            } ${isTraded ? 'ring-1 ring-accent/30' : ''}`}>
-                              <div className={`font-mono font-bold leading-tight ${colors?.text ?? 'text-foreground'}`} style={{ fontSize: `${fontSize}rem` }}>
+                            } ${isTraded ? 'ring-1 ring-accent/30' : ''} ${worstPickSet.has(`${round}.${slot}`) ? 'ring-2 ring-amber-400/60' : ''}`}>
+                              <div className={`font-mono font-bold leading-tight ${colors?.text ?? 'text-foreground'} flex items-center justify-center gap-0.5`} style={{ fontSize: `${fontSize}rem` }}>
                                 {pick.currentOwner}
+                                {worstPickSet.has(`${round}.${slot}`) && (
+                                  <span className="text-amber-600" style={{ fontSize: `${fontSize * 0.7}rem` }} title="Worst pick — must trade this one first">▼</span>
+                                )}
                               </div>
                               {isTraded && (
                                 <div className={`font-mono leading-tight ${isMultiHop ? 'text-yellow-700' : 'text-accent'}`} style={{ fontSize: `${fontSize * 0.75}rem` }}>
@@ -339,20 +359,28 @@ export default function DraftBoardPage() {
                           )
                         }
 
-                        // Multiple picks in this round
+                        // Multiple picks in this round — mark worst (highest slot)
+                        const worstSlot = Math.max(...picks.map(p => p.slot))
                         return (
                           <td
                             key={round}
                             className={`p-0.5 text-center border border-border/10 ${isNA ? 'bg-amber-950/10' : ''}`}
-                            title={`${owner} — Round ${round}: ${pickCount} picks (slots ${picks.map(p => p.slot).join(', ')})`}
+                            title={`${owner} — Round ${round}: ${pickCount} picks (slots ${picks.map(p => p.slot).join(', ')}). Worst pick rule: slot ${worstSlot} must be traded first.`}
                           >
-                            <div className={`rounded px-0.5 py-1 border relative ${colors?.bg} ${colors?.border}`}
+                            <div className={`rounded px-0.5 py-1 border relative ${colors?.bg} ${colors?.border} ring-1 ring-amber-400/40`}
                               style={{
                                 boxShadow: '0 0 8px rgba(234,179,8,0.25), inset 0 0 6px rgba(234,179,8,0.1)',
                               }}
                             >
                               <div className={`font-mono font-bold leading-tight ${colors?.text}`} style={{ fontSize: `${Math.max(fontSize * 0.75, 0.5)}rem` }}>
-                                {picks.map(p => p.slot).join(',')}
+                                {picks.sort((a, b) => a.slot - b.slot).map((p, i) => (
+                                  <span key={p.slot}>
+                                    {i > 0 && ','}
+                                    <span className={p.slot === worstSlot ? 'text-amber-600 dark:text-amber-400' : ''}>
+                                      {p.slot}{p.slot === worstSlot ? '▼' : ''}
+                                    </span>
+                                  </span>
+                                ))}
                               </div>
                               <div className="absolute -top-1.5 -right-1.5 bg-yellow-500 text-black rounded-full flex items-center justify-center font-mono font-bold"
                                 style={{ fontSize: '0.5rem', width: '14px', height: '14px' }}

@@ -33,6 +33,12 @@ const KEEPER_RULES = `
 - Redraft = reset: If you draft, don't keep, then draft again later = treated as 1st year keeper.
 - Minor league draft rounds: If drafted during regular draft (Rd 1-23) but as a minor leaguer, and a major leaguer is drafted in Rd 24-26, the minor leaguer is treated as Rd 23 for keeper value.
 
+## Worst Pick Trade Rule
+- When a team has multiple picks in the SAME round, they MUST trade the pick with the HIGHEST slot number (latest pick = least valuable).
+- Example: If Alex has Rd 8 slot 2 and Rd 8 slot 4, and wants to trade a Rd 8 pick, he MUST trade slot 4 (the "worst" one).
+- This prevents teams from cherry-picking better draft positions in multi-pick rounds.
+- Always enforce this when evaluating or suggesting trades involving draft picks.
+
 ## ECR Source
 FantasyPros Expert Consensus Ranking (fantasypros.com/mlb/rankings/overall.php)
 `
