@@ -44,6 +44,7 @@ const LEAGUE_INFO = `
 - Format: Head-to-Head, 5x5 Category
 - Teams: 12
 - Draft Date: Friday, March 6, 2026
+- Keeper Deadline: Thursday, February 20, 2026
 - Entry Fee: $200
 - Season: March 25 – September 6, 2026
 

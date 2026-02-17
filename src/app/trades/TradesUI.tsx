@@ -275,7 +275,7 @@ export function TradesUI() {
           </div>
         )}
 
-        {/* Propose Trade CTA */}
+        {/* Report Trade CTA */}
         <button
           onClick={() => setFilter(filter === 'propose' ? 'all' : 'propose')}
           className={`w-full py-3 px-4 rounded-lg text-sm font-bold uppercase tracking-wider transition-all duration-200 flex items-center justify-center gap-2 ${
@@ -287,12 +287,12 @@ export function TradesUI() {
           {filter === 'propose' ? (
             <>
               <span className="text-lg">✕</span>
-              Close Proposal Form
+              Close Trade Report Form
             </>
           ) : (
             <>
               <span className="text-lg">⚾</span>
-              Propose a Trade
+              Report a Trade
               <span className="text-lg">→</span>
             </>
           )}
@@ -335,18 +335,18 @@ export function TradesUI() {
         {filter === 'propose' ? (
           <div className="dashboard-card p-6">
             <h2 className="text-lg font-bold text-primary font-serif mb-2 flex items-center gap-2">
-              ⚾ Propose a Trade
+              ⚾ Report a Trade
             </h2>
             <p className="text-sm text-muted-foreground font-mono mb-4">
-              Put your offer in plain English. Include picks, players, whatever you&apos;ve got.
-              The Commissioner will review your proposal.
+              Already agreed on a deal? Report it here in plain English. Include picks, players, whatever was exchanged.
+              The Commissioner will review and process it.
             </p>
             {offerStatus === 'success' ? (
               <div className="text-center py-8">
                 <div className="text-4xl mb-3">⚾</div>
-                <div className="font-bold text-primary text-lg uppercase tracking-wider">Trade Proposal Submitted!</div>
+                <div className="font-bold text-primary text-lg uppercase tracking-wider">Trade Reported!</div>
                 <p className="mt-2 text-sm text-muted-foreground font-mono">
-                  The Commissioner will review your proposal and get back to you.
+                  The Commissioner will review your trade report and process it.
                 </p>
                 <button
                   onClick={() => {
@@ -436,7 +436,7 @@ export function TradesUI() {
                   disabled={offerStatus === 'submitting'}
                   className="w-full px-4 py-3 rounded-md bg-primary text-primary-foreground font-bold text-sm uppercase tracking-wider hover:bg-primary/90 transition-colors disabled:opacity-50"
                 >
-                  {offerStatus === 'submitting' ? '⏳ SUBMITTING...' : '⚾ SUBMIT TRADE PROPOSAL'}
+                  {offerStatus === 'submitting' ? '⏳ SUBMITTING...' : '📋 SUBMIT TRADE REPORT'}
                 </button>
               </form>
             )}

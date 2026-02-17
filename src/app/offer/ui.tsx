@@ -42,7 +42,7 @@ export function OfferForm() {
     if (!res.ok) {
       const text = await res.text()
       setStatus('error')
-      setError(text || 'Transmission failed. The wasteland is unforgiving.')
+      setError(text || 'Something went wrong. Please try again.')
       return
     }
 
@@ -52,21 +52,21 @@ export function OfferForm() {
   if (status === 'success') {
     return (
       <div className="dashboard-card text-center py-8">
-        <div className="text-4xl mb-3">☢️</div>
-        <div className="font-bold text-primary text-lg uppercase tracking-wider">Trade Transmitted</div>
+        <div className="text-4xl mb-3">⚾</div>
+        <div className="font-bold text-primary text-lg uppercase tracking-wider">Trade Reported</div>
         <p className="mt-2 text-sm text-muted-foreground font-mono">
-          The Overseer will review your proposal. Stand by, wastelander.
+          The Commissioner will review your trade report and process it. Stand by, manager.
         </p>
       </div>
     )
   }
 
-  const inputClasses = "mt-1 w-full rounded-md border border-border bg-secondary px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary/50 font-mono"
+  const inputClasses = "mt-1 w-full rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary/50 font-mono"
 
   return (
     <form onSubmit={onSubmit} className="space-y-4">
       <div>
-        <label className="block text-sm font-semibold uppercase tracking-wider text-primary/80">Your Faction</label>
+        <label className="block text-sm font-semibold uppercase tracking-wider text-primary/80">Your Team</label>
         <select
           className={inputClasses}
           value={teamName}
@@ -88,43 +88,43 @@ export function OfferForm() {
           className={inputClasses}
           value={displayName}
           onChange={(e) => setDisplayName(e.target.value)}
-          placeholder="Vault Dweller"
+          placeholder="Your name"
         />
       </div>
 
       <div>
         <label className="block text-sm font-semibold uppercase tracking-wider text-primary/80">
-          Pip-Boy Mail <span className="normal-case text-muted-foreground font-normal">(optional)</span>
+          Email <span className="normal-case text-muted-foreground font-normal">(optional)</span>
         </label>
         <input
           className={inputClasses}
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           type="email"
-          placeholder="dweller@vault101.com"
+          placeholder="you@example.com"
         />
       </div>
 
       <div>
-        <label className="block text-sm font-semibold uppercase tracking-wider text-primary/80">Your Offer</label>
+        <label className="block text-sm font-semibold uppercase tracking-wider text-primary/80">Trade Details</label>
         <textarea
           className={`${inputClasses} min-h-[120px]`}
           value={offerText}
           onChange={(e) => setOfferText(e.target.value)}
           required
-          placeholder="I'll trade you Pick #3 + Player X for Player Y. Throw in some Nuka-Cola and we've got a deal."
+          placeholder="Describe the trade you've agreed on — include picks, players, whatever was exchanged."
         />
       </div>
 
       <div>
         <label className="block text-sm font-semibold uppercase tracking-wider text-primary/80">
-          Additional Intel <span className="normal-case text-muted-foreground font-normal">(optional)</span>
+          Additional Notes <span className="normal-case text-muted-foreground font-normal">(optional)</span>
         </label>
         <textarea
           className={`${inputClasses} min-h-[80px]`}
           value={message}
           onChange={(e) => setMessage(e.target.value)}
-          placeholder="Anything else the Overseer should know..."
+          placeholder="Anything else the Commissioner should know..."
         />
       </div>
 
@@ -133,7 +133,7 @@ export function OfferForm() {
       ) : null}
 
       <button type="submit" disabled={status === 'submitting'} className="btn-trade w-full">
-        {status === 'submitting' ? '⏳ TRANSMITTING...' : '⚡ SUBMIT TRADE PROPOSAL'}
+        {status === 'submitting' ? '⏳ SUBMITTING...' : '📋 SUBMIT TRADE REPORT'}
       </button>
     </form>
   )

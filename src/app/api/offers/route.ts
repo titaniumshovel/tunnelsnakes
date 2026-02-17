@@ -78,13 +78,13 @@ export async function POST(req: Request) {
 
   // Send Telegram notification
   const lines = [
-    `🐍 <b>NEW TRADE OFFER</b>`,
+    `⚾ <b>NEW TRADE REPORT</b>`,
     ``,
     `<b>From:</b> ${teamName}${displayName ? ` (${displayName})` : ''}`,
-    `<b>Wants:</b> ${playerName}`,
-    `<b>Offer:</b> ${offerText}`,
-  ]
-  if (message) lines.push(`<b>Message:</b> ${message}`)
+    requestedPlayerId ? `<b>Regarding:</b> ${playerName}` : null,
+    `<b>Details:</b> ${offerText}`,
+  ].filter(Boolean) as string[]
+  if (message) lines.push(`<b>Notes:</b> ${message}`)
   lines.push(``, `<i>thesandlot.app</i>`)
 
   await notifyTelegram(lines.join('\n'))
