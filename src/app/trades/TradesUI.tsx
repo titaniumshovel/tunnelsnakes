@@ -75,10 +75,11 @@ function formatDate(dateStr: string): string {
   return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
 }
 
-function formatPickList(picks: (TradePickInfo | string)[]): string {
+function formatPickList(picks: TradePickInfo[]): string {
   if (!picks || picks.length === 0) return ''
   return picks.map(p => {
-    if (typeof p === 'string') return p
+    // All picks are now stored as {round, slot} objects
+    if (typeof p === 'string') return p // legacy fallback
     if (p.round && p.slot) return `Rd ${p.round}.${p.slot}`
     if (p.round) return `Rd ${p.round}`
     return String(p)
