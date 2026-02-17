@@ -39,6 +39,7 @@ type RosterPlayer = {
     eligible_positions: string[] | null
     is_na_eligible: boolean | null
     na_eligibility_reason: string | null
+    mlb_debut_date: string | null
   } | null
 }
 
@@ -642,11 +643,19 @@ function ValidateKeepers({ roster }: { roster: RosterPlayer[] }) {
       errors.push(`Multiple 7th Keepers selected: ${seventhKeeper.length}/1 maximum`)
     }
 
-    // If keeping-7th is used, warn that it's honor system
+    // Validate 7th keeper eligibility against MLB debut data
     if (seventhKeeper.length === 1) {
       const player = seventhKeeper[0]
       if (player.players) {
-        warnings.push(`⭐ 7th Keeper is honor system — make sure ${player.players.full_name} is in their first MLB year`)
+        const debutDate = player.players.mlb_debut_date
+        if (debutDate) {
+          const debutYear = new Date(debutDate).getFullYear()
+          if (debutYear < 2025) {
+            errors.push(`❌ ${player.players.full_name} debuted in ${debutYear} — not eligible for 7th Keeper (must be in first MLB year)`)
+          }
+          // If debut in 2025-2026, it's valid — no message needed
+        }
+        // If no debut date (null), they haven't debuted — that's valid for 7th keeper
       }
     }
 
@@ -654,7 +663,14 @@ function ValidateKeepers({ roster }: { roster: RosterPlayer[] }) {
     const isValid = errors.length === 0
 
     if (isValid && allMessages.length === 0) {
-      allMessages.push("✅ Keeper configuration is valid! Ready to submit by Feb 20.")
+      const seventhName = seventhKeeper.length === 1 && seventhKeeper[0].players
+        ? seventhKeeper[0].players.full_name
+        : null
+      if (seventhName) {
+        allMessages.push(`✅ Keeper configuration is valid! 7th keeper (${seventhName}) confirmed eligible. Ready to submit by Feb 20.`)
+      } else {
+        allMessages.push("✅ Keeper configuration is valid! Ready to submit by Feb 20.")
+      }
     }
 
     setValidationResult({ isValid, messages: allMessages })
