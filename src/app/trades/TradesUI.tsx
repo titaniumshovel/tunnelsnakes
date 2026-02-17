@@ -86,44 +86,6 @@ function formatPickList(picks: TradePickInfo[]): string {
   }).join(', ')
 }
 
-// Compute the "worst pick" map: for each team, in rounds where they have 2+ picks,
-// the highest slot number (latest pick = least valuable) is the one that MUST be traded.
-// Returns a Set of "round.slot" strings that are worst picks.
-function getWorstPickMap(): { worstSet: Set<string>; multiRoundTeams: Map<string, Map<number, number[]>> } {
-  const boardPicks = draftBoard.picks as Record<string, Array<{
-    slot: number
-    currentOwner: string
-  }>>
-
-  // Build team → round → slots map
-  const teamRounds = new Map<string, Map<number, number[]>>()
-  for (const [roundStr, picks] of Object.entries(boardPicks)) {
-    const round = parseInt(roundStr)
-    for (const p of picks) {
-      if (!teamRounds.has(p.currentOwner)) teamRounds.set(p.currentOwner, new Map())
-      const roundMap = teamRounds.get(p.currentOwner)!
-      if (!roundMap.has(round)) roundMap.set(round, [])
-      roundMap.get(round)!.push(p.slot)
-    }
-  }
-
-  const worstSet = new Set<string>()
-  const multiRoundTeams = new Map<string, Map<number, number[]>>()
-
-  for (const [team, roundMap] of teamRounds) {
-    for (const [round, slots] of roundMap) {
-      if (slots.length > 1) {
-        const worst = Math.max(...slots)
-        worstSet.add(`${round}.${worst}`)
-        if (!multiRoundTeams.has(team)) multiRoundTeams.set(team, new Map())
-        multiRoundTeams.get(team)!.set(round, slots.sort((a, b) => a - b))
-      }
-    }
-  }
-
-  return { worstSet, multiRoundTeams }
-}
-
 // Extract all traded picks from draft-board.json
 function getTradedPicks(): TradedPick[] {
   const picks: TradedPick[] = []
@@ -379,14 +341,6 @@ export function TradesUI() {
               Put your offer in plain English. Include picks, players, whatever you&apos;ve got.
               The Commissioner will review your proposal.
             </p>
-            <div className="rounded-md border border-amber-400/30 bg-amber-50 dark:bg-amber-900/10 px-3 py-2 mb-6">
-              <p className="text-xs font-mono text-amber-800 dark:text-amber-300">
-                <span className="font-bold">⚠️ WORST PICK RULE:</span> If you have multiple picks in the same round,
-                you <span className="font-bold">must</span> trade the one with the highest slot number (latest pick).
-                Check the <span className="font-bold">📍 Pick Trail</span> tab to see which picks are flagged.
-              </p>
-            </div>
-
             {offerStatus === 'success' ? (
               <div className="text-center py-8">
                 <div className="text-4xl mb-3">⚾</div>
@@ -530,7 +484,6 @@ export function TradesUI() {
 // ============================================
 function PickOriginTrail() {
   const tradedPicks = useMemo(() => getTradedPicks(), [])
-  const { worstSet } = useMemo(() => getWorstPickMap(), [])
   const [teamFilter, setTeamFilter] = useState<string>('all')
   const [expandedPick, setExpandedPick] = useState<string | null>(null)
 
@@ -581,13 +534,6 @@ function PickOriginTrail() {
             <p className="text-xs font-mono text-muted-foreground mt-1">
               {tradedPicks.length} picks changed hands across the offseason. Click any pick to trace its journey.
             </p>
-            <div className="mt-3 rounded-md border border-amber-400/30 bg-amber-50 dark:bg-amber-900/10 px-3 py-2">
-              <p className="text-xs font-mono text-amber-800 dark:text-amber-300">
-                <span className="font-bold">⚠️ WORST PICK RULE:</span> When a team has multiple picks in the same round,
-                they must trade the <span className="font-bold">highest slot number</span> (latest pick = least valuable).
-                Picks marked with <span className="inline-flex items-center px-1 py-0.5 rounded bg-amber-200 dark:bg-amber-800 text-amber-900 dark:text-amber-200 text-[10px] font-bold">▼ WORST</span> must be traded first.
-              </p>
-            </div>
           </div>
           <select
             value={teamFilter}
@@ -637,7 +583,6 @@ function PickOriginTrail() {
                 const pickKey = `${pick.round}.${pick.slot}`
                 const isExpanded = expandedPick === pickKey
                 const origColors = TEAM_COLORS[pick.originalOwner]
-                const isWorst = worstSet.has(pickKey)
 
                 return (
                   <button
@@ -646,9 +591,7 @@ function PickOriginTrail() {
                     className={`text-left rounded-md border p-2 transition-all ${
                       isExpanded
                         ? `${ownerColors?.bg ?? 'bg-secondary'} ${ownerColors?.border ?? 'border-border'}`
-                        : isWorst
-                          ? 'bg-amber-50 dark:bg-amber-900/10 border-amber-300 dark:border-amber-700 hover:border-amber-400'
-                          : 'bg-secondary/50 border-border hover:border-primary/30'
+                        : 'bg-secondary/50 border-border hover:border-primary/30'
                     }`}
                   >
                     <div className="flex items-center justify-between">
@@ -656,11 +599,6 @@ function PickOriginTrail() {
                         Rd {pick.round}.{pick.slot}
                       </span>
                       <div className="flex items-center gap-1">
-                        {isWorst && (
-                          <span className="px-1 py-0.5 rounded bg-amber-200 dark:bg-amber-800 text-amber-900 dark:text-amber-200 text-[8px] font-bold leading-none" title="Worst pick in round — must trade this one first">
-                            ▼
-                          </span>
-                        )}
                         <span className={`w-2 h-2 rounded-full ${origColors?.dot ?? 'bg-muted-foreground'}`}
                           title={`Originally: ${pick.originalOwner}`} />
                       </div>
