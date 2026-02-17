@@ -47,7 +47,7 @@ export async function PATCH(req: Request) {
   // Verify ownership: the roster player must belong to this manager's team
   const { data: rosterPlayer } = await supabase
     .from('my_roster_players')
-    .select('id, yahoo_team_key, players(eligible_positions)')
+    .select('id, yahoo_team_key, players(eligible_positions, is_na_eligible)')
     .eq('id', roster_player_id)
     .single()
 
@@ -55,10 +55,12 @@ export async function PATCH(req: Request) {
     return NextResponse.json({ error: 'Roster player not found' }, { status: 404 })
   }
 
-  // Gate NA keepers: only allow keeping-na for players with NA in eligible_positions
+  // Gate NA keepers: allow keeping-na if player has is_na_eligible flag OR NA in eligible_positions
   if (keeper_status === 'keeping-na') {
-    const eligible = (rosterPlayer as { players?: { eligible_positions?: string[] } }).players?.eligible_positions ?? []
-    if (!eligible.includes('NA')) {
+    const players = rosterPlayer as { players?: { eligible_positions?: string[]; is_na_eligible?: boolean } }
+    const eligible = players.players?.eligible_positions ?? []
+    const isNAEligible = players.players?.is_na_eligible === true || eligible.includes('NA')
+    if (!isNAEligible) {
       return NextResponse.json({ error: 'This player is not minor league (NA) eligible' }, { status: 400 })
     }
   }
