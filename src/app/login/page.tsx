@@ -11,15 +11,14 @@ export default function LoginPage() {
   const [step, setStep] = useState<'email' | 'code'>('email')
   const [error, setError] = useState<string | null>(null)
   const [verifying, setVerifying] = useState(false)
-  const OTP_LENGTH = 8
-  const [otp, setOtp] = useState(Array(8).fill(''))
-  const inputRefs = useRef<(HTMLInputElement | null)[]>([])
+  const [code, setCode] = useState('')
+  const codeInputRef = useRef<HTMLInputElement>(null)
   const router = useRouter()
 
-  // Auto-focus first OTP input when step changes
+  // Auto-focus code input when step changes
   useEffect(() => {
     if (step === 'code') {
-      setTimeout(() => inputRefs.current[0]?.focus(), 100)
+      setTimeout(() => codeInputRef.current?.focus(), 100)
     }
   }, [step])
 
@@ -46,7 +45,7 @@ export default function LoginPage() {
     }
   }
 
-  async function handleVerifyOtp(code: string) {
+  async function handleVerifyOtp(token: string) {
     setVerifying(true)
     setError(null)
 
@@ -54,7 +53,7 @@ export default function LoginPage() {
 
     const { error } = await supabase.auth.verifyOtp({
       email,
-      token: code,
+      token,
       type: 'email',
     })
 
@@ -62,60 +61,22 @@ export default function LoginPage() {
 
     if (error) {
       setError('Invalid or expired code. Please try again.')
-      setOtp(Array(OTP_LENGTH).fill(''))
-      setTimeout(() => inputRefs.current[0]?.focus(), 100)
+      setCode('')
+      setTimeout(() => codeInputRef.current?.focus(), 100)
     } else {
-      // Success — redirect to dashboard
       router.push('/dashboard')
       router.refresh()
     }
   }
 
-  function handleOtpChange(index: number, value: string) {
-    // Only allow digits
-    const digit = value.replace(/\D/g, '').slice(-1)
-    const newOtp = [...otp]
-    newOtp[index] = digit
-    setOtp(newOtp)
+  function handleCodeChange(value: string) {
+    // Only allow digits, max 8
+    const digits = value.replace(/\D/g, '').slice(0, 8)
+    setCode(digits)
 
-    // Auto-advance to next input
-    if (digit && index < OTP_LENGTH - 1) {
-      inputRefs.current[index + 1]?.focus()
-    }
-
-    // Auto-submit when all digits entered
-    if (digit && index === OTP_LENGTH - 1) {
-      const fullCode = newOtp.join('')
-      if (fullCode.length === OTP_LENGTH) {
-        handleVerifyOtp(fullCode)
-      }
-    }
-  }
-
-  function handleOtpKeyDown(index: number, e: React.KeyboardEvent) {
-    if (e.key === 'Backspace' && !otp[index] && index > 0) {
-      inputRefs.current[index - 1]?.focus()
-    }
-  }
-
-  function handleOtpPaste(e: React.ClipboardEvent) {
-    e.preventDefault()
-    const pasted = e.clipboardData.getData('text').replace(/\D/g, '').slice(0, OTP_LENGTH)
-    if (pasted.length === 0) return
-
-    const newOtp = [...otp]
-    for (let i = 0; i < OTP_LENGTH; i++) {
-      newOtp[i] = pasted[i] || ''
-    }
-    setOtp(newOtp)
-
-    // Focus the next empty slot or last
-    const nextEmpty = newOtp.findIndex(d => !d)
-    inputRefs.current[nextEmpty === -1 ? 5 : nextEmpty]?.focus()
-
-    // Auto-submit if full
-    if (pasted.length === OTP_LENGTH) {
-      handleVerifyOtp(pasted)
+    // Auto-submit when 6 or 8 digits entered
+    if (digits.length === 6 || digits.length === 8) {
+      handleVerifyOtp(digits)
     }
   }
 
@@ -150,26 +111,19 @@ export default function LoginPage() {
                 </p>
               </div>
 
-              {/* OTP Input */}
-              <div className="flex justify-center gap-2 sm:gap-3" onPaste={handleOtpPaste}>
-                {otp.map((digit, i) => (
-                  <input
-                    key={i}
-                    ref={el => { inputRefs.current[i] = el }}
-                    type="text"
-                    inputMode="numeric"
-                    maxLength={1}
-                    value={digit}
-                    onChange={(e) => handleOtpChange(i, e.target.value)}
-                    onKeyDown={(e) => handleOtpKeyDown(i, e)}
-                    disabled={verifying}
-                    className={`w-9 h-12 sm:w-11 sm:h-14 text-center text-xl sm:text-2xl font-mono font-bold rounded-lg border-2 bg-background text-foreground transition-all duration-150 focus:outline-none ${
-                      digit
-                        ? 'border-primary/50 bg-primary/5'
-                        : 'border-primary/20'
-                    } focus:border-primary focus:ring-2 focus:ring-primary/20 disabled:opacity-50`}
-                  />
-                ))}
+              {/* Single code input — paste-friendly, mobile-friendly */}
+              <div className="flex justify-center">
+                <input
+                  ref={codeInputRef}
+                  type="text"
+                  inputMode="numeric"
+                  autoComplete="one-time-code"
+                  value={code}
+                  onChange={(e) => handleCodeChange(e.target.value)}
+                  disabled={verifying}
+                  placeholder="Enter code"
+                  className="w-full max-w-[280px] h-16 text-center text-3xl font-mono font-bold tracking-[0.4em] rounded-lg border-2 bg-background text-foreground transition-all duration-150 focus:outline-none border-primary/20 focus:border-primary focus:ring-2 focus:ring-primary/20 disabled:opacity-50 placeholder:text-muted-foreground/30 placeholder:text-lg placeholder:tracking-normal"
+                />
               </div>
 
               {verifying && (
@@ -186,13 +140,13 @@ export default function LoginPage() {
 
               <div className="flex items-center justify-between pt-2">
                 <button
-                  onClick={() => { setStep('email'); setOtp(Array(OTP_LENGTH).fill('')); setError(null) }}
+                  onClick={() => { setStep('email'); setCode(''); setError(null) }}
                   className="text-xs font-mono text-primary/60 hover:text-primary transition-colors"
                 >
                   ← Different email
                 </button>
                 <button
-                  onClick={() => { setOtp(['', '', '', '', '', '']); setError(null); handleEmailSubmit(new Event('submit') as unknown as React.FormEvent) }}
+                  onClick={() => { setCode(''); setError(null); handleEmailSubmit(new Event('submit') as unknown as React.FormEvent) }}
                   disabled={loading}
                   className="text-xs font-mono text-accent hover:text-accent/80 transition-colors disabled:opacity-50"
                 >
