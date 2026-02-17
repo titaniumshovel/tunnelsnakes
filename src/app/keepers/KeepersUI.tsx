@@ -27,6 +27,7 @@ const MAX_NA = 4
 
 const STATUS_DISPLAY: Record<string, { icon: string; label: string; color: string }> = {
   keeping: { icon: '🔒', label: 'Locked', color: 'text-secondary' },
+  'keeping-7th': { icon: '⭐', label: '7th Keeper', color: 'text-amber-400' },
   'keeping-na': { icon: '🔷', label: 'NA Keeper', color: 'text-blue-400' },
   undecided: { icon: '⏳', label: 'Undecided', color: 'text-amber-400' },
   'not-keeping': { icon: '❌', label: 'Not Keeping', color: 'text-red-400' },
@@ -96,8 +97,8 @@ export function KeepersUI() {
       mgrs.sort((a, b) => a.teamName.localeCompare(b.teamName))
     } else if (sortBy === 'round' || sortBy === 'ecr') {
       mgrs.sort((a, b) => {
-        const aKeepers = (teamKeepers[a.displayName] ?? []).filter(rp => rp.keeper_status === 'keeping' || rp.keeper_status === 'keeping-na').length
-        const bKeepers = (teamKeepers[b.displayName] ?? []).filter(rp => rp.keeper_status === 'keeping' || rp.keeper_status === 'keeping-na').length
+        const aKeepers = (teamKeepers[a.displayName] ?? []).filter(rp => rp.keeper_status === 'keeping' || rp.keeper_status === 'keeping-7th' || rp.keeper_status === 'keeping-na').length
+        const bKeepers = (teamKeepers[b.displayName] ?? []).filter(rp => rp.keeper_status === 'keeping' || rp.keeper_status === 'keeping-7th' || rp.keeper_status === 'keeping-na').length
         if (bKeepers !== aKeepers) return bKeepers - aKeepers
         return a.teamName.localeCompare(b.teamName)
       })
@@ -187,6 +188,7 @@ export function KeepersUI() {
             const colors = TEAM_COLORS[mgr.colorKey]
             const roster = teamKeepers[mgr.displayName] ?? []
             const keepers = roster.filter(rp => rp.keeper_status === 'keeping')
+            const seventhKeepers = roster.filter(rp => rp.keeper_status === 'keeping-7th')
             const naKeepers = roster.filter(rp => rp.keeper_status === 'keeping-na')
             const undecided = roster.filter(rp => rp.keeper_status === 'undecided')
             const notKeeping = roster.filter(rp => rp.keeper_status === 'not-keeping')
@@ -230,8 +232,8 @@ export function KeepersUI() {
                   </div>
                 ) : (
                   <div className="space-y-1">
-                    {/* Show keepers first, then NA, then undecided (limited), then not-keeping (limited) */}
-                    {[...keepers, ...naKeepers].map(rp => {
+                    {/* Show keepers first, then 7th keeper, then NA, then undecided (limited), then not-keeping (limited) */}
+                    {[...keepers, ...seventhKeepers, ...naKeepers].map(rp => {
                       if (!rp.players) return null
                       const statusInfo = STATUS_DISPLAY[rp.keeper_status] ?? STATUS_DISPLAY.undecided
                       const costRound = rp.keeper_cost_round ?? rp.players.keeper_cost_round

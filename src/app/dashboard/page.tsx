@@ -47,9 +47,10 @@ function isNAEligible(rp: RosterPlayer): boolean {
 const MAX_KEEPERS = 6
 const MAX_NA = 4
 
-const STATUS_CYCLE = ['undecided', 'keeping', 'keeping-na', 'not-keeping'] as const
+const STATUS_CYCLE = ['undecided', 'keeping', 'keeping-7th', 'keeping-na', 'not-keeping'] as const
 const STATUS_DISPLAY: Record<string, { icon: string; label: string; color: string; bg: string; border: string }> = {
   keeping: { icon: '🔒', label: 'KEEPING', color: 'text-secondary', bg: 'bg-secondary/10', border: 'border-secondary/30' },
+  'keeping-7th': { icon: '⭐', label: '7TH KEEPER', color: 'text-amber-400', bg: 'bg-amber-500/10', border: 'border-amber-500/30' },
   'keeping-na': { icon: '🔷', label: 'KEEPER (NA)', color: 'text-blue-400', bg: 'bg-blue-500/10', border: 'border-blue-500/30' },
   undecided: { icon: '⏳', label: 'UNDECIDED', color: 'text-amber-400', bg: 'bg-amber-500/5', border: 'border-amber-500/20' },
   'not-keeping': { icon: '❌', label: 'NOT KEEPING', color: 'text-red-400', bg: 'bg-red-500/5', border: 'border-red-500/20' },
@@ -117,6 +118,7 @@ export default function DashboardPage() {
     // Determine next status in cycle, skipping any that are at limit
     const currentIdx = STATUS_CYCLE.indexOf(rp.keeper_status as typeof STATUS_CYCLE[number])
     const currentKeepers = roster.filter(r => r.id !== rp.id && r.keeper_status === 'keeping').length
+    const currentSeventhKeeper = roster.filter(r => r.id !== rp.id && r.keeper_status === 'keeping-7th').length
     const currentNA = roster.filter(r => r.id !== rp.id && r.keeper_status === 'keeping-na').length
 
     let nextStatus: typeof STATUS_CYCLE[number] | null = null
@@ -127,6 +129,15 @@ export default function DashboardPage() {
       if (candidate === 'keeping' && currentKeepers >= MAX_KEEPERS) {
         // Show warning and skip
         setLimitWarning(`Keeper limit reached (${MAX_KEEPERS}/${MAX_KEEPERS}). Remove a keeper first.`)
+        setTimeout(() => setLimitWarning(null), 3000)
+        continue
+      }
+      if (candidate === 'keeping-7th' && isNAEligible(rp)) {
+        // NA players use NA slots, not 7th keeper — skip this state
+        continue
+      }
+      if (candidate === 'keeping-7th' && currentSeventhKeeper >= 1) {
+        setLimitWarning(`7th Keeper slot already used. Only 1 per team.`)
         setTimeout(() => setLimitWarning(null), 3000)
         continue
       }
@@ -226,11 +237,12 @@ export default function DashboardPage() {
 
   // Keeper counts
   const keepersSelected = roster.filter(r => r.keeper_status === 'keeping').length
+  const seventhKeeper = roster.filter(r => r.keeper_status === 'keeping-7th').length
   const naKeepers = roster.filter(r => r.keeper_status === 'keeping-na').length
   const notKeepingCount = roster.filter(r => r.keeper_status === 'not-keeping').length
 
-  // Sort roster: keepers first, then NA, then undecided, then not-keeping
-  const sortOrder: Record<string, number> = { 'keeping': 0, 'keeping-na': 1, 'undecided': 2, 'not-keeping': 3 }
+  // Sort roster: keepers first, then 7th keeper, then NA, then undecided, then not-keeping
+  const sortOrder: Record<string, number> = { 'keeping': 0, 'keeping-7th': 1, 'keeping-na': 2, 'undecided': 3, 'not-keeping': 4 }
   const sortedRoster = [...roster].sort((a, b) => {
     const aOrder = sortOrder[a.keeper_status] ?? 2
     const bOrder = sortOrder[b.keeper_status] ?? 2
@@ -276,7 +288,7 @@ export default function DashboardPage() {
         </div>
 
         {/* Stats Row */}
-        <div className="grid grid-cols-3 sm:grid-cols-6 gap-4">
+        <div className="grid grid-cols-3 sm:grid-cols-7 gap-4">
           <div className="dashboard-card p-4 text-center">
             <div className="text-2xl font-bold text-primary font-mono">{totalPicks}</div>
             <div className="text-[10px] font-mono text-muted-foreground uppercase tracking-wider">Total Picks</div>
@@ -292,6 +304,10 @@ export default function DashboardPage() {
           <div className="dashboard-card p-4 text-center">
             <div className="text-2xl font-bold text-secondary font-mono">{keepersSelected}</div>
             <div className="text-[10px] font-mono text-muted-foreground uppercase tracking-wider">Keepers</div>
+          </div>
+          <div className="dashboard-card p-4 text-center">
+            <div className="text-2xl font-bold text-amber-400 font-mono">{seventhKeeper}</div>
+            <div className="text-[10px] font-mono text-muted-foreground uppercase tracking-wider">7th Keeper</div>
           </div>
           <div className="dashboard-card p-4 text-center">
             <div className="text-2xl font-bold text-blue-400 font-mono">{naKeepers}</div>
@@ -311,6 +327,7 @@ export default function DashboardPage() {
             </h2>
             <div className="flex items-center gap-3 text-xs font-mono">
               <span className="text-secondary">🔒 {keepersSelected}/{MAX_KEEPERS}</span>
+              <span className="text-amber-400">⭐ {seventhKeeper}/1</span>
               <span className="text-blue-400">🔷 {naKeepers}/{MAX_NA}</span>
             </div>
           </div>
@@ -401,8 +418,10 @@ export default function DashboardPage() {
           )}
 
           <div className="mt-3 text-xs font-mono text-muted-foreground/60 text-center">
-            Click to cycle: ⏳ Undecided → 🔒 Keeping → 🔷 NA Keeper → ❌ Not Keeping
+            Click to cycle: ⏳ Undecided → 🔒 Keeping → ⭐ 7th Keeper → 🔷 NA Keeper → ❌ Not Keeping
           </div>
+
+          <ValidateKeepers roster={roster} />
         </div>
 
         {/* Draft Picks */}
@@ -494,6 +513,82 @@ export default function DashboardPage() {
         </div>
       </div>
     </main>
+  )
+}
+
+function ValidateKeepers({ roster }: { roster: RosterPlayer[] }) {
+  const [validationResult, setValidationResult] = useState<{ isValid: boolean; messages: string[] } | null>(null)
+
+  function validateKeepers() {
+    const keepersSelected = roster.filter(r => r.keeper_status === 'keeping').length
+    const seventhKeeper = roster.filter(r => r.keeper_status === 'keeping-7th')
+    const naKeepers = roster.filter(r => r.keeper_status === 'keeping-na').length
+    
+    const errors: string[] = []
+    const warnings: string[] = []
+
+    // Check total keepers (keeping + keeping-7th) doesn't exceed 7
+    const totalKeepers = keepersSelected + seventhKeeper.length
+    if (totalKeepers > 7) {
+      errors.push(`Too many total keepers: ${totalKeepers}/7 maximum`)
+    }
+
+    // Check regular keepers doesn't exceed 6
+    if (keepersSelected > MAX_KEEPERS) {
+      errors.push(`Too many regular keepers: ${keepersSelected}/${MAX_KEEPERS} maximum`)
+    }
+
+    // Check NA keepers doesn't exceed 4
+    if (naKeepers > MAX_NA) {
+      errors.push(`Too many NA keepers: ${naKeepers}/${MAX_NA} maximum`)
+    }
+
+    // Check at most 1 player has keeping-7th status
+    if (seventhKeeper.length > 1) {
+      errors.push(`Multiple 7th Keepers selected: ${seventhKeeper.length}/1 maximum`)
+    }
+
+    // If keeping-7th is used, warn that it's honor system
+    if (seventhKeeper.length === 1) {
+      const player = seventhKeeper[0]
+      if (player.players) {
+        warnings.push(`⭐ 7th Keeper is honor system — make sure ${player.players.full_name} is in their first MLB year`)
+      }
+    }
+
+    const allMessages = [...errors, ...warnings]
+    const isValid = errors.length === 0
+
+    if (isValid && allMessages.length === 0) {
+      allMessages.push("✅ Keeper configuration is valid! Ready to submit by Feb 20.")
+    }
+
+    setValidationResult({ isValid, messages: allMessages })
+  }
+
+  return (
+    <div className="mt-4">
+      <button
+        onClick={validateKeepers}
+        className="w-full px-4 py-3 rounded-md border border-primary/30 bg-primary/5 hover:bg-primary/10 text-sm font-mono font-bold text-primary transition-colors"
+      >
+        ✅ Validate Keeper Configuration
+      </button>
+      
+      {validationResult && (
+        <div className={`mt-3 px-4 py-3 rounded-md text-sm font-mono ${
+          validationResult.isValid 
+            ? 'bg-green-500/10 border border-green-500/30 text-green-400' 
+            : 'bg-red-500/10 border border-red-500/30 text-red-400'
+        }`}>
+          {validationResult.messages.map((message, index) => (
+            <div key={index} className={index > 0 ? 'mt-2' : ''}>
+              {message}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
   )
 }
 
