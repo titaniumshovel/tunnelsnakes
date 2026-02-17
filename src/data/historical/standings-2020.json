@@ -1,0 +1,92 @@
+{
+  "year": 2020,
+  "leagueKey": "398.l.82390",
+  "champion": "Nick",
+  "championTeam": "Red Stagz",
+  "runnerUp": "Mike",
+  "runnerUpTeam": "The Dirty Farm",
+  "third": "Greasy",
+  "thirdTeam": "Greasy Cap Advisors",
+  "standings": [
+    {
+      "rank": 1,
+      "team": "Nick",
+      "teamName": "Red Stagz",
+      "wins": 45,
+      "losses": 21,
+      "ties": 4
+    },
+    {
+      "rank": 2,
+      "team": "Mike",
+      "teamName": "The Dirty Farm",
+      "wins": 35,
+      "losses": 30,
+      "ties": 5
+    },
+    {
+      "rank": 3,
+      "team": "Greasy",
+      "teamName": "Greasy Cap Advisors",
+      "wins": 41,
+      "losses": 26,
+      "ties": 3
+    },
+    {
+      "rank": 4,
+      "team": "Tom",
+      "teamName": "Goin' Yahdgoats",
+      "wins": 36,
+      "losses": 32,
+      "ties": 2
+    },
+    {
+      "rank": 5,
+      "team": "Web",
+      "teamName": "Lollygaggers",
+      "wins": 33,
+      "losses": 32,
+      "ties": 5
+    },
+    {
+      "rank": 6,
+      "team": "Alex",
+      "teamName": "Alex in Chains",
+      "wins": 33,
+      "losses": 30,
+      "ties": 7
+    },
+    {
+      "rank": 7,
+      "team": "Chris",
+      "teamName": "Return of the Mack",
+      "wins": 30,
+      "losses": 34,
+      "ties": 6
+    },
+    {
+      "rank": 8,
+      "team": "Sean",
+      "teamName": "ClutchHutch",
+      "wins": 27,
+      "losses": 36,
+      "ties": 7
+    },
+    {
+      "rank": 9,
+      "team": "Pudge",
+      "teamName": "Bleacher Creatures",
+      "wins": 23,
+      "losses": 42,
+      "ties": 5
+    },
+    {
+      "rank": 10,
+      "team": "Bob",
+      "teamName": "Runs-N-Roses",
+      "wins": 21,
+      "losses": 41,
+      "ties": 8
+    }
+  ]
+}

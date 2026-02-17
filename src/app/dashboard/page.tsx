@@ -36,7 +36,12 @@ type RosterPlayer = {
     primary_position: string | null
     mlb_team: string | null
     fantasypros_ecr: number | null
+    eligible_positions: string[] | null
   } | null
+}
+
+function isNAEligible(rp: RosterPlayer): boolean {
+  return rp.players?.eligible_positions?.includes('NA') ?? false
 }
 
 const MAX_KEEPERS = 6
@@ -123,6 +128,10 @@ export default function DashboardPage() {
         // Show warning and skip
         setLimitWarning(`Keeper limit reached (${MAX_KEEPERS}/${MAX_KEEPERS}). Remove a keeper first.`)
         setTimeout(() => setLimitWarning(null), 3000)
+        continue
+      }
+      if (candidate === 'keeping-na' && !isNAEligible(rp)) {
+        // Player doesn't have NA eligibility — skip this state entirely
         continue
       }
       if (candidate === 'keeping-na' && currentNA >= MAX_NA) {

@@ -1,0 +1,92 @@
+{
+  "year": 2025,
+  "leagueKey": "458.l.5221",
+  "champion": "Sean",
+  "championTeam": "ClutchHutch",
+  "runnerUp": "Mike",
+  "runnerUpTeam": "The Dirty Farm",
+  "third": "Bob",
+  "thirdTeam": "Runs-N-Roses",
+  "standings": [
+    {
+      "rank": 1,
+      "team": "Sean",
+      "teamName": "ClutchHutch",
+      "wins": 119,
+      "losses": 62,
+      "ties": 9
+    },
+    {
+      "rank": 2,
+      "team": "Mike",
+      "teamName": "The Dirty Farm",
+      "wins": 109,
+      "losses": 71,
+      "ties": 10
+    },
+    {
+      "rank": 3,
+      "team": "Bob",
+      "teamName": "Runs-N-Roses",
+      "wins": 91,
+      "losses": 90,
+      "ties": 9
+    },
+    {
+      "rank": 4,
+      "team": "Greasy",
+      "teamName": "Greasy Cap Advisors",
+      "wins": 98,
+      "losses": 82,
+      "ties": 10
+    },
+    {
+      "rank": 5,
+      "team": "Alex",
+      "teamName": "Alex in Chains",
+      "wins": 90,
+      "losses": 91,
+      "ties": 9
+    },
+    {
+      "rank": 6,
+      "team": "Chris",
+      "teamName": "Tunnel Snakes",
+      "wins": 98,
+      "losses": 84,
+      "ties": 8
+    },
+    {
+      "rank": 7,
+      "team": "Pudge",
+      "teamName": "Bleacher Creatures",
+      "wins": 87,
+      "losses": 89,
+      "ties": 14
+    },
+    {
+      "rank": 8,
+      "team": "Nick",
+      "teamName": "Red Stagz",
+      "wins": 77,
+      "losses": 103,
+      "ties": 10
+    },
+    {
+      "rank": 9,
+      "team": "Web",
+      "teamName": "Lollygaggers",
+      "wins": 78,
+      "losses": 101,
+      "ties": 11
+    },
+    {
+      "rank": 10,
+      "team": "Tom",
+      "teamName": "Goin' Yahdgoats",
+      "wins": 54,
+      "losses": 128,
+      "ties": 8
+    }
+  ]
+}

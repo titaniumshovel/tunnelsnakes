@@ -1,0 +1,92 @@
+{
+  "year": 2024,
+  "leagueKey": "431.l.27405",
+  "champion": "Sean",
+  "championTeam": "ClutchHutch",
+  "runnerUp": "Tom",
+  "runnerUpTeam": "Goin' Yahdgoats",
+  "third": "Mike",
+  "thirdTeam": "The Dirty Farm",
+  "standings": [
+    {
+      "rank": 1,
+      "team": "Sean",
+      "teamName": "ClutchHutch",
+      "wins": 117,
+      "losses": 66,
+      "ties": 7
+    },
+    {
+      "rank": 2,
+      "team": "Tom",
+      "teamName": "Goin' Yahdgoats",
+      "wins": 104,
+      "losses": 76,
+      "ties": 10
+    },
+    {
+      "rank": 3,
+      "team": "Mike",
+      "teamName": "The Dirty Farm",
+      "wins": 86,
+      "losses": 96,
+      "ties": 8
+    },
+    {
+      "rank": 4,
+      "team": "Alex",
+      "teamName": "Alex in Chains",
+      "wins": 92,
+      "losses": 85,
+      "ties": 13
+    },
+    {
+      "rank": 5,
+      "team": "Bob",
+      "teamName": "Runs-N-Roses",
+      "wins": 97,
+      "losses": 81,
+      "ties": 12
+    },
+    {
+      "rank": 6,
+      "team": "Nick",
+      "teamName": "Red Stagz",
+      "wins": 90,
+      "losses": 90,
+      "ties": 10
+    },
+    {
+      "rank": 7,
+      "team": "Greasy",
+      "teamName": "Greasy Cap Advisors",
+      "wins": 84,
+      "losses": 95,
+      "ties": 11
+    },
+    {
+      "rank": 8,
+      "team": "Chris",
+      "teamName": "Tunnel Snakes",
+      "wins": 78,
+      "losses": 103,
+      "ties": 9
+    },
+    {
+      "rank": 9,
+      "team": "Web",
+      "teamName": "Lollygaggers",
+      "wins": 83,
+      "losses": 97,
+      "ties": 10
+    },
+    {
+      "rank": 10,
+      "team": "Pudge",
+      "teamName": "Bleacher Creatures",
+      "wins": 68,
+      "losses": 110,
+      "ties": 12
+    }
+  ]
+}
