@@ -162,15 +162,15 @@
   },
   {
     "rank": 24,
-    "name": "Francisco Lindor",
-    "team": "NYM",
+    "name": "Trea Turner",
+    "team": "PHI",
     "position": "SS",
     "pos_rank": "SS4"
   },
   {
     "rank": 25,
-    "name": "Trea Turner",
-    "team": "PHI",
+    "name": "Francisco Lindor",
+    "team": "NYM",
     "position": "SS",
     "pos_rank": "SS5"
   },
@@ -190,17 +190,17 @@
   },
   {
     "rank": 28,
-    "name": "Yordan Alvarez",
-    "team": "HOU",
-    "position": "LF,DH",
-    "pos_rank": "OF9"
-  },
-  {
-    "rank": 29,
     "name": "Cristopher Sanchez",
     "team": "PHI",
     "position": "SP",
     "pos_rank": "SP5"
+  },
+  {
+    "rank": 29,
+    "name": "Yordan Alvarez",
+    "team": "HOU",
+    "position": "LF,DH",
+    "pos_rank": "OF9"
   },
   {
     "rank": 30,
@@ -211,31 +211,31 @@
   },
   {
     "rank": 31,
-    "name": "Manny Machado",
-    "team": "SD",
-    "position": "3B",
-    "pos_rank": "3B3"
-  },
-  {
-    "rank": 32,
     "name": "Pete Crow-Armstrong",
     "team": "CHC",
     "position": "CF",
     "pos_rank": "OF10"
   },
   {
-    "rank": 33,
-    "name": "Matt Olson",
-    "team": "ATL",
-    "position": "1B",
-    "pos_rank": "1B4"
+    "rank": 32,
+    "name": "Manny Machado",
+    "team": "SD",
+    "position": "3B",
+    "pos_rank": "3B3"
   },
   {
-    "rank": 34,
+    "rank": 33,
     "name": "James Wood",
     "team": "WSH",
     "position": "LF,DH",
     "pos_rank": "OF11"
+  },
+  {
+    "rank": 34,
+    "name": "Matt Olson",
+    "team": "ATL",
+    "position": "1B",
+    "pos_rank": "1B4"
   },
   {
     "rank": 35,
@@ -386,17 +386,17 @@
   },
   {
     "rank": 56,
-    "name": "Josh Naylor",
-    "team": "SEA",
-    "position": "1B,DH",
-    "pos_rank": "1B8"
-  },
-  {
-    "rank": 57,
     "name": "Freddy Peralta",
     "team": "NYM",
     "position": "SP",
     "pos_rank": "SP16"
+  },
+  {
+    "rank": 57,
+    "name": "Josh Naylor",
+    "team": "SEA",
+    "position": "1B,DH",
+    "pos_rank": "1B8"
   },
   {
     "rank": 58,
@@ -582,17 +582,17 @@
   },
   {
     "rank": 84,
-    "name": "Nick Pivetta",
-    "team": "SD",
-    "position": "SP",
-    "pos_rank": "SP23"
-  },
-  {
-    "rank": 85,
     "name": "Randy Arozarena",
     "team": "SEA",
     "position": "LF,CF",
     "pos_rank": "OF20"
+  },
+  {
+    "rank": 85,
+    "name": "Nick Pivetta",
+    "team": "SD",
+    "position": "SP",
+    "pos_rank": "SP23"
   },
   {
     "rank": 86,
@@ -610,17 +610,17 @@
   },
   {
     "rank": 88,
-    "name": "Tyler Soderstrom",
-    "team": "ATH",
-    "position": "1B,LF",
-    "pos_rank": "1B11"
-  },
-  {
-    "rank": 89,
     "name": "Nolan McLean",
     "team": "NYM",
     "position": "SP",
     "pos_rank": "SP25"
+  },
+  {
+    "rank": 89,
+    "name": "Tyler Soderstrom",
+    "team": "ATH",
+    "position": "1B,LF",
+    "pos_rank": "1B11"
   },
   {
     "rank": 90,
@@ -729,31 +729,31 @@
   },
   {
     "rank": 105,
-    "name": "Willy Adames",
-    "team": "SF",
-    "position": "SS",
-    "pos_rank": "SS14"
-  },
-  {
-    "rank": 106,
     "name": "Sonny Gray",
     "team": "BOS",
     "position": "SP",
     "pos_rank": "SP29"
   },
   {
-    "rank": 107,
-    "name": "Salvador Perez",
-    "team": "KC",
-    "position": "C,1B,DH",
-    "pos_rank": "C5"
+    "rank": 106,
+    "name": "Willy Adames",
+    "team": "SF",
+    "position": "SS",
+    "pos_rank": "SS14"
   },
   {
-    "rank": 108,
+    "rank": 107,
     "name": "Brandon Woodruff",
     "team": "MIL",
     "position": "SP",
     "pos_rank": "SP30"
+  },
+  {
+    "rank": 108,
+    "name": "Salvador Perez",
+    "team": "KC",
+    "position": "C,1B,DH",
+    "pos_rank": "C5"
   },
   {
     "rank": 109,
@@ -813,24 +813,24 @@
   },
   {
     "rank": 117,
-    "name": "Pablo Lopez",
-    "team": "MIN",
+    "name": "Cam Schlittler",
+    "team": "NYY",
     "position": "SP",
     "pos_rank": "SP33"
   },
   {
     "rank": 118,
-    "name": "Cam Schlittler",
-    "team": "NYY",
+    "name": "Zack Wheeler",
+    "team": "PHI",
     "position": "SP",
     "pos_rank": "SP34"
   },
   {
     "rank": 119,
-    "name": "Zack Wheeler",
-    "team": "PHI",
-    "position": "SP",
-    "pos_rank": "SP35"
+    "name": "Jo Adell",
+    "team": "LAA",
+    "position": "CF,RF",
+    "pos_rank": "OF25"
   },
   {
     "rank": 120,
@@ -841,122 +841,122 @@
   },
   {
     "rank": 121,
-    "name": "Jo Adell",
-    "team": "LAA",
-    "position": "CF,RF",
-    "pos_rank": "OF25"
-  },
-  {
-    "rank": 122,
-    "name": "Chase Burns",
-    "team": "CIN",
-    "position": "SP,RP",
-    "pos_rank": "SP,RP1"
-  },
-  {
-    "rank": 123,
     "name": "Nathan Eovaldi",
     "team": "TEX",
     "position": "SP",
-    "pos_rank": "SP36"
+    "pos_rank": "SP35"
   },
   {
-    "rank": 124,
-    "name": "Josh Hader",
-    "team": "HOU",
-    "position": "RP",
-    "pos_rank": "RP9"
-  },
-  {
-    "rank": 125,
+    "rank": 122,
     "name": "Brandon Nimmo",
     "team": "TEX",
     "position": "LF,CF",
     "pos_rank": "OF26"
   },
   {
-    "rank": 126,
+    "rank": 123,
+    "name": "Chase Burns",
+    "team": "CIN",
+    "position": "SP,RP",
+    "pos_rank": "SP,RP1"
+  },
+  {
+    "rank": 124,
     "name": "Michael King",
     "team": "SD",
+    "position": "SP",
+    "pos_rank": "SP36"
+  },
+  {
+    "rank": 125,
+    "name": "Sandy Alcantara",
+    "team": "MIA",
     "position": "SP",
     "pos_rank": "SP37"
   },
   {
-    "rank": 127,
-    "name": "Sandy Alcantara",
-    "team": "MIA",
-    "position": "SP",
-    "pos_rank": "SP38"
-  },
-  {
-    "rank": 128,
+    "rank": 126,
     "name": "Luke Keaschall",
     "team": "MIN",
     "position": "2B",
     "pos_rank": "2B8"
   },
   {
-    "rank": 129,
+    "rank": 127,
     "name": "Nick Lodolo",
     "team": "CIN",
+    "position": "SP",
+    "pos_rank": "SP38"
+  },
+  {
+    "rank": 128,
+    "name": "Luis Castillo",
+    "team": "SEA",
     "position": "SP",
     "pos_rank": "SP39"
   },
   {
-    "rank": 130,
-    "name": "Luis Castillo",
-    "team": "SEA",
-    "position": "SP",
-    "pos_rank": "SP40"
-  },
-  {
-    "rank": 131,
+    "rank": 129,
     "name": "Andy Pages",
     "team": "LAD",
     "position": "LF,CF,RF",
     "pos_rank": "OF27"
   },
   {
-    "rank": 132,
+    "rank": 130,
+    "name": "Josh Hader",
+    "team": "HOU",
+    "position": "RP",
+    "pos_rank": "RP9"
+  },
+  {
+    "rank": 131,
     "name": "Ozzie Albies",
     "team": "ATL",
     "position": "2B",
     "pos_rank": "2B9"
   },
   {
-    "rank": 133,
+    "rank": 132,
     "name": "Luis Robert Jr.",
     "team": "NYM",
     "position": "CF",
     "pos_rank": "OF28"
   },
   {
-    "rank": 134,
+    "rank": 133,
     "name": "Ryan Pepiot",
     "team": "TB",
+    "position": "SP",
+    "pos_rank": "SP40"
+  },
+  {
+    "rank": 134,
+    "name": "Bubba Chandler",
+    "team": "PIT",
     "position": "SP",
     "pos_rank": "SP41"
   },
   {
     "rank": 135,
-    "name": "Bubba Chandler",
-    "team": "PIT",
+    "name": "Robbie Ray",
+    "team": "SF",
     "position": "SP",
     "pos_rank": "SP42"
   },
   {
     "rank": 136,
-    "name": "Robbie Ray",
-    "team": "SF",
-    "position": "SP",
-    "pos_rank": "SP43"
-  },
-  {
-    "rank": 137,
     "name": "Lawrence Butler",
     "team": "ATH",
     "position": "CF,RF",
     "pos_rank": "OF29"
+  },
+  {
+    "rank": 137,
+    "name": "Gavin Williams",
+    "team": "CLE",
+    "position": "SP",
+    "pos_rank": "SP43"
   },
   {
     "rank": 138,
@@ -974,185 +974,185 @@
   },
   {
     "rank": 140,
-    "name": "Gavin Williams",
-    "team": "CLE",
+    "name": "Trevor Rogers",
+    "team": "BAL",
     "position": "SP",
     "pos_rank": "SP45"
   },
   {
     "rank": 141,
-    "name": "Raisel Iglesias",
-    "team": "ATL",
-    "position": "RP",
-    "pos_rank": "RP10"
-  },
-  {
-    "rank": 142,
-    "name": "Trevor Rogers",
-    "team": "BAL",
-    "position": "SP",
-    "pos_rank": "SP46"
-  },
-  {
-    "rank": 143,
     "name": "Matt Chapman",
     "team": "SF",
     "position": "3B",
     "pos_rank": "3B7"
   },
   {
-    "rank": 144,
+    "rank": 142,
     "name": "Jakob Marsee",
     "team": "MIA",
     "position": "LF,CF",
     "pos_rank": "OF31"
   },
   {
-    "rank": 145,
+    "rank": 143,
     "name": "Ranger Suarez",
     "team": "BOS",
     "position": "SP",
-    "pos_rank": "SP47"
+    "pos_rank": "SP46"
   },
   {
-    "rank": 146,
-    "name": "Carlos Estevez",
-    "team": "KC",
+    "rank": 144,
+    "name": "Raisel Iglesias",
+    "team": "ATL",
+    "position": "RP",
+    "pos_rank": "RP10"
+  },
+  {
+    "rank": 145,
+    "name": "Ryan Helsley",
+    "team": "BAL",
     "position": "RP",
     "pos_rank": "RP11"
   },
   {
-    "rank": 147,
+    "rank": 146,
     "name": "Jacob Wilson",
     "team": "ATH",
     "position": "SS",
     "pos_rank": "SS15"
   },
   {
-    "rank": 148,
+    "rank": 147,
     "name": "Steven Kwan",
     "team": "CLE",
     "position": "LF",
     "pos_rank": "OF32"
   },
   {
-    "rank": 149,
-    "name": "Ryan Helsley",
-    "team": "BAL",
-    "position": "RP",
-    "pos_rank": "RP12"
-  },
-  {
-    "rank": 150,
+    "rank": 148,
     "name": "MacKenzie Gore",
     "team": "TEX",
+    "position": "SP",
+    "pos_rank": "SP47"
+  },
+  {
+    "rank": 149,
+    "name": "Drew Rasmussen",
+    "team": "TB",
     "position": "SP",
     "pos_rank": "SP48"
   },
   {
-    "rank": 151,
-    "name": "Drew Rasmussen",
-    "team": "TB",
-    "position": "SP",
-    "pos_rank": "SP49"
-  },
-  {
-    "rank": 152,
+    "rank": 150,
     "name": "Dansby Swanson",
     "team": "CHC",
     "position": "SS",
     "pos_rank": "SS16"
   },
   {
-    "rank": 153,
+    "rank": 151,
+    "name": "Shota Imanaga",
+    "team": "CHC",
+    "position": "SP",
+    "pos_rank": "SP49"
+  },
+  {
+    "rank": 152,
     "name": "Ian Happ",
     "team": "CHC",
     "position": "LF",
     "pos_rank": "OF33"
   },
   {
-    "rank": 154,
-    "name": "Shota Imanaga",
-    "team": "CHC",
-    "position": "SP",
-    "pos_rank": "SP50"
+    "rank": 153,
+    "name": "Carlos Estevez",
+    "team": "KC",
+    "position": "RP",
+    "pos_rank": "RP12"
   },
   {
-    "rank": 155,
+    "rank": 154,
     "name": "Ceddanne Rafaela",
     "team": "BOS",
     "position": "2B,CF",
     "pos_rank": "OF34"
   },
   {
-    "rank": 156,
+    "rank": 155,
     "name": "Tanner Bibee",
     "team": "CLE",
     "position": "SP",
-    "pos_rank": "SP51"
+    "pos_rank": "SP50"
   },
   {
-    "rank": 157,
+    "rank": 156,
     "name": "Jeff Hoffman",
     "team": "TOR",
     "position": "RP",
     "pos_rank": "RP13"
   },
   {
-    "rank": 158,
+    "rank": 157,
     "name": "Jurickson Profar",
     "team": "ATL",
     "position": "LF",
     "pos_rank": "OF35"
   },
   {
-    "rank": 159,
+    "rank": 158,
     "name": "Xavier Edwards",
     "team": "MIA",
     "position": "2B,SS",
     "pos_rank": "SS17"
   },
   {
-    "rank": 160,
+    "rank": 159,
     "name": "Ivan Herrera",
     "team": "STL",
     "position": "C,DH",
     "pos_rank": "C9"
   },
   {
-    "rank": 161,
+    "rank": 160,
     "name": "Willson Contreras",
     "team": "BOS",
     "position": "1B",
     "pos_rank": "1B14"
   },
   {
-    "rank": 162,
+    "rank": 161,
     "name": "Yainer Diaz",
     "team": "HOU",
     "position": "C,DH",
     "pos_rank": "C10"
   },
   {
-    "rank": 163,
-    "name": "Pete Fairbanks",
-    "team": "MIA",
-    "position": "RP",
-    "pos_rank": "RP14"
+    "rank": 162,
+    "name": "Spencer Torkelson",
+    "team": "DET",
+    "position": "1B",
+    "pos_rank": "1B15"
   },
   {
-    "rank": 164,
+    "rank": 163,
     "name": "Noelvi Marte",
     "team": "CIN",
     "position": "3B,RF",
     "pos_rank": "3B8"
   },
   {
+    "rank": 164,
+    "name": "Pete Fairbanks",
+    "team": "MIA",
+    "position": "RP",
+    "pos_rank": "RP14"
+  },
+  {
     "rank": 165,
-    "name": "Spencer Torkelson",
-    "team": "DET",
-    "position": "1B",
-    "pos_rank": "1B15"
+    "name": "Bryan Reynolds",
+    "team": "PIT",
+    "position": "LF,CF,RF,DH",
+    "pos_rank": "OF36"
   },
   {
     "rank": 166,
@@ -1170,92 +1170,92 @@
   },
   {
     "rank": 168,
-    "name": "Bryan Reynolds",
-    "team": "PIT",
-    "position": "LF,CF,RF,DH",
-    "pos_rank": "OF36"
-  },
-  {
-    "rank": 169,
     "name": "Adley Rutschman",
     "team": "BAL",
     "position": "C",
     "pos_rank": "C11"
   },
   {
-    "rank": 170,
+    "rank": 169,
     "name": "Edward Cabrera",
     "team": "CHC",
     "position": "SP",
-    "pos_rank": "SP52"
+    "pos_rank": "SP51"
+  },
+  {
+    "rank": 170,
+    "name": "Daniel Palencia",
+    "team": "CHC",
+    "position": "RP",
+    "pos_rank": "RP15"
   },
   {
     "rank": 171,
     "name": "Carlos Rodon",
     "team": "NYY",
     "position": "SP",
-    "pos_rank": "SP53"
+    "pos_rank": "SP52"
   },
   {
     "rank": 172,
+    "name": "Cade Horton",
+    "team": "CHC",
+    "position": "SP",
+    "pos_rank": "SP53"
+  },
+  {
+    "rank": 173,
     "name": "Dylan Crews",
     "team": "WSH",
     "position": "CF,RF",
     "pos_rank": "OF37"
   },
   {
-    "rank": 173,
-    "name": "Trevor Megill",
-    "team": "MIL",
-    "position": "RP",
-    "pos_rank": "RP15"
-  },
-  {
     "rank": 174,
-    "name": "Cade Horton",
-    "team": "CHC",
-    "position": "SP",
-    "pos_rank": "SP54"
-  },
-  {
-    "rank": 175,
     "name": "Brenton Doyle",
     "team": "COL",
     "position": "CF",
     "pos_rank": "OF38"
   },
   {
-    "rank": 176,
-    "name": "Daniel Palencia",
-    "team": "CHC",
+    "rank": 175,
+    "name": "Trevor Megill",
+    "team": "MIL",
     "position": "RP",
     "pos_rank": "RP16"
   },
   {
-    "rank": 177,
-    "name": "Emilio Pagan",
-    "team": "CIN",
-    "position": "RP",
-    "pos_rank": "RP17"
-  },
-  {
-    "rank": 178,
+    "rank": 176,
     "name": "Christian Walker",
     "team": "HOU",
     "position": "1B",
     "pos_rank": "1B17"
   },
   {
-    "rank": 179,
+    "rank": 177,
     "name": "Jackson Holliday",
     "team": "BAL",
     "position": "2B,SS",
     "pos_rank": "2B11"
   },
   {
-    "rank": 180,
+    "rank": 178,
+    "name": "Emilio Pagan",
+    "team": "CIN",
+    "position": "RP",
+    "pos_rank": "RP17"
+  },
+  {
+    "rank": 179,
     "name": "Tatsuya Imai",
     "team": "HOU",
+    "position": "SP",
+    "pos_rank": "SP54"
+  },
+  {
+    "rank": 180,
+    "name": "Jack Flaherty",
+    "team": "DET",
     "position": "SP",
     "pos_rank": "SP55"
   },
@@ -1268,120 +1268,120 @@
   },
   {
     "rank": 182,
-    "name": "Jack Flaherty",
-    "team": "DET",
-    "position": "SP",
-    "pos_rank": "SP56"
-  },
-  {
-    "rank": 183,
     "name": "Alec Burleson",
     "team": "STL",
     "position": "1B,LF,RF,DH",
     "pos_rank": "OF39"
   },
   {
-    "rank": 184,
+    "rank": 183,
     "name": "Chandler Simpson",
     "team": "TB",
     "position": "LF,CF",
     "pos_rank": "OF40"
   },
   {
-    "rank": 185,
+    "rank": 184,
     "name": "Isaac Paredes",
     "team": "HOU",
     "position": "3B",
     "pos_rank": "3B9"
   },
   {
-    "rank": 186,
+    "rank": 185,
     "name": "Andrew Abbott",
     "team": "CIN",
+    "position": "SP",
+    "pos_rank": "SP56"
+  },
+  {
+    "rank": 186,
+    "name": "Aaron Nola",
+    "team": "PHI",
     "position": "SP",
     "pos_rank": "SP57"
   },
   {
     "rank": 187,
-    "name": "Aaron Nola",
-    "team": "PHI",
+    "name": "Shane Baz",
+    "team": "BAL",
     "position": "SP",
     "pos_rank": "SP58"
   },
   {
     "rank": 188,
-    "name": "Shane Baz",
-    "team": "BAL",
+    "name": "Matthew Boyd",
+    "team": "CHC",
     "position": "SP",
     "pos_rank": "SP59"
   },
   {
     "rank": 189,
-    "name": "Matthew Boyd",
-    "team": "CHC",
-    "position": "SP",
-    "pos_rank": "SP60"
-  },
-  {
-    "rank": 190,
     "name": "Marcus Semien",
     "team": "NYM",
     "position": "2B",
     "pos_rank": "2B12"
   },
   {
-    "rank": 191,
+    "rank": 190,
     "name": "Alejandro Kirk",
     "team": "TOR",
     "position": "C",
     "pos_rank": "C12"
   },
   {
-    "rank": 192,
+    "rank": 191,
     "name": "Zac Gallen",
     "team": "ARI",
     "position": "SP",
-    "pos_rank": "SP61"
+    "pos_rank": "SP60"
   },
   {
-    "rank": 193,
+    "rank": 192,
     "name": "Heliot Ramos",
     "team": "SF",
     "position": "LF,CF,RF",
     "pos_rank": "OF41"
   },
   {
-    "rank": 194,
+    "rank": 193,
     "name": "Royce Lewis",
     "team": "MIN",
     "position": "3B",
     "pos_rank": "3B10"
   },
   {
-    "rank": 195,
+    "rank": 194,
     "name": "Mike Trout",
     "team": "LAA",
     "position": "CF,RF,DH",
     "pos_rank": "OF42"
   },
   {
-    "rank": 196,
+    "rank": 195,
     "name": "Merrill Kelly",
     "team": "ARI",
     "position": "SP",
-    "pos_rank": "SP62"
+    "pos_rank": "SP61"
   },
   {
-    "rank": 197,
+    "rank": 196,
     "name": "Colson Montgomery",
     "team": "CWS",
     "position": "3B,SS",
     "pos_rank": "SS18"
   },
   {
-    "rank": 198,
+    "rank": 197,
     "name": "Shane McClanahan",
     "team": "TB",
+    "position": "SP",
+    "pos_rank": "SP62"
+  },
+  {
+    "rank": 198,
+    "name": "Shane Bieber",
+    "team": "TOR",
     "position": "SP",
     "pos_rank": "SP63"
   },
@@ -1394,17 +1394,17 @@
   },
   {
     "rank": 200,
-    "name": "Shane Bieber",
-    "team": "TOR",
-    "position": "SP",
-    "pos_rank": "SP64"
-  },
-  {
-    "rank": 201,
     "name": "Bryson Stott",
     "team": "PHI",
     "position": "2B,SS",
     "pos_rank": "2B13"
+  },
+  {
+    "rank": 201,
+    "name": "Ryan Walker",
+    "team": "SF",
+    "position": "RP",
+    "pos_rank": "RP19"
   },
   {
     "rank": 202,
@@ -1415,17 +1415,17 @@
   },
   {
     "rank": 203,
-    "name": "Kris Bubic",
-    "team": "KC",
-    "position": "SP",
-    "pos_rank": "SP65"
-  },
-  {
-    "rank": 204,
     "name": "Gleyber Torres",
     "team": "DET",
     "position": "2B",
     "pos_rank": "2B14"
+  },
+  {
+    "rank": 204,
+    "name": "Kris Bubic",
+    "team": "KC",
+    "position": "SP",
+    "pos_rank": "SP64"
   },
   {
     "rank": 205,
@@ -1436,52 +1436,52 @@
   },
   {
     "rank": 206,
-    "name": "Ryan Walker",
-    "team": "SF",
-    "position": "RP",
-    "pos_rank": "RP19"
-  },
-  {
-    "rank": 207,
     "name": "Kyle Manzardo",
     "team": "CLE",
     "position": "1B,DH",
     "pos_rank": "1B18"
   },
   {
-    "rank": 208,
-    "name": "Dennis Santana",
-    "team": "PIT",
-    "position": "RP",
-    "pos_rank": "RP20"
-  },
-  {
-    "rank": 209,
-    "name": "Luis Garcia",
-    "team": "WSH",
-    "position": "2B",
-    "pos_rank": "2B16"
-  },
-  {
-    "rank": 210,
+    "rank": 207,
     "name": "Daylen Lile",
     "team": "WSH",
     "position": "LF,RF",
     "pos_rank": "OF43"
   },
   {
-    "rank": 211,
+    "rank": 208,
+    "name": "Luis Garcia",
+    "team": "WSH",
+    "position": "2B",
+    "pos_rank": "2B16"
+  },
+  {
+    "rank": 209,
     "name": "Daulton Varsho",
     "team": "TOR",
     "position": "LF,CF",
     "pos_rank": "OF44"
   },
   {
-    "rank": 212,
+    "rank": 210,
+    "name": "Dennis Santana",
+    "team": "PIT",
+    "position": "RP",
+    "pos_rank": "RP20"
+  },
+  {
+    "rank": 211,
     "name": "Wilyer Abreu",
     "team": "BOS",
     "position": "LF,CF,RF",
     "pos_rank": "OF45"
+  },
+  {
+    "rank": 212,
+    "name": "Pablo Lopez",
+    "team": "MIN",
+    "position": "SP",
+    "pos_rank": "SP65"
   },
   {
     "rank": 213,
@@ -1625,17 +1625,17 @@
   },
   {
     "rank": 233,
-    "name": "Xander Bogaerts",
-    "team": "SD",
-    "position": "SS",
-    "pos_rank": "SS20"
-  },
-  {
-    "rank": 234,
     "name": "Noah Cameron",
     "team": "KC",
     "position": "SP",
     "pos_rank": "SP70"
+  },
+  {
+    "rank": 234,
+    "name": "Xander Bogaerts",
+    "team": "SD",
+    "position": "SS",
+    "pos_rank": "SS20"
   },
   {
     "rank": 235,
@@ -1646,24 +1646,24 @@
   },
   {
     "rank": 236,
-    "name": "Alec Bohm",
-    "team": "PHI",
-    "position": "1B,3B",
-    "pos_rank": "3B13"
-  },
-  {
-    "rank": 237,
     "name": "Bryce Miller",
     "team": "SEA",
     "position": "SP",
     "pos_rank": "SP71"
   },
   {
-    "rank": 238,
+    "rank": 237,
     "name": "Spencer Steer",
     "team": "CIN",
     "position": "1B,LF",
     "pos_rank": "1B22"
+  },
+  {
+    "rank": 238,
+    "name": "Alec Bohm",
+    "team": "PHI",
+    "position": "1B,3B",
+    "pos_rank": "3B13"
   },
   {
     "rank": 239,
@@ -1695,24 +1695,24 @@
   },
   {
     "rank": 243,
+    "name": "Kodai Senga",
+    "team": "NYM",
+    "position": "SP",
+    "pos_rank": "SP73"
+  },
+  {
+    "rank": 244,
     "name": "Abner Uribe",
     "team": "MIL",
     "position": "RP",
     "pos_rank": "RP21"
   },
   {
-    "rank": 244,
-    "name": "Brendan Donovan",
-    "team": "SEA",
-    "position": "2B,SS,LF",
-    "pos_rank": "2B19"
-  },
-  {
     "rank": 245,
     "name": "Luis Arraez",
     "team": "SF",
     "position": "1B,2B,DH",
-    "pos_rank": "2B20"
+    "pos_rank": "2B19"
   },
   {
     "rank": 246,
@@ -1723,36 +1723,36 @@
   },
   {
     "rank": 247,
+    "name": "Brendan Donovan",
+    "team": "SEA",
+    "position": "2B,SS,LF",
+    "pos_rank": "2B20"
+  },
+  {
+    "rank": 248,
     "name": "Konnor Griffin",
     "team": "PIT",
     "position": "SS,CF",
     "pos_rank": "SS21"
   },
   {
-    "rank": 248,
+    "rank": 249,
     "name": "Max Muncy",
     "team": "LAD",
     "position": "3B",
     "pos_rank": "3B15"
   },
   {
-    "rank": 249,
+    "rank": 250,
     "name": "Masyn Winn",
     "team": "STL",
     "position": "SS",
     "pos_rank": "SS22"
   },
   {
-    "rank": 250,
+    "rank": 251,
     "name": "Jose Soriano",
     "team": "LAA",
-    "position": "SP",
-    "pos_rank": "SP73"
-  },
-  {
-    "rank": 251,
-    "name": "Kodai Senga",
-    "team": "NYM",
     "position": "SP",
     "pos_rank": "SP74"
   },
@@ -1982,8 +1982,8 @@
   },
   {
     "rank": 284,
-    "name": "Robert Suarez",
-    "team": "ATL",
+    "name": "Seranthony Dominguez",
+    "team": "CWS",
     "position": "RP",
     "pos_rank": "RP24"
   },
@@ -1996,17 +1996,17 @@
   },
   {
     "rank": 286,
-    "name": "Seranthony Dominguez",
-    "team": "CWS",
+    "name": "Robert Suarez",
+    "team": "ATL",
     "position": "RP",
     "pos_rank": "RP25"
   },
   {
     "rank": 287,
-    "name": "Joey Cantillo",
-    "team": "CLE",
-    "position": "SP,RP",
-    "pos_rank": "SP,RP5"
+    "name": "Bryan Abreu",
+    "team": "HOU",
+    "position": "RP",
+    "pos_rank": "RP26"
   },
   {
     "rank": 288,
@@ -2017,17 +2017,17 @@
   },
   {
     "rank": 289,
-    "name": "Bryan Abreu",
-    "team": "HOU",
-    "position": "RP",
-    "pos_rank": "RP26"
-  },
-  {
-    "rank": 290,
     "name": "Brady Singer",
     "team": "CIN",
     "position": "SP",
     "pos_rank": "SP85"
+  },
+  {
+    "rank": 290,
+    "name": "Joey Cantillo",
+    "team": "CLE",
+    "position": "SP,RP",
+    "pos_rank": "SP,RP5"
   },
   {
     "rank": 291,
@@ -2045,45 +2045,45 @@
   },
   {
     "rank": 293,
-    "name": "Jeff McNeil",
-    "team": "ATH",
-    "position": "2B,LF,CF,RF",
-    "pos_rank": "2B24"
-  },
-  {
-    "rank": 294,
     "name": "Will Warren",
     "team": "NYY",
     "position": "SP",
     "pos_rank": "SP86"
   },
   {
-    "rank": 295,
+    "rank": 294,
     "name": "Yusei Kikuchi",
     "team": "LAA",
     "position": "SP",
     "pos_rank": "SP87"
   },
   {
-    "rank": 296,
+    "rank": 295,
     "name": "Michael Wacha",
     "team": "KC",
     "position": "SP",
     "pos_rank": "SP88"
   },
   {
-    "rank": 297,
+    "rank": 296,
     "name": "Brayan Bello",
     "team": "BOS",
     "position": "SP",
     "pos_rank": "SP89"
   },
   {
-    "rank": 298,
+    "rank": 297,
     "name": "Justin Crawford",
     "team": "PHI",
     "position": "CF",
     "pos_rank": "OF60"
+  },
+  {
+    "rank": 298,
+    "name": "Jeff McNeil",
+    "team": "ATH",
+    "position": "2B,LF,CF,RF",
+    "pos_rank": "2B24"
   },
   {
     "rank": 299,
@@ -2094,31 +2094,31 @@
   },
   {
     "rank": 300,
+    "name": "Giancarlo Stanton",
+    "team": "NYY",
+    "position": "LF,RF,DH",
+    "pos_rank": "RF1"
+  },
+  {
+    "rank": 301,
     "name": "Colt Keith",
     "team": "DET",
     "position": "1B,2B,3B,DH",
     "pos_rank": "2B25"
   },
   {
-    "rank": 301,
+    "rank": 302,
     "name": "Brandon Pfaadt",
     "team": "ARI",
     "position": "SP",
     "pos_rank": "SP91"
   },
   {
-    "rank": 302,
+    "rank": 303,
     "name": "Andres Gimenez",
     "team": "TOR",
     "position": "2B,SS",
     "pos_rank": "2B26"
-  },
-  {
-    "rank": 303,
-    "name": "Zebby Matthews",
-    "team": "MIN",
-    "position": "SP",
-    "pos_rank": "SP92"
   },
   {
     "rank": 304,
@@ -2129,24 +2129,24 @@
   },
   {
     "rank": 305,
-    "name": "Giancarlo Stanton",
-    "team": "NYY",
-    "position": "LF,RF,DH",
-    "pos_rank": "RF1"
+    "name": "Zebby Matthews",
+    "team": "MIN",
+    "position": "SP",
+    "pos_rank": "SP92"
   },
   {
     "rank": 306,
-    "name": "Reid Detmers",
-    "team": "LAA",
-    "position": "RP",
-    "pos_rank": "RP27"
+    "name": "Cedric Mullins II",
+    "team": "TB",
+    "position": "CF",
+    "pos_rank": "OF61"
   },
   {
     "rank": 307,
     "name": "Nick Castellanos",
     "team": "SD",
     "position": "RF",
-    "pos_rank": "OF61"
+    "pos_rank": "OF62"
   },
   {
     "rank": 308,
@@ -2160,7 +2160,7 @@
     "name": "Riley O'Brien",
     "team": "STL",
     "position": "RP",
-    "pos_rank": "RP28"
+    "pos_rank": "RP27"
   },
   {
     "rank": 310,
@@ -2171,45 +2171,45 @@
   },
   {
     "rank": 311,
-    "name": "Cedric Mullins II",
-    "team": "TB",
-    "position": "CF",
-    "pos_rank": "OF62"
+    "name": "Reid Detmers",
+    "team": "LAA",
+    "position": "RP",
+    "pos_rank": "RP28"
   },
   {
     "rank": 312,
+    "name": "Matt Wallner",
+    "team": "MIN",
+    "position": "LF,RF",
+    "pos_rank": "OF63"
+  },
+  {
+    "rank": 313,
     "name": "Jameson Taillon",
     "team": "CHC",
     "position": "SP",
     "pos_rank": "SP94"
   },
   {
-    "rank": 313,
-    "name": "Josh Jung",
-    "team": "TEX",
-    "position": "3B",
-    "pos_rank": "3B19"
-  },
-  {
     "rank": 314,
-    "name": "Logan O'Hoppe",
-    "team": "LAA",
-    "position": "C",
-    "pos_rank": "C20"
-  },
-  {
-    "rank": 315,
     "name": "Cody Ponce",
     "team": "TOR",
     "position": "SP,RP",
     "pos_rank": "SP,RP6"
   },
   {
-    "rank": 316,
-    "name": "Evan Carter",
+    "rank": 315,
+    "name": "Josh Jung",
     "team": "TEX",
-    "position": "LF,CF,RF",
-    "pos_rank": "OF63"
+    "position": "3B",
+    "pos_rank": "3B19"
+  },
+  {
+    "rank": 316,
+    "name": "Logan O'Hoppe",
+    "team": "LAA",
+    "position": "C",
+    "pos_rank": "C20"
   },
   {
     "rank": 317,
@@ -2220,45 +2220,45 @@
   },
   {
     "rank": 318,
+    "name": "Evan Carter",
+    "team": "TEX",
+    "position": "LF,CF,RF",
+    "pos_rank": "OF64"
+  },
+  {
+    "rank": 319,
     "name": "Austin Wells",
     "team": "NYY",
     "position": "C",
     "pos_rank": "C21"
   },
   {
-    "rank": 319,
-    "name": "Lars Nootbaar",
-    "team": "STL",
-    "position": "LF,CF,RF",
-    "pos_rank": "OF64"
-  },
-  {
     "rank": 320,
-    "name": "Ian Seymour",
-    "team": "TB",
-    "position": "SP,RP",
-    "pos_rank": "SP,RP7"
-  },
-  {
-    "rank": 321,
     "name": "Seth Lugo",
     "team": "KC",
     "position": "SP",
     "pos_rank": "SP95"
   },
   {
-    "rank": 322,
-    "name": "Matt Wallner",
-    "team": "MIN",
-    "position": "LF,RF",
-    "pos_rank": "OF65"
+    "rank": 321,
+    "name": "Ian Seymour",
+    "team": "TB",
+    "position": "SP,RP",
+    "pos_rank": "SP,RP7"
   },
   {
-    "rank": 323,
+    "rank": 322,
     "name": "Mike Burrows",
     "team": "HOU",
     "position": "SP,RP",
     "pos_rank": "SP,RP8"
+  },
+  {
+    "rank": 323,
+    "name": "Braxton Ashcraft",
+    "team": "PIT",
+    "position": "SP,RP",
+    "pos_rank": "SP,RP9"
   },
   {
     "rank": 324,
@@ -2276,122 +2276,122 @@
   },
   {
     "rank": 326,
-    "name": "Braxton Ashcraft",
-    "team": "PIT",
-    "position": "SP,RP",
-    "pos_rank": "SP,RP9"
-  },
-  {
-    "rank": 327,
     "name": "Grant Taylor",
     "team": "CWS",
     "position": "RP",
     "pos_rank": "RP29"
   },
   {
-    "rank": 328,
+    "rank": 327,
     "name": "Reynaldo Lopez",
     "team": "ATL",
     "position": "SP",
     "pos_rank": "SP96"
   },
   {
-    "rank": 329,
-    "name": "Carson Benge",
-    "team": "NYM",
-    "position": "CF",
-    "pos_rank": "OF66"
-  },
-  {
-    "rank": 330,
-    "name": "Kirby Yates",
-    "team": "LAA",
+    "rank": 328,
+    "name": "Robert Garcia",
+    "team": "TEX",
     "position": "RP",
     "pos_rank": "RP30"
   },
   {
-    "rank": 331,
+    "rank": 329,
+    "name": "Carson Benge",
+    "team": "NYM",
+    "position": "CF",
+    "pos_rank": "OF65"
+  },
+  {
+    "rank": 330,
     "name": "Ryan Jeffers",
     "team": "MIN",
     "position": "C,DH",
     "pos_rank": "C22"
   },
   {
-    "rank": 332,
-    "name": "Robert Garcia",
-    "team": "TEX",
+    "rank": 331,
+    "name": "Kirby Yates",
+    "team": "LAA",
     "position": "RP",
     "pos_rank": "RP31"
   },
   {
-    "rank": 333,
-    "name": "Brandon Marsh",
-    "team": "PHI",
-    "position": "LF,CF",
-    "pos_rank": "OF67"
-  },
-  {
-    "rank": 334,
+    "rank": 332,
     "name": "Chris Bassitt",
     "team": "BAL",
     "position": "SP",
     "pos_rank": "SP97"
   },
   {
-    "rank": 335,
+    "rank": 333,
     "name": "Bailey Ober",
     "team": "MIN",
     "position": "SP",
     "pos_rank": "SP98"
   },
   {
-    "rank": 336,
+    "rank": 334,
     "name": "Robby Snelling",
     "team": "MIA",
     "position": "SP",
     "pos_rank": "SP99"
   },
   {
-    "rank": 337,
+    "rank": 335,
+    "name": "Lars Nootbaar",
+    "team": "STL",
+    "position": "LF,CF,RF",
+    "pos_rank": "OF66"
+  },
+  {
+    "rank": 336,
     "name": "Brooks Lee",
     "team": "MIN",
     "position": "2B,3B,SS",
     "pos_rank": "SS27"
   },
   {
-    "rank": 338,
+    "rank": 337,
     "name": "Tyler Mahle",
     "team": "SF",
     "position": "SP",
     "pos_rank": "SP100"
   },
   {
-    "rank": 339,
+    "rank": 338,
     "name": "Luis Severino",
     "team": "ATH",
     "position": "SP",
     "pos_rank": "SP101"
   },
   {
-    "rank": 340,
+    "rank": 339,
     "name": "Cade Cavalli",
     "team": "WSH",
     "position": "SP",
     "pos_rank": "SP102"
   },
   {
-    "rank": 341,
+    "rank": 340,
     "name": "J.P. Crawford",
     "team": "SEA",
     "position": "SS",
     "pos_rank": "SS28"
   },
   {
-    "rank": 342,
+    "rank": 341,
     "name": "Ernie Clement",
     "team": "TOR",
     "position": "1B,2B,3B,SS",
     "pos_rank": "3B20"
+  },
+  {
+    "rank": 342,
+    "name": "Brandon Marsh",
+    "team": "PHI",
+    "position": "LF,CF",
+    "pos_rank": "OF67"
   },
   {
     "rank": 343,
@@ -2409,94 +2409,94 @@
   },
   {
     "rank": 345,
-    "name": "Nolan Arenado",
-    "team": "ARI",
-    "position": "3B",
-    "pos_rank": "3B21"
-  },
-  {
-    "rank": 346,
-    "name": "Jose Berrios",
-    "team": "TOR",
-    "position": "SP",
-    "pos_rank": "SP103"
-  },
-  {
-    "rank": 347,
-    "name": "Cam Smith",
-    "team": "HOU",
-    "position": "RF",
-    "pos_rank": "RF2"
-  },
-  {
-    "rank": 348,
-    "name": "Will Vest",
-    "team": "DET",
-    "position": "RP",
-    "pos_rank": "RP32"
-  },
-  {
-    "rank": 349,
-    "name": "Tyler Stephenson",
-    "team": "CIN",
-    "position": "C",
-    "pos_rank": "C23"
-  },
-  {
-    "rank": 350,
-    "name": "Owen Caissie",
-    "team": "MIA",
-    "position": "CF,RF",
-    "pos_rank": "OF70"
-  },
-  {
-    "rank": 351,
     "name": "Troy Melton",
     "team": "DET",
     "position": "SP,RP",
     "pos_rank": "SP,RP10"
   },
   {
+    "rank": 346,
+    "name": "Nolan Arenado",
+    "team": "ARI",
+    "position": "3B",
+    "pos_rank": "3B21"
+  },
+  {
+    "rank": 347,
+    "name": "Jose Berrios",
+    "team": "TOR",
+    "position": "SP",
+    "pos_rank": "SP103"
+  },
+  {
+    "rank": 348,
+    "name": "Cam Smith",
+    "team": "HOU",
+    "position": "RF",
+    "pos_rank": "RF2"
+  },
+  {
+    "rank": 349,
+    "name": "Will Vest",
+    "team": "DET",
+    "position": "RP",
+    "pos_rank": "RP32"
+  },
+  {
+    "rank": 350,
+    "name": "Tyler Stephenson",
+    "team": "CIN",
+    "position": "C",
+    "pos_rank": "C23"
+  },
+  {
+    "rank": 351,
+    "name": "Owen Caissie",
+    "team": "MIA",
+    "position": "CF,RF",
+    "pos_rank": "OF70"
+  },
+  {
     "rank": 352,
+    "name": "Clayton Beeter",
+    "team": "WSH",
+    "position": "RP",
+    "pos_rank": "RP33"
+  },
+  {
+    "rank": 353,
     "name": "Marcelo Mayer",
     "team": "BOS",
     "position": "2B,3B",
     "pos_rank": "2B28"
   },
   {
-    "rank": 353,
+    "rank": 354,
     "name": "Willi Castro",
     "team": "COL",
     "position": "2B,3B,LF,RF",
     "pos_rank": "2B29"
   },
   {
-    "rank": 354,
+    "rank": 355,
     "name": "Jake Cronenworth",
     "team": "SD",
     "position": "1B,2B,SS",
     "pos_rank": "2B30"
   },
   {
-    "rank": 355,
+    "rank": 356,
     "name": "Chad Patrick",
     "team": "MIL",
     "position": "SP",
     "pos_rank": "SP104"
   },
   {
-    "rank": 356,
+    "rank": 357,
     "name": "Jacob Lopez",
     "team": "ATH",
     "position": "SP",
     "pos_rank": "SP105"
-  },
-  {
-    "rank": 357,
-    "name": "Tanner Scott",
-    "team": "LAD",
-    "position": "RP",
-    "pos_rank": "RP33"
   },
   {
     "rank": 358,
@@ -2514,10 +2514,10 @@
   },
   {
     "rank": 360,
-    "name": "Clayton Beeter",
-    "team": "WSH",
-    "position": "RP",
-    "pos_rank": "RP34"
+    "name": "Victor Scott",
+    "team": "STL",
+    "position": "CF",
+    "pos_rank": "OF71"
   },
   {
     "rank": 361,
@@ -2531,7 +2531,7 @@
     "name": "Harrison Bader",
     "team": "SF",
     "position": "LF,CF,RF",
-    "pos_rank": "OF71"
+    "pos_rank": "OF72"
   },
   {
     "rank": 363,
@@ -2545,152 +2545,152 @@
     "name": "JoJo Romero",
     "team": "STL",
     "position": "RP",
-    "pos_rank": "RP35"
+    "pos_rank": "RP34"
   },
   {
     "rank": 365,
-    "name": "Victor Robles",
-    "team": "SEA",
-    "position": "LF,CF,RF",
-    "pos_rank": "OF72"
-  },
-  {
-    "rank": 366,
-    "name": "Moises Ballesteros",
-    "team": "CHC",
-    "position": "C,DH",
-    "pos_rank": "C24"
-  },
-  {
-    "rank": 367,
     "name": "Jake Mangum",
     "team": "PIT",
     "position": "LF,CF,RF",
     "pos_rank": "OF73"
   },
   {
+    "rank": 366,
+    "name": "Victor Robles",
+    "team": "SEA",
+    "position": "LF,CF,RF",
+    "pos_rank": "OF74"
+  },
+  {
+    "rank": 367,
+    "name": "Moises Ballesteros",
+    "team": "CHC",
+    "position": "C,DH",
+    "pos_rank": "C24"
+  },
+  {
     "rank": 368,
+    "name": "Victor Vodnik",
+    "team": "COL",
+    "position": "RP",
+    "pos_rank": "RP35"
+  },
+  {
+    "rank": 369,
     "name": "Jeffrey Springs",
     "team": "ATH",
     "position": "SP",
     "pos_rank": "SP108"
   },
   {
-    "rank": 369,
+    "rank": 370,
+    "name": "Tanner Scott",
+    "team": "LAD",
+    "position": "RP",
+    "pos_rank": "RP36"
+  },
+  {
+    "rank": 371,
     "name": "Justin Steele",
     "team": "CHC",
     "position": "SP",
     "pos_rank": "SP109"
   },
   {
-    "rank": 370,
+    "rank": 372,
     "name": "Isaac Collins",
     "team": "KC",
     "position": "LF,RF",
     "pos_rank": "LF1"
   },
   {
-    "rank": 371,
+    "rank": 373,
     "name": "Jared Jones",
     "team": "PIT",
     "position": "SP",
     "pos_rank": "SP110"
   },
   {
-    "rank": 372,
-    "name": "Victor Scott",
-    "team": "STL",
-    "position": "CF",
-    "pos_rank": "OF74"
+    "rank": 374,
+    "name": "Kyle Finnegan",
+    "team": "DET",
+    "position": "RP",
+    "pos_rank": "RP37"
   },
   {
-    "rank": 373,
+    "rank": 375,
     "name": "Connor Norby",
     "team": "MIA",
     "position": "3B",
     "pos_rank": "3B24"
   },
   {
-    "rank": 374,
+    "rank": 376,
     "name": "Paul Goldschmidt",
     "team": "NYY",
     "position": "1B",
     "pos_rank": "1B30"
   },
   {
-    "rank": 375,
+    "rank": 377,
     "name": "Jordan Walker",
     "team": "STL",
     "position": "LF,RF",
     "pos_rank": "OF75"
   },
   {
-    "rank": 376,
+    "rank": 378,
     "name": "Ha-Seong Kim",
     "team": "ATL",
     "position": "2B,SS",
     "pos_rank": "SS29"
   },
   {
-    "rank": 377,
+    "rank": 379,
     "name": "Jesus Sanchez",
     "team": "TOR",
     "position": "LF,CF,RF",
     "pos_rank": "OF76"
   },
   {
-    "rank": 378,
+    "rank": 380,
     "name": "Carson Kelly",
     "team": "CHC",
     "position": "C",
     "pos_rank": "C25"
   },
   {
-    "rank": 379,
+    "rank": 381,
     "name": "Edgar Quero",
     "team": "CWS",
     "position": "C,DH",
     "pos_rank": "C26"
   },
   {
-    "rank": 380,
-    "name": "Taylor Rogers",
-    "team": "MIN",
-    "position": "RP",
-    "pos_rank": "RP36"
-  },
-  {
-    "rank": 381,
+    "rank": 382,
     "name": "Austin Hays",
     "team": "CWS",
     "position": "LF,DH",
     "pos_rank": "OF77"
   },
   {
-    "rank": 382,
+    "rank": 383,
     "name": "Luis Morales",
     "team": "ATH",
     "position": "SP",
     "pos_rank": "SP111"
   },
   {
-    "rank": 383,
+    "rank": 384,
     "name": "Bo Naylor",
     "team": "CLE",
     "position": "C",
     "pos_rank": "C27"
   },
   {
-    "rank": 384,
+    "rank": 385,
     "name": "Jeremiah Estrada",
     "team": "SD",
-    "position": "RP",
-    "pos_rank": "RP37"
-  },
-  {
-    "rank": 385,
-    "name": "Kyle Finnegan",
-    "team": "DET",
     "position": "RP",
     "pos_rank": "RP38"
   },
@@ -2717,80 +2717,80 @@
   },
   {
     "rank": 389,
-    "name": "Robert Stephenson",
-    "team": "LAA",
+    "name": "Kevin Ginkel",
+    "team": "ARI",
     "position": "RP",
     "pos_rank": "RP39"
   },
   {
     "rank": 390,
+    "name": "Robert Stephenson",
+    "team": "LAA",
+    "position": "RP",
+    "pos_rank": "RP40"
+  },
+  {
+    "rank": 391,
     "name": "Joey Ortiz",
     "team": "MIL",
     "position": "SS",
     "pos_rank": "SS30"
   },
   {
-    "rank": 391,
+    "rank": 392,
     "name": "Nick Gonzales",
     "team": "PIT",
     "position": "2B,SS",
     "pos_rank": "2B31"
   },
   {
-    "rank": 392,
-    "name": "Victor Vodnik",
-    "team": "COL",
+    "rank": 393,
+    "name": "Taylor Rogers",
+    "team": "MIN",
     "position": "RP",
-    "pos_rank": "RP40"
+    "pos_rank": "RP41"
   },
   {
-    "rank": 393,
+    "rank": 394,
     "name": "Parker Meadows",
     "team": "DET",
     "position": "CF",
     "pos_rank": "OF79"
   },
   {
-    "rank": 394,
-    "name": "Simeon Woods Richardson",
-    "team": "MIN",
-    "position": "SP",
-    "pos_rank": "SP113"
-  },
-  {
     "rank": 395,
     "name": "Dustin May",
     "team": "STL",
     "position": "SP",
-    "pos_rank": "SP114"
+    "pos_rank": "SP113"
   },
   {
     "rank": 396,
+    "name": "Simeon Woods Richardson",
+    "team": "MIN",
+    "position": "SP",
+    "pos_rank": "SP114"
+  },
+  {
+    "rank": 397,
     "name": "Nolan Gorman",
     "team": "STL",
     "position": "2B,3B,DH",
     "pos_rank": "2B32"
   },
   {
-    "rank": 397,
+    "rank": 398,
     "name": "Jonathan India",
     "team": "KC",
     "position": "2B,3B,LF,DH",
     "pos_rank": "2B33"
   },
   {
-    "rank": 398,
+    "rank": 399,
     "name": "Andrew Benintendi",
     "team": "CWS",
     "position": "LF,DH",
     "pos_rank": "OF80"
-  },
-  {
-    "rank": 399,
-    "name": "Payton Tolle",
-    "team": "BOS",
-    "position": "SP,RP",
-    "pos_rank": "SP,RP11"
   },
   {
     "rank": 400,
@@ -2808,22 +2808,22 @@
   },
   {
     "rank": 402,
+    "name": "Eduardo Rodriguez",
+    "team": "ARI",
+    "position": "SP",
+    "pos_rank": "SP115"
+  },
+  {
+    "rank": 403,
     "name": "Carlos Narvaez",
     "team": "BOS",
     "position": "C",
     "pos_rank": "C28"
   },
   {
-    "rank": 403,
+    "rank": 404,
     "name": "Luis Gil",
     "team": "NYY",
-    "position": "SP",
-    "pos_rank": "SP115"
-  },
-  {
-    "rank": 404,
-    "name": "Eduardo Rodriguez",
-    "team": "ARI",
     "position": "SP",
     "pos_rank": "SP116"
   },
@@ -2839,14 +2839,14 @@
     "name": "Jordan Leasure",
     "team": "CWS",
     "position": "RP",
-    "pos_rank": "RP41"
+    "pos_rank": "RP42"
   },
   {
     "rank": 407,
     "name": "Jose A. Ferrer",
     "team": "SEA",
     "position": "RP",
-    "pos_rank": "RP42"
+    "pos_rank": "RP43"
   },
   {
     "rank": 408,
@@ -2860,7 +2860,7 @@
     "name": "Garrett Cleavinger",
     "team": "TB",
     "position": "RP",
-    "pos_rank": "RP43"
+    "pos_rank": "RP44"
   },
   {
     "rank": 410,
@@ -2920,17 +2920,17 @@
   },
   {
     "rank": 418,
+    "name": "Tony Santillan",
+    "team": "CIN",
+    "position": "RP",
+    "pos_rank": "RP45"
+  },
+  {
+    "rank": 419,
     "name": "Triston Casas",
     "team": "BOS",
     "position": "1B",
     "pos_rank": "1B32"
-  },
-  {
-    "rank": 419,
-    "name": "Kevin Ginkel",
-    "team": "ARI",
-    "position": "RP",
-    "pos_rank": "RP44"
   },
   {
     "rank": 420,
@@ -2948,38 +2948,38 @@
   },
   {
     "rank": 422,
-    "name": "Michael Soroka",
-    "team": "ARI",
-    "position": "SP,RP",
-    "pos_rank": "SP,RP12"
-  },
-  {
-    "rank": 423,
     "name": "Jake Meyers",
     "team": "HOU",
     "position": "CF",
     "pos_rank": "OF82"
   },
   {
-    "rank": 424,
+    "rank": 423,
     "name": "Max Meyer",
     "team": "MIA",
     "position": "SP",
     "pos_rank": "SP122"
   },
   {
-    "rank": 425,
+    "rank": 424,
     "name": "Johan Oviedo",
     "team": "BOS",
     "position": "SP",
     "pos_rank": "SP123"
   },
   {
-    "rank": 426,
+    "rank": 425,
     "name": "Matt Brash",
     "team": "SEA",
     "position": "RP",
-    "pos_rank": "RP45"
+    "pos_rank": "RP46"
+  },
+  {
+    "rank": 426,
+    "name": "Lucas Erceg",
+    "team": "KC",
+    "position": "RP",
+    "pos_rank": "RP47"
   },
   {
     "rank": 427,
@@ -3000,63 +3000,63 @@
     "name": "Garrett Whitlock",
     "team": "BOS",
     "position": "RP",
-    "pos_rank": "RP46"
+    "pos_rank": "RP48"
   },
   {
     "rank": 430,
+    "name": "Payton Tolle",
+    "team": "BOS",
+    "position": "SP,RP",
+    "pos_rank": "SP,RP11"
+  },
+  {
+    "rank": 431,
     "name": "Thomas White",
     "team": "MIA",
     "position": "SP",
     "pos_rank": "SP125"
   },
   {
-    "rank": 431,
+    "rank": 432,
     "name": "Luke Weaver",
     "team": "NYM",
     "position": "RP",
-    "pos_rank": "RP47"
+    "pos_rank": "RP49"
   },
   {
-    "rank": 432,
+    "rank": 433,
     "name": "Kristian Campbell",
     "team": "BOS",
     "position": "2B,CF",
     "pos_rank": "2B36"
   },
   {
-    "rank": 433,
+    "rank": 434,
     "name": "Christian Moore",
     "team": "LAA",
     "position": "2B",
     "pos_rank": "2B37"
   },
   {
-    "rank": 434,
+    "rank": 435,
     "name": "Mike Yastrzemski",
     "team": "ATL",
     "position": "LF,CF,RF",
     "pos_rank": "OF83"
   },
   {
-    "rank": 435,
+    "rank": 436,
     "name": "Grant Holmes",
     "team": "ATL",
     "position": "SP",
     "pos_rank": "SP126"
   },
   {
-    "rank": 436,
+    "rank": 437,
     "name": "Camilo Doval",
     "team": "NYY",
     "position": "RP",
-    "pos_rank": "RP48"
-  },
-  {
-    "rank": 437,
-    "name": "Tony Santillan",
-    "team": "CIN",
-    "position": "RP",
-    "pos_rank": "RP49"
+    "pos_rank": "RP50"
   },
   {
     "rank": 438,
@@ -3084,40 +3084,40 @@
     "name": "Andrew Kittredge",
     "team": "BAL",
     "position": "RP",
-    "pos_rank": "RP50"
+    "pos_rank": "RP51"
   },
   {
     "rank": 442,
+    "name": "Michael Soroka",
+    "team": "ARI",
+    "position": "SP,RP",
+    "pos_rank": "SP,RP12"
+  },
+  {
+    "rank": 443,
     "name": "Sung-Mun Song",
     "team": "SD",
     "position": "2B,3B",
     "pos_rank": "2B38"
   },
   {
-    "rank": 443,
+    "rank": 444,
     "name": "Dean Kremer",
     "team": "BAL",
     "position": "SP",
     "pos_rank": "SP129"
   },
   {
-    "rank": 444,
+    "rank": 445,
     "name": "Tyler Wells",
     "team": "BAL",
     "position": "SP",
     "pos_rank": "SP130"
   },
   {
-    "rank": 445,
+    "rank": 446,
     "name": "Adrian Morejon",
     "team": "SD",
-    "position": "RP",
-    "pos_rank": "RP51"
-  },
-  {
-    "rank": 446,
-    "name": "Lucas Erceg",
-    "team": "KC",
     "position": "RP",
     "pos_rank": "RP52"
   },
@@ -3438,65 +3438,65 @@
   },
   {
     "rank": 492,
-    "name": "Ronny Henriquez",
-    "team": "MIA",
+    "name": "Gregory Soto",
+    "team": "PIT",
     "position": "RP",
     "pos_rank": "RP65"
   },
   {
     "rank": 493,
+    "name": "Ronny Henriquez",
+    "team": "MIA",
+    "position": "RP",
+    "pos_rank": "RP66"
+  },
+  {
+    "rank": 494,
     "name": "Joey Bart",
     "team": "PIT",
     "position": "C",
     "pos_rank": "C36"
   },
   {
-    "rank": 494,
+    "rank": 495,
+    "name": "Alexis Diaz",
+    "team": "TEX",
+    "position": "RP",
+    "pos_rank": "RP67"
+  },
+  {
+    "rank": 496,
     "name": "Brooks Baldwin",
     "team": "CWS",
     "position": "2B,3B,SS,LF,CF,RF",
     "pos_rank": "2B44"
   },
   {
-    "rank": 495,
-    "name": "Alexis Diaz",
-    "team": "TEX",
-    "position": "RP",
-    "pos_rank": "RP66"
-  },
-  {
-    "rank": 496,
+    "rank": 497,
     "name": "Alex Vesia",
     "team": "LAD",
     "position": "RP",
-    "pos_rank": "RP67"
+    "pos_rank": "RP68"
   },
   {
-    "rank": 497,
+    "rank": 498,
     "name": "Kutter Crawford",
     "team": "BOS",
     "position": "SP",
     "pos_rank": "SP134"
   },
   {
-    "rank": 498,
+    "rank": 499,
     "name": "Rhys Hoskins",
     "team": "FA",
     "position": "1B",
     "pos_rank": "1B36"
   },
   {
-    "rank": 499,
+    "rank": 500,
     "name": "Tyler Freeman",
     "team": "COL",
     "position": "2B,RF,DH",
     "pos_rank": "2B45"
-  },
-  {
-    "rank": 500,
-    "name": "Joshua Baez",
-    "team": "STL",
-    "position": "LF,CF,RF",
-    "pos_rank": "OF91"
   }
 ]
