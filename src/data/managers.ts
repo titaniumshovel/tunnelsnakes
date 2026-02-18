@@ -47,7 +47,7 @@ export const TEAM_COLORS: Record<string, { bg: string; border: string; text: str
   Chris:  { bg: 'bg-amber-50 dark:bg-amber-900/30',     border: 'border-amber-400 dark:border-amber-500/40',   text: 'text-amber-700 dark:text-amber-300',   dot: 'bg-amber-500',    hex: '#f59e0b' },
   Alex:   { bg: 'bg-orange-50 dark:bg-orange-900/30',   border: 'border-orange-300 dark:border-orange-500/40', text: 'text-orange-700 dark:text-orange-300', dot: 'bg-orange-500',   hex: '#f97316' },
   Greasy: { bg: 'bg-cyan-50 dark:bg-cyan-900/30',       border: 'border-cyan-300 dark:border-cyan-500/40',     text: 'text-cyan-700 dark:text-cyan-300',     dot: 'bg-cyan-500',     hex: '#06b6d4' },
-  Bob:    { bg: 'bg-slate-100 dark:bg-slate-900/30',    border: 'border-slate-300 dark:border-slate-500/40',   text: 'text-slate-700 dark:text-slate-300',   dot: 'bg-slate-500',    hex: '#64748b' },
+  Bob:    { bg: 'bg-rose-50 dark:bg-rose-900/30',        border: 'border-rose-300 dark:border-rose-500/40',     text: 'text-rose-700 dark:text-rose-300',     dot: 'bg-rose-400',     hex: '#fb7185' },
   Mike:   { bg: 'bg-fuchsia-50 dark:bg-fuchsia-900/30', border: 'border-fuchsia-300 dark:border-fuchsia-500/40', text: 'text-fuchsia-700 dark:text-fuchsia-300', dot: 'bg-fuchsia-500', hex: '#d946ef' },
   Sean:   { bg: 'bg-emerald-50 dark:bg-emerald-900/30', border: 'border-emerald-300 dark:border-emerald-500/40', text: 'text-emerald-700 dark:text-emerald-300', dot: 'bg-emerald-500', hex: '#10b981' },
 }
