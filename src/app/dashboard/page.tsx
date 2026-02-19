@@ -129,7 +129,7 @@ export default function DashboardPage() {
 
     return [
       { status: 'keeping', available: keepingCount < MAX_KEEPERS, reason: keepingCount >= MAX_KEEPERS ? 'Keeper limit reached' : undefined },
-      { status: 'keeping-7th', available: !naEligible && !has7th, reason: naEligible ? 'NA-eligible players use NA slots' : has7th ? '7th slot taken' : undefined },
+      { status: 'keeping-7th', available: !has7th, reason: has7th ? '7th slot taken' : undefined },
       { status: 'keeping-na', available: naEligible && naCount < MAX_NA, reason: !naEligible ? 'Not NA eligible' : naCount >= MAX_NA ? 'NA limit reached' : undefined },
       { status: 'undecided', available: true },
       { status: 'not-keeping', available: true },
