@@ -212,11 +212,10 @@ async function buildRostersSection(): Promise<string> {
           // Already labeled "2nd yr keeper — ECR" etc.
           const effectiveRound = Math.ceil(p.ecr / 12)
           cost = `Rd ${effectiveRound} (${p.keeperCostLabel})`
-        } else if (p.keeperCostLabel && (p.keeperCostLabel.startsWith('Drafted') || p.keeperCostLabel.startsWith('FA') || p.keeperCostLabel.startsWith('Trade'))) {
+        } else if (p.keeperCostLabel && (p.keeperCostLabel.startsWith('Drafted') || p.keeperCostLabel.startsWith('FA') || p.keeperCostLabel.startsWith('Trade') || p.keeperCostLabel.startsWith('NA'))) {
           // Explicitly mark as 1st year keeper so the AI doesn't assume 2nd year
+          // Covers: "Drafted Rd X", "FA — Rd 23", "Trade — Rd X", "NA — Rd 23", "NA (minor leaguer)"
           cost = `${p.keeperCostLabel} (1st yr keeper — next yr becomes ECR)`
-        } else if (p.keeperCostLabel === 'NA (minor leaguer)') {
-          cost = p.keeperCostLabel
         } else {
           cost = p.keeperCostLabel ?? (p.keeperCostRound ? `Rd ${p.keeperCostRound}` : 'N/A')
         }
