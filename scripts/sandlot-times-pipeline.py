@@ -13,6 +13,7 @@ Usage:
 
 import json
 import os
+import re
 import sys
 import subprocess
 import time
@@ -25,6 +26,7 @@ from urllib.parse import urljoin
 # Third-party
 import feedparser
 import requests
+from dateutil.parser import parse as dateutil_parse
 
 # ─── Configuration ────────────────────────────────────────────────
 
@@ -97,11 +99,37 @@ REDDIT_HEADERS = {"User-Agent": "SandlotTimes/1.0 (Fantasy Baseball League Newsl
 
 # ─── RSS Fetching ─────────────────────────────────────────────────
 
+def _parse_entry_date(entry) -> datetime | None:
+    """Try multiple strategies to parse an RSS entry's publication date."""
+    # Strategy 1: feedparser's pre-parsed date (normalized to UTC struct_time)
+    if hasattr(entry, 'published_parsed') and entry.published_parsed:
+        return datetime(*entry.published_parsed[:6], tzinfo=timezone.utc)
+    if hasattr(entry, 'updated_parsed') and entry.updated_parsed:
+        return datetime(*entry.updated_parsed[:6], tzinfo=timezone.utc)
+
+    # Strategy 2: raw date string via dateutil (handles many formats)
+    raw_date = getattr(entry, 'published', None) or getattr(entry, 'updated', None)
+    if raw_date:
+        try:
+            dt = dateutil_parse(raw_date)
+            # If naive (no timezone), assume UTC
+            if dt.tzinfo is None:
+                dt = dt.replace(tzinfo=timezone.utc)
+            return dt
+        except (ValueError, OverflowError):
+            pass
+
+    return None
+
+
 def fetch_feed(feed_config: dict, cutoff: datetime) -> list[dict]:
     """Fetch and parse a single RSS feed, returning items from the last N hours."""
     url = feed_config["url"]
     source = feed_config["source"]
     items = []
+    now = datetime.now(timezone.utc)
+    skipped_no_date = 0
+    skipped_stale = 0
 
     try:
         feed = feedparser.parse(url)
@@ -110,15 +138,22 @@ def fetch_feed(feed_config: dict, cutoff: datetime) -> list[dict]:
             return []
 
         for entry in feed.entries:
-            # Parse published date
-            published = None
-            if hasattr(entry, 'published_parsed') and entry.published_parsed:
-                published = datetime(*entry.published_parsed[:6], tzinfo=timezone.utc)
-            elif hasattr(entry, 'updated_parsed') and entry.updated_parsed:
-                published = datetime(*entry.updated_parsed[:6], tzinfo=timezone.utc)
+            # Parse published date with multiple fallback strategies
+            published = _parse_entry_date(entry)
 
-            # If no date, include it anyway (better to have too much than miss)
-            if published and published < cutoff:
+            # STRICT: If no date can be parsed, EXCLUDE the item
+            # This prevents stale undated articles from slipping through
+            if published is None:
+                skipped_no_date += 1
+                continue
+
+            # Cap future-dated articles at now (some feeds have bad dates)
+            if published > now:
+                published = now
+
+            # Filter by cutoff — the core lookback check
+            if published < cutoff:
+                skipped_stale += 1
                 continue
 
             summary = ""
@@ -132,14 +167,54 @@ def fetch_feed(feed_config: dict, cutoff: datetime) -> list[dict]:
                 "summary": summary,
                 "url": entry.get("link", ""),
                 "source": source,
-                "published_date": published.isoformat() if published else None,
+                "published_date": published.isoformat(),
             })
 
-        print(f"  ✓ {source}: {len(items)} items")
+        log_parts = [f"{len(items)} items"]
+        if skipped_stale:
+            log_parts.append(f"{skipped_stale} stale")
+        if skipped_no_date:
+            log_parts.append(f"{skipped_no_date} undated/skipped")
+        print(f"  ✓ {source}: {', '.join(log_parts)}")
     except Exception as e:
         print(f"  ✗ {source}: {e}")
 
     return items
+
+
+def _normalize_title(title: str) -> str:
+    """Normalize a title for dedup comparison."""
+    # Lowercase, strip punctuation, collapse whitespace
+    t = title.lower().strip()
+    t = re.sub(r'[^\w\s]', '', t)
+    t = re.sub(r'\s+', ' ', t)
+    return t
+
+
+def _dedup_items(items: list[dict]) -> list[dict]:
+    """Deduplicate items by URL and normalized title."""
+    seen_urls = set()
+    seen_titles = set()
+    deduped = []
+
+    for item in items:
+        # Dedup by URL (exact match, ignoring trailing slashes and query params)
+        url = item.get("url", "").rstrip("/").split("?")[0]
+        if url and url in seen_urls:
+            continue
+
+        # Dedup by normalized title (catches same story from different sources)
+        norm_title = _normalize_title(item.get("title", ""))
+        if norm_title and norm_title in seen_titles:
+            continue
+
+        if url:
+            seen_urls.add(url)
+        if norm_title:
+            seen_titles.add(norm_title)
+        deduped.append(item)
+
+    return deduped
 
 
 def fetch_all_feeds(lookback_hours: int = 24) -> list[dict]:
@@ -156,6 +231,12 @@ def fetch_all_feeds(lookback_hours: int = 24) -> list[dict]:
         for future in as_completed(futures):
             items = future.result()
             all_items.extend(items)
+
+    # Deduplicate across all feeds
+    before_count = len(all_items)
+    all_items = _dedup_items(all_items)
+    if before_count != len(all_items):
+        print(f"  🔄 Dedup: {before_count} → {len(all_items)} items ({before_count - len(all_items)} duplicates removed)")
 
     return all_items
 
@@ -272,10 +353,11 @@ def analyze_with_ai(news_items: list[dict], roster_context: str) -> dict:
 
     today = datetime.now().strftime("%A, %B %d, %Y")
 
-    # Prepare news digest for AI
+    # Prepare news digest for AI — include dates so AI can see recency
     news_text = ""
     for i, item in enumerate(news_items[:50], 1):  # Cap at 50 items
-        news_text += f"\n{i}. [{item['source']}] {item['title']}"
+        date_str = item.get('published_date', 'unknown date')
+        news_text += f"\n{i}. [{item['source']}] [{date_str}] {item['title']}"
         if item.get('summary'):
             news_text += f"\n   {item['summary'][:200]}"
         if item.get('url'):
@@ -330,7 +412,9 @@ GUIDELINES:
 - The hot take should be entertaining and reference specific managers when relevant
 - If it's offseason, focus on trades, signings, and spring training
 - If league rosters are available, cross-reference affected players to specific managers
-- Be accurate with URLs — use the source_url from the input when available"""
+- Be accurate with URLs — use the source_url from the input when available
+
+CRITICAL — ONLY use stories from the provided news items below. Do NOT invent, recall, or hallucinate stories from your training data. Every headline and fact in your output must trace back to a specific numbered item in the input. If there are few items, produce a shorter edition — do NOT pad with made-up stories."""
 
     user_prompt = f"Here are today's MLB news items:\n{news_text}"
 
