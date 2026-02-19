@@ -39,7 +39,6 @@ type RosterPlayer = {
     eligible_positions: string[] | null
     is_na_eligible: boolean | null
     na_eligibility_reason: string | null
-    mlb_debut_date: string | null
   } | null
 }
 
@@ -129,7 +128,7 @@ export default function DashboardPage() {
 
     return [
       { status: 'keeping', available: keepingCount < MAX_KEEPERS, reason: keepingCount >= MAX_KEEPERS ? 'Keeper limit reached' : undefined },
-      { status: 'keeping-7th', available: !has7th, reason: has7th ? '7th slot taken' : undefined },
+      { status: 'keeping-7th', available: !has7th && naEligible, reason: has7th ? '7th slot taken' : !naEligible ? 'Exceeded qualifying thresholds' : undefined },
       { status: 'keeping-na', available: naEligible && naCount < MAX_NA, reason: !naEligible ? 'Not NA eligible' : naCount >= MAX_NA ? 'NA limit reached' : undefined },
       { status: 'undecided', available: true },
       { status: 'not-keeping', available: true },
@@ -643,19 +642,14 @@ function ValidateKeepers({ roster }: { roster: RosterPlayer[] }) {
       errors.push(`Multiple 7th Keepers selected: ${seventhKeeper.length}/1 maximum`)
     }
 
-    // Validate 7th keeper eligibility against MLB debut data
+    // Validate 7th keeper eligibility: player must be under MLB rookie thresholds
+    // (fewer than 130 career AB AND fewer than 50 career IP, i.e. NA-eligible)
     if (seventhKeeper.length === 1) {
       const player = seventhKeeper[0]
       if (player.players) {
-        const debutDate = player.players.mlb_debut_date
-        if (debutDate) {
-          const debutYear = new Date(debutDate).getFullYear()
-          if (debutYear < 2025) {
-            errors.push(`❌ ${player.players.full_name} debuted in ${debutYear} — not eligible for 7th Keeper (must be in first MLB year)`)
-          }
-          // If debut in 2025-2026, it's valid — no message needed
+        if (!isNAEligible(player)) {
+          errors.push(`❌ ${player.players.full_name} has exceeded qualifying thresholds (130 AB or 50 IP) — not eligible for 7th Keeper`)
         }
-        // If no debut date (null), they haven't debuted — that's valid for 7th keeper
       }
     }
 

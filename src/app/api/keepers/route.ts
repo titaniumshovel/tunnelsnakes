@@ -55,6 +55,16 @@ export async function PATCH(req: Request) {
     return NextResponse.json({ error: 'Roster player not found' }, { status: 404 })
   }
 
+  // Gate 7th keeper: player must be NA-eligible (under rookie thresholds: <130 AB and <50 IP)
+  if (keeper_status === 'keeping-7th') {
+    const players = rosterPlayer as { players?: { eligible_positions?: string[]; is_na_eligible?: boolean } }
+    const eligible = players.players?.eligible_positions ?? []
+    const isNAEligible = players.players?.is_na_eligible === true || (players.players?.is_na_eligible == null && eligible.includes('NA'))
+    if (!isNAEligible) {
+      return NextResponse.json({ error: 'This player has exceeded qualifying thresholds (130 AB or 50 IP) — not eligible for 7th Keeper' }, { status: 400 })
+    }
+  }
+
   // Gate NA keepers: allow keeping-na if player has is_na_eligible flag OR NA in eligible_positions
   if (keeper_status === 'keeping-na') {
     const players = rosterPlayer as { players?: { eligible_positions?: string[]; is_na_eligible?: boolean } }
