@@ -3,7 +3,7 @@
 import { useEffect, useState, useMemo } from 'react'
 import Link from 'next/link'
 import { MANAGERS, TEAM_COLORS, getManagerByYahooTeamKey, type Manager } from '@/data/managers'
-import { resolveKeeperStacking, type ResolvedKeeper, type KeeperInput } from '@/lib/keeper-stacking'
+import { resolveKeeperStacking, getEffectiveKeeperCostRound, type ResolvedKeeper, type KeeperInput } from '@/lib/keeper-stacking'
 
 type RosterPlayer = {
   id: string
@@ -100,7 +100,7 @@ export function KeepersUI() {
         .map(r => ({
           id: r.id,
           player_name: r.players?.full_name ?? 'Unknown',
-          keeper_cost_round: r.keeper_cost_round ?? r.players?.keeper_cost_round ?? 0,
+          keeper_cost_round: getEffectiveKeeperCostRound(r.keeper_status, r.keeper_cost_round ?? r.players?.keeper_cost_round ?? 0, r.players?.fantasypros_ecr ?? null) ?? 0,
           ecr: r.players?.fantasypros_ecr ?? null,
           keeper_status: r.keeper_status,
         }))
@@ -263,7 +263,7 @@ export function KeepersUI() {
                     {[...keepers, ...seventhKeepers, ...naKeepers].map(rp => {
                       if (!rp.players) return null
                       const statusInfo = STATUS_DISPLAY[rp.keeper_status] ?? STATUS_DISPLAY.undecided
-                      const costRound = rp.keeper_cost_round ?? rp.players.keeper_cost_round
+                      const costRound = getEffectiveKeeperCostRound(rp.keeper_status, rp.keeper_cost_round ?? rp.players.keeper_cost_round, rp.players.fantasypros_ecr)
                       const costLabel = rp.keeper_cost_label ?? rp.players.keeper_cost_label
                       const resolved = teamStackingMaps[mgr.displayName]?.get(rp.id)
                       const isStacked = resolved?.stacked_from !== null && resolved?.stacked_from !== undefined

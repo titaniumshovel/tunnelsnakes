@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { MANAGERS, TEAM_COLORS, getManagerByEmail, type Manager } from '@/data/managers'
 import draftBoardData from '@/data/draft-board.json'
-import { resolveKeeperStacking, checkStackingConflict, type ResolvedKeeper, type KeeperInput } from '@/lib/keeper-stacking'
+import { resolveKeeperStacking, checkStackingConflict, getEffectiveKeeperCostRound, type ResolvedKeeper, type KeeperInput } from '@/lib/keeper-stacking'
 
 type DraftPick = {
   slot: number
@@ -135,7 +135,7 @@ export default function DashboardPage() {
         .map(r => ({
           id: r.id,
           player_name: r.players?.full_name ?? 'Unknown',
-          keeper_cost_round: r.keeper_cost_round!,
+          keeper_cost_round: getEffectiveKeeperCostRound(r.keeper_status, r.keeper_cost_round!, r.players?.fantasypros_ecr ?? null) ?? r.keeper_cost_round!,
           ecr: r.players?.fantasypros_ecr ?? null,
           keeper_status: r.keeper_status,
         }))
@@ -271,7 +271,7 @@ export default function DashboardPage() {
       .map(r => ({
         id: r.id,
         player_name: r.players?.full_name ?? 'Unknown',
-        keeper_cost_round: r.keeper_cost_round!,
+        keeper_cost_round: getEffectiveKeeperCostRound(r.keeper_status, r.keeper_cost_round!, r.players?.fantasypros_ecr ?? null) ?? r.keeper_cost_round!,
         ecr: r.players?.fantasypros_ecr ?? null,
         keeper_status: r.keeper_status,
       }))
@@ -499,7 +499,8 @@ export default function DashboardPage() {
                                 </>
                               )
                             }
-                            return ` · Cost: Rd ${rp.keeper_cost_round}`
+                            const effectiveCost = getEffectiveKeeperCostRound(rp.keeper_status, rp.keeper_cost_round, rp.players.fantasypros_ecr)
+                            return ` · Cost: Rd ${effectiveCost ?? rp.keeper_cost_round}`
                           })()}
                           {rp.keeper_cost_label && !rp.keeper_cost_round && ` · ${rp.keeper_cost_label}`}
                         </div>

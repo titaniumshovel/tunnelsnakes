@@ -3,6 +3,7 @@ import Image from 'next/image'
 import { notFound } from 'next/navigation'
 import { createClient } from '@supabase/supabase-js'
 import { MANAGERS, TEAM_COLORS, getManagerBySlug } from '@/data/managers'
+import { getEffectiveKeeperCostRound } from '@/lib/keeper-stacking'
 import TeamLogo from '@/components/TeamLogo'
 
 export const revalidate = 300 // Revalidate every 5 minutes
@@ -259,7 +260,7 @@ export default async function TeamProfilePage({ params }: Props) {
                   {players.map((rp) => {
                     if (!rp.players) return null
                     const p = rp.players
-                    const keeperCostRound = rp.keeper_cost_round ?? p.keeper_cost_round
+                    const keeperCostRound = getEffectiveKeeperCostRound(rp.keeper_status, rp.keeper_cost_round ?? p.keeper_cost_round, p.fantasypros_ecr)
                     const keeperCostLabel = rp.keeper_cost_label ?? p.keeper_cost_label
                     return (
                       <div key={rp.id} className="flex items-center gap-3 px-4 py-2.5 hover:bg-muted/50 transition-colors">

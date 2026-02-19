@@ -14,6 +14,22 @@
 
 const MAX_REGULAR_ROUND = 23
 
+/**
+ * Get the effective keeper cost round for a player.
+ * For 7th keepers (keeping-7th), the cost is ALWAYS ECR-based: ceil(ECR / 12).
+ * For regular keepers, the cost is the stored keeper_cost_round.
+ */
+export function getEffectiveKeeperCostRound(
+  keeperStatus: string,
+  keeperCostRound: number | null,
+  fantasyprosEcr: number | null
+): number | null {
+  if (keeperStatus === 'keeping-7th' && fantasyprosEcr != null) {
+    return Math.ceil(fantasyprosEcr / 12)
+  }
+  return keeperCostRound
+}
+
 export type KeeperInput = {
   id: string
   player_name: string

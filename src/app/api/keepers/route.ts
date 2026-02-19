@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { getManagerByEmail, MANAGERS } from '@/data/managers'
-import { resolveKeeperStacking, type KeeperInput } from '@/lib/keeper-stacking'
+import { resolveKeeperStacking, getEffectiveKeeperCostRound, type KeeperInput } from '@/lib/keeper-stacking'
 
 // GET: fetch all keeper data (public) — includes stacking info
 export async function GET() {
@@ -34,13 +34,16 @@ export async function GET() {
       .filter((r: Record<string, unknown>) =>
         (r.keeper_status === 'keeping' || r.keeper_status === 'keeping-7th') && r.keeper_cost_round
       )
-      .map((r: Record<string, unknown>) => ({
-        id: r.id as string,
-        player_name: (r.players as Record<string, unknown>)?.full_name as string ?? 'Unknown',
-        keeper_cost_round: r.keeper_cost_round as number,
-        ecr: (r.players as Record<string, unknown>)?.fantasypros_ecr as number | null ?? null,
-        keeper_status: r.keeper_status as string,
-      }))
+      .map((r: Record<string, unknown>) => {
+        const ecr = (r.players as Record<string, unknown>)?.fantasypros_ecr as number | null ?? null
+        return {
+          id: r.id as string,
+          player_name: (r.players as Record<string, unknown>)?.full_name as string ?? 'Unknown',
+          keeper_cost_round: getEffectiveKeeperCostRound(r.keeper_status as string, r.keeper_cost_round as number, ecr) ?? (r.keeper_cost_round as number),
+          ecr,
+          keeper_status: r.keeper_status as string,
+        }
+      })
 
     if (keeperInputs.length > 0) {
       const result = resolveKeeperStacking(keeperInputs)
