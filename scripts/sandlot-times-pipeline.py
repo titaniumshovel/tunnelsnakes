@@ -86,9 +86,13 @@ MANAGERS = {
 MANAGER_NAMES = list(MANAGERS.values())
 
 # RSS feeds
+# verify_dates: ESPN's RSS feed uses the feed-generation time for ALL articles,
+# not the actual publish date. This lets multi-day-old articles bypass the lookback
+# filter because they always appear "fresh." For these sources, we scrape the real
+# datePublished from the article page's JSON-LD structured data.
 RSS_FEEDS = [
     {"url": "https://www.mlb.com/feeds/news/rss.xml", "source": "MLB.com"},
-    {"url": "https://www.espn.com/espn/rss/mlb/news", "source": "ESPN"},
+    {"url": "https://www.espn.com/espn/rss/mlb/news", "source": "ESPN", "verify_dates": True},
     {"url": "https://www.cbssports.com/rss/headlines/mlb/", "source": "CBS Sports"},
     {"url": "https://www.rotoworld.com/rss/feed.xml", "source": "Rotoworld"},
 ]
@@ -122,10 +126,94 @@ def _parse_entry_date(entry) -> datetime | None:
     return None
 
 
+def _scrape_real_date(url: str) -> datetime | None:
+    """
+    Scrape the real datePublished from an article page's JSON-LD structured data.
+
+    ESPN's RSS feed assigns the feed-generation timestamp to ALL articles,
+    making 3-day-old articles appear "fresh." The article page's JSON-LD
+    always has the correct datePublished.
+    """
+    try:
+        resp = requests.get(url, timeout=10, headers={
+            "User-Agent": "SandlotTimes/1.0 (Fantasy Baseball Newsletter)"
+        })
+        if resp.status_code != 200:
+            return None
+
+        # Look for datePublished in JSON-LD or meta tags
+        match = re.search(r'"datePublished"\s*:\s*"([^"]+)"', resp.text)
+        if match:
+            dt = dateutil_parse(match.group(1))
+            if dt.tzinfo is None:
+                dt = dt.replace(tzinfo=timezone.utc)
+            return dt
+
+        # Fallback: og:article:published_time meta tag
+        match = re.search(
+            r'<meta[^>]+property=["\']article:published_time["\'][^>]+content=["\']([^"\']+)["\']',
+            resp.text
+        )
+        if match:
+            dt = dateutil_parse(match.group(1))
+            if dt.tzinfo is None:
+                dt = dt.replace(tzinfo=timezone.utc)
+            return dt
+
+    except Exception:
+        pass
+    return None
+
+
+def _verify_dates_for_items(items: list[dict], cutoff: datetime) -> list[dict]:
+    """
+    For sources with unreliable RSS dates (e.g., ESPN), parallel-fetch
+    the real datePublished from article pages and re-filter against cutoff.
+    """
+    now = datetime.now(timezone.utc)
+    verified = []
+    skipped = 0
+
+    # Parallel-fetch real dates
+    url_to_item = {item["url"]: item for item in items if item.get("url")}
+    urls = list(url_to_item.keys())
+
+    real_dates = {}
+    with ThreadPoolExecutor(max_workers=8) as executor:
+        future_to_url = {executor.submit(_scrape_real_date, u): u for u in urls}
+        for future in as_completed(future_to_url):
+            url = future_to_url[future]
+            try:
+                real_dates[url] = future.result()
+            except Exception:
+                real_dates[url] = None
+
+    for item in items:
+        url = item.get("url", "")
+        real_date = real_dates.get(url)
+
+        if real_date:
+            # Cap future dates
+            if real_date > now:
+                real_date = now
+            # Re-filter with the REAL date
+            if real_date < cutoff:
+                skipped += 1
+                continue
+            # Update the item's date to the real one
+            item["published_date"] = real_date.isoformat()
+
+        # If we couldn't get a real date, keep the item (RSS date already passed cutoff)
+        verified.append(item)
+
+    return verified, skipped
+
+
 def fetch_feed(feed_config: dict, cutoff: datetime) -> list[dict]:
     """Fetch and parse a single RSS feed, returning items from the last N hours."""
     url = feed_config["url"]
     source = feed_config["source"]
+    needs_date_verify = feed_config.get("verify_dates", False)
     items = []
     now = datetime.now(timezone.utc)
     skipped_no_date = 0
@@ -151,8 +239,10 @@ def fetch_feed(feed_config: dict, cutoff: datetime) -> list[dict]:
             if published > now:
                 published = now
 
-            # Filter by cutoff — the core lookback check
-            if published < cutoff:
+            # For feeds with reliable dates, apply cutoff immediately.
+            # For feeds with unreliable dates (verify_dates=True), defer
+            # filtering until after we scrape real dates from article pages.
+            if not needs_date_verify and published < cutoff:
                 skipped_stale += 1
                 continue
 
@@ -169,6 +259,14 @@ def fetch_feed(feed_config: dict, cutoff: datetime) -> list[dict]:
                 "source": source,
                 "published_date": published.isoformat(),
             })
+
+        # For sources with unreliable RSS dates, verify against article pages
+        if needs_date_verify and items:
+            before = len(items)
+            items, verify_skipped = _verify_dates_for_items(items, cutoff)
+            skipped_stale += verify_skipped
+            if verify_skipped:
+                print(f"  🔍 {source}: Date verification removed {verify_skipped} stale items ({before}→{len(items)})")
 
         log_parts = [f"{len(items)} items"]
         if skipped_stale:
@@ -231,6 +329,12 @@ def fetch_all_feeds(lookback_hours: int = 24) -> list[dict]:
         for future in as_completed(futures):
             items = future.result()
             all_items.extend(items)
+
+    # Sort by date (newest first) before dedup — ensures dedup keeps the freshest version
+    all_items.sort(
+        key=lambda x: x.get("published_date", ""),
+        reverse=True,
+    )
 
     # Deduplicate across all feeds
     before_count = len(all_items)
