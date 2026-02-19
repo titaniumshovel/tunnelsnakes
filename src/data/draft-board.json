@@ -1708,10 +1708,11 @@
       {
         "slot": 10,
         "originalOwner": "Bob",
-        "currentOwner": "Bob",
-        "traded": false,
+        "currentOwner": "Alex",
+        "traded": true,
         "path": [
-          "Bob"
+          "Bob",
+          "Alex"
         ]
       },
       {
@@ -1801,10 +1802,11 @@
       {
         "slot": 8,
         "originalOwner": "Alex",
-        "currentOwner": "Alex",
-        "traded": false,
+        "currentOwner": "Bob",
+        "traded": true,
         "path": [
-          "Alex"
+          "Alex",
+          "Bob"
         ]
       },
       {
@@ -1914,10 +1916,11 @@
       {
         "slot": 8,
         "originalOwner": "Alex",
-        "currentOwner": "Alex",
-        "traded": false,
+        "currentOwner": "Bob",
+        "traded": true,
         "path": [
-          "Alex"
+          "Alex",
+          "Bob"
         ]
       },
       {
@@ -2160,10 +2163,11 @@
       {
         "slot": 10,
         "originalOwner": "Bob",
-        "currentOwner": "Bob",
-        "traded": false,
+        "currentOwner": "Alex",
+        "traded": true,
         "path": [
-          "Bob"
+          "Bob",
+          "Alex"
         ]
       },
       {
@@ -2376,10 +2380,11 @@
       {
         "slot": 8,
         "originalOwner": "Alex",
-        "currentOwner": "Alex",
-        "traded": false,
+        "currentOwner": "Bob",
+        "traded": true,
         "path": [
-          "Alex"
+          "Alex",
+          "Bob"
         ]
       },
       {
@@ -2630,10 +2635,11 @@
       {
         "slot": 10,
         "originalOwner": "Bob",
-        "currentOwner": "Bob",
-        "traded": false,
+        "currentOwner": "Alex",
+        "traded": true,
         "path": [
-          "Bob"
+          "Bob",
+          "Alex"
         ]
       },
       {
@@ -3209,6 +3215,18 @@
     },
     {
       "description": "OS10: Alex↔Tyler (Yelich+Ward+Rd8.8+Rd10.4 for Rd2.5+Rd6.6)",
+      "source": "offseason"
+    },
+    {
+      "description": "Alex↔Pudge (Langford+Díaz+Ragans+Rd7+Rd20 for Schwarber+Rd11+Rd23)",
+      "source": "offseason"
+    },
+    {
+      "description": "Bob↔Alex (Rd15+Rd19+Rd23 for Rd16+Rd17+Rd21)",
+      "source": "offseason"
+    },
+    {
+      "description": "Chris↔Thomas (Pivetta+Díaz+Rd22+Rd23 for Rd12+Rd16)",
       "source": "offseason"
     }
   ]
