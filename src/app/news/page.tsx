@@ -353,16 +353,16 @@ function DateNav({
         disabled={!hasOlder || loading}
         aria-label="Previous edition"
         className={`
-          flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-full
-          font-mono text-xl sm:text-2xl font-bold
-          border-2 transition-all duration-200 select-none
+          flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14
+          text-3xl sm:text-4xl font-black
+          transition-all duration-200 select-none
           ${hasOlder && !loading
-            ? 'border-primary text-primary hover:bg-primary hover:text-primary-foreground active:scale-95 cursor-pointer'
-            : 'border-muted text-muted-foreground/40 cursor-not-allowed'
+            ? 'text-primary hover:text-primary/70 active:scale-90 cursor-pointer'
+            : 'text-muted-foreground/30 cursor-not-allowed'
           }
         `}
       >
-        ←
+        ‹
       </button>
 
       {/* Date display + picker */}
@@ -415,16 +415,16 @@ function DateNav({
         disabled={!hasNewer || loading}
         aria-label="Next edition"
         className={`
-          flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-full
-          font-mono text-xl sm:text-2xl font-bold
-          border-2 transition-all duration-200 select-none
+          flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14
+          text-3xl sm:text-4xl font-black
+          transition-all duration-200 select-none
           ${hasNewer && !loading
-            ? 'border-primary text-primary hover:bg-primary hover:text-primary-foreground active:scale-95 cursor-pointer'
-            : 'border-muted text-muted-foreground/40 cursor-not-allowed'
+            ? 'text-primary hover:text-primary/70 active:scale-90 cursor-pointer'
+            : 'text-muted-foreground/30 cursor-not-allowed'
           }
         `}
       >
-        →
+        ›
       </button>
     </div>
   )
