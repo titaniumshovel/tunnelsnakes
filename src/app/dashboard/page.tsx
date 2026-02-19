@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { MANAGERS, TEAM_COLORS, getManagerByEmail, type Manager } from '@/data/managers'
 import draftBoardData from '@/data/draft-board.json'
+import { resolveKeeperStacking, checkStackingConflict, type ResolvedKeeper, type KeeperInput } from '@/lib/keeper-stacking'
 
 type DraftPick = {
   slot: number
@@ -126,8 +127,33 @@ export default function DashboardPage() {
     const naCount = others.filter(r => r.keeper_status === 'keeping-na').length
     const naEligible = isNAEligible(rp)
 
+    // Check if selecting 'keeping' would create a stacking conflict
+    let stackingWarning: string | undefined
+    if (rp.keeper_cost_round && rp.keeper_status !== 'keeping' && rp.keeper_status !== 'keeping-7th') {
+      const existingKeepers: KeeperInput[] = others
+        .filter(r => (r.keeper_status === 'keeping' || r.keeper_status === 'keeping-7th') && r.keeper_cost_round)
+        .map(r => ({
+          id: r.id,
+          player_name: r.players?.full_name ?? 'Unknown',
+          keeper_cost_round: r.keeper_cost_round!,
+          ecr: r.players?.fantasypros_ecr ?? null,
+          keeper_status: r.keeper_status,
+        }))
+      const newKeeper: KeeperInput = {
+        id: rp.id,
+        player_name: rp.players?.full_name ?? 'Unknown',
+        keeper_cost_round: rp.keeper_cost_round,
+        ecr: rp.players?.fantasypros_ecr ?? null,
+        keeper_status: 'keeping',
+      }
+      const conflict = checkStackingConflict(existingKeepers, newKeeper)
+      if (conflict.conflicts) {
+        stackingWarning = `⚠️ Same-round conflict with ${conflict.conflictWith} — will stack to Rd ${conflict.effectiveRound}`
+      }
+    }
+
     return [
-      { status: 'keeping', available: keepingCount < MAX_KEEPERS, reason: keepingCount >= MAX_KEEPERS ? 'Keeper limit reached' : undefined },
+      { status: 'keeping', available: keepingCount < MAX_KEEPERS, reason: keepingCount >= MAX_KEEPERS ? 'Keeper limit reached' : undefined, warning: stackingWarning },
       { status: 'keeping-7th', available: !has7th && naEligible, reason: has7th ? '7th slot taken' : !naEligible ? 'Exceeded qualifying thresholds' : undefined },
       { status: 'keeping-na', available: naEligible && naCount < MAX_NA, reason: !naEligible ? 'Not NA eligible' : naCount >= MAX_NA ? 'NA limit reached' : undefined },
       { status: 'undecided', available: true },
@@ -234,28 +260,48 @@ export default function DashboardPage() {
     return (a.keeper_cost_round ?? 99) - (b.keeper_cost_round ?? 99)
   })
 
-  // Compute keeper-to-draft-pick assignments (display only)
+  // Compute keeper-to-draft-pick assignments with stacking resolution
   const keeperPickAssignments: Record<string, RosterPlayer> = {} // key: "round-slot"
+  const stackingMap = new Map<string, ResolvedKeeper>() // rp.id → resolved keeper info
+  let stackingErrors: { player_name: string; original_round: number; message: string }[] = []
   {
-    // Regular keepers (keeping + keeping-7th) — assign to their keeper_cost_round
-    const regularKeepers = roster.filter(
-      r => (r.keeper_status === 'keeping' || r.keeper_status === 'keeping-7th') && r.keeper_cost_round
-    )
-    // Group by round
-    const byRound: Record<number, RosterPlayer[]> = {}
-    for (const k of regularKeepers) {
-      const rd = k.keeper_cost_round!
-      if (!byRound[rd]) byRound[rd] = []
-      byRound[rd].push(k)
+    // Build keeper inputs for stacking resolution
+    const keeperInputs: KeeperInput[] = roster
+      .filter(r => (r.keeper_status === 'keeping' || r.keeper_status === 'keeping-7th') && r.keeper_cost_round)
+      .map(r => ({
+        id: r.id,
+        player_name: r.players?.full_name ?? 'Unknown',
+        keeper_cost_round: r.keeper_cost_round!,
+        ecr: r.players?.fantasypros_ecr ?? null,
+        keeper_status: r.keeper_status,
+      }))
+
+    // Resolve stacking
+    const stackingResult = resolveKeeperStacking(keeperInputs)
+    stackingErrors = stackingResult.errors
+
+    // Build lookup map
+    for (const resolved of stackingResult.keepers) {
+      stackingMap.set(resolved.id, resolved)
     }
+
+    // Assign resolved keepers to draft picks using their EFFECTIVE round
+    const byEffectiveRound: Record<number, RosterPlayer[]> = {}
+    for (const resolved of stackingResult.keepers) {
+      const rp = roster.find(r => r.id === resolved.id)
+      if (!rp) continue
+      const rd = resolved.effective_round
+      if (!byEffectiveRound[rd]) byEffectiveRound[rd] = []
+      byEffectiveRound[rd].push(rp)
+    }
+
     // For each round, assign to highest slot numbers (worst pick rule)
-    for (const [rdStr, keepers] of Object.entries(byRound)) {
+    for (const [rdStr, keepers] of Object.entries(byEffectiveRound)) {
       const rd = Number(rdStr)
       const roundPicks = (data.picks[rdStr] ?? []) as DraftPick[]
       const myRoundPicks = roundPicks
         .filter(p => p.currentOwner === manager.displayName)
         .sort((a, b) => b.slot - a.slot) // highest slot first
-      // Sort keepers by cost round (they're same round so just assign in order)
       for (let i = 0; i < keepers.length && i < myRoundPicks.length; i++) {
         keeperPickAssignments[`${rd}-${myRoundPicks[i].slot}`] = keepers[i]
       }
@@ -438,7 +484,23 @@ export default function DashboardPage() {
                         </div>
                         <div className="text-[10px] font-mono text-muted-foreground">
                           {rp.players.primary_position ?? '—'} · {rp.players.mlb_team ?? '—'}
-                          {rp.keeper_cost_round && ` · Cost: Rd ${rp.keeper_cost_round}`}
+                          {rp.keeper_cost_round && (() => {
+                            const resolved = stackingMap.get(rp.id)
+                            if (resolved?.stacked_from !== null && resolved?.stacked_from !== undefined) {
+                              return (
+                                <>
+                                  {' · Cost: '}
+                                  <span className="text-amber-400 font-bold">
+                                    Rd {resolved.effective_round}
+                                  </span>
+                                  <span className="text-amber-400/70 ml-1">
+                                    ↓ stacked from Rd {resolved.stacked_from}
+                                  </span>
+                                </>
+                              )
+                            }
+                            return ` · Cost: Rd ${rp.keeper_cost_round}`
+                          })()}
                           {rp.keeper_cost_label && !rp.keeper_cost_round && ` · ${rp.keeper_cost_label}`}
                         </div>
                       </div>
@@ -471,13 +533,20 @@ export default function DashboardPage() {
                             >
                               <span className="text-base shrink-0">{display.icon}</span>
                               <div className="flex-1 min-w-0">
-                                <span className={`text-xs font-mono font-bold uppercase tracking-wider ${isCurrent ? display.color : opt.available ? 'text-foreground' : 'text-muted-foreground'}`}>
-                                  {display.label}
-                                </span>
-                                {!opt.available && !isCurrent && opt.reason && (
-                                  <span className="text-[10px] font-mono text-muted-foreground/60 ml-2">
-                                    — {opt.reason}
+                                <div className="flex items-center flex-wrap gap-x-2">
+                                  <span className={`text-xs font-mono font-bold uppercase tracking-wider ${isCurrent ? display.color : opt.available ? 'text-foreground' : 'text-muted-foreground'}`}>
+                                    {display.label}
                                   </span>
+                                  {!opt.available && !isCurrent && opt.reason && (
+                                    <span className="text-[10px] font-mono text-muted-foreground/60">
+                                      — {opt.reason}
+                                    </span>
+                                  )}
+                                </div>
+                                {'warning' in opt && opt.warning && (
+                                  <div className="text-[10px] font-mono text-amber-400 mt-0.5">
+                                    {opt.warning}
+                                  </div>
                                 )}
                               </div>
                               {isCurrent && (
@@ -494,7 +563,7 @@ export default function DashboardPage() {
             </div>
           )}
 
-          <ValidateKeepers roster={roster} />
+          <ValidateKeepers roster={roster} stackingMap={stackingMap} stackingErrors={stackingErrors} />
         </div>
 
         {/* Draft Picks */}
@@ -558,6 +627,17 @@ export default function DashboardPage() {
                           {assignedKeeper.keeper_status === 'keeping-na' && (
                             <span className="text-blue-400 ml-1">🔷</span>
                           )}
+                          {(() => {
+                            const resolved = stackingMap.get(assignedKeeper.id)
+                            if (resolved?.stacked_from !== null && resolved?.stacked_from !== undefined) {
+                              return (
+                                <span className="text-amber-400 ml-1 text-[10px]">
+                                  ↓ stacked from Rd {resolved.stacked_from}
+                                </span>
+                              )
+                            }
+                            return null
+                          })()}
                         </div>
                       )}
                     </div>
@@ -610,8 +690,8 @@ export default function DashboardPage() {
   )
 }
 
-function ValidateKeepers({ roster }: { roster: RosterPlayer[] }) {
-  const [validationResult, setValidationResult] = useState<{ isValid: boolean; messages: string[] } | null>(null)
+function ValidateKeepers({ roster, stackingMap, stackingErrors }: { roster: RosterPlayer[]; stackingMap: Map<string, ResolvedKeeper>; stackingErrors: { player_name: string; original_round: number; message: string }[] }) {
+  const [validationResult, setValidationResult] = useState<{ isValid: boolean; messages: string[]; warnings: string[] } | null>(null)
 
   function validateKeepers() {
     const keepersSelected = roster.filter(r => r.keeper_status === 'keeping').length
@@ -653,10 +733,21 @@ function ValidateKeepers({ roster }: { roster: RosterPlayer[] }) {
       }
     }
 
-    const allMessages = [...errors, ...warnings]
+    // Add stacking errors
+    for (const err of stackingErrors) {
+      errors.push(`🚫 ${err.message}`)
+    }
+
+    // Add stacking warnings
+    const stackedKeepers = Array.from(stackingMap.values()).filter(k => k.stacked_from !== null)
+    for (const sk of stackedKeepers) {
+      warnings.push(`⚠️ Same-round conflict: ${sk.player_name} (Rd ${sk.stacked_from}) → stacked to Rd ${sk.effective_round}`)
+    }
+
+    const allMessages = [...errors]
     const isValid = errors.length === 0
 
-    if (isValid && allMessages.length === 0) {
+    if (isValid && allMessages.length === 0 && warnings.length === 0) {
       const seventhName = seventhKeeper.length === 1 && seventhKeeper[0].players
         ? seventhKeeper[0].players.full_name
         : null
@@ -665,9 +756,11 @@ function ValidateKeepers({ roster }: { roster: RosterPlayer[] }) {
       } else {
         allMessages.push("✅ Keeper configuration is valid! Ready to submit by Feb 20.")
       }
+    } else if (isValid && warnings.length > 0) {
+      allMessages.push("✅ Keeper configuration is valid (stacking applied). Ready to submit by Feb 20.")
     }
 
-    setValidationResult({ isValid, messages: allMessages })
+    setValidationResult({ isValid, messages: allMessages, warnings })
   }
 
   return (
@@ -680,17 +773,28 @@ function ValidateKeepers({ roster }: { roster: RosterPlayer[] }) {
       </button>
       
       {validationResult && (
-        <div className={`mt-3 px-4 py-3 rounded-md text-sm font-mono ${
-          validationResult.isValid 
-            ? 'bg-green-500/10 border border-green-500/30 text-green-400' 
-            : 'bg-red-500/10 border border-red-500/30 text-red-400'
-        }`}>
-          {validationResult.messages.map((message, index) => (
-            <div key={index} className={index > 0 ? 'mt-2' : ''}>
-              {message}
+        <>
+          <div className={`mt-3 px-4 py-3 rounded-md text-sm font-mono ${
+            validationResult.isValid 
+              ? 'bg-green-500/10 border border-green-500/30 text-green-400' 
+              : 'bg-red-500/10 border border-red-500/30 text-red-400'
+          }`}>
+            {validationResult.messages.map((message, index) => (
+              <div key={index} className={index > 0 ? 'mt-2' : ''}>
+                {message}
+              </div>
+            ))}
+          </div>
+          {validationResult.warnings && validationResult.warnings.length > 0 && (
+            <div className="mt-2 px-4 py-3 rounded-md text-sm font-mono bg-amber-500/10 border border-amber-500/30 text-amber-400">
+              {validationResult.warnings.map((warning, index) => (
+                <div key={index} className={index > 0 ? 'mt-2' : ''}>
+                  {warning}
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
+          )}
+        </>
       )}
     </div>
   )

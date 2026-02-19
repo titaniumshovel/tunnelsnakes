@@ -1,8 +1,9 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
-import { getManagerByEmail } from '@/data/managers'
+import { getManagerByEmail, MANAGERS } from '@/data/managers'
+import { resolveKeeperStacking, type KeeperInput } from '@/lib/keeper-stacking'
 
-// GET: fetch all keeper data (public)
+// GET: fetch all keeper data (public) — includes stacking info
 export async function GET() {
   const supabase = await createClient()
 
@@ -15,7 +16,50 @@ export async function GET() {
     return NextResponse.json({ error: error.message }, { status: 500 })
   }
 
-  return NextResponse.json(data ?? [])
+  const rows = data ?? []
+
+  // Compute stacking per team and annotate rows
+  const teamGroups: Record<string, typeof rows> = {}
+  for (const row of rows) {
+    const key = row.yahoo_team_key as string
+    if (!teamGroups[key]) teamGroups[key] = []
+    teamGroups[key].push(row)
+  }
+
+  // Build a map of stacking info: id → { effective_round, stacked_from }
+  const stackingInfo: Record<string, { effective_round: number; stacked_from: number | null }> = {}
+
+  for (const [, teamRows] of Object.entries(teamGroups)) {
+    const keeperInputs: KeeperInput[] = teamRows
+      .filter((r: Record<string, unknown>) =>
+        (r.keeper_status === 'keeping' || r.keeper_status === 'keeping-7th') && r.keeper_cost_round
+      )
+      .map((r: Record<string, unknown>) => ({
+        id: r.id as string,
+        player_name: (r.players as Record<string, unknown>)?.full_name as string ?? 'Unknown',
+        keeper_cost_round: r.keeper_cost_round as number,
+        ecr: (r.players as Record<string, unknown>)?.fantasypros_ecr as number | null ?? null,
+        keeper_status: r.keeper_status as string,
+      }))
+
+    if (keeperInputs.length > 0) {
+      const result = resolveKeeperStacking(keeperInputs)
+      for (const resolved of result.keepers) {
+        stackingInfo[resolved.id] = {
+          effective_round: resolved.effective_round,
+          stacked_from: resolved.stacked_from,
+        }
+      }
+    }
+  }
+
+  // Annotate rows with stacking info
+  const annotatedRows = rows.map(row => ({
+    ...row,
+    stacking: stackingInfo[row.id as string] ?? null,
+  }))
+
+  return NextResponse.json(annotatedRows)
 }
 
 // PATCH: update keeper status (auth required, own team only)

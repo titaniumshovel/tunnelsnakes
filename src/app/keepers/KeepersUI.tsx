@@ -3,6 +3,7 @@
 import { useEffect, useState, useMemo } from 'react'
 import Link from 'next/link'
 import { MANAGERS, TEAM_COLORS, getManagerByYahooTeamKey, type Manager } from '@/data/managers'
+import { resolveKeeperStacking, type ResolvedKeeper, type KeeperInput } from '@/lib/keeper-stacking'
 
 type RosterPlayer = {
   id: string
@@ -88,6 +89,30 @@ export function KeepersUI() {
 
     return grouped
   }, [rosterData])
+
+  // Compute stacking per team
+  const teamStackingMaps = useMemo(() => {
+    const maps: Record<string, Map<string, ResolvedKeeper>> = {}
+    for (const mgr of MANAGERS) {
+      const roster = teamKeepers[mgr.displayName] ?? []
+      const keeperInputs: KeeperInput[] = roster
+        .filter(r => (r.keeper_status === 'keeping' || r.keeper_status === 'keeping-7th') && r.keeper_cost_round)
+        .map(r => ({
+          id: r.id,
+          player_name: r.players?.full_name ?? 'Unknown',
+          keeper_cost_round: r.keeper_cost_round ?? r.players?.keeper_cost_round ?? 0,
+          ecr: r.players?.fantasypros_ecr ?? null,
+          keeper_status: r.keeper_status,
+        }))
+      const result = resolveKeeperStacking(keeperInputs)
+      const map = new Map<string, ResolvedKeeper>()
+      for (const k of result.keepers) {
+        map.set(k.id, k)
+      }
+      maps[mgr.displayName] = map
+    }
+    return maps
+  }, [teamKeepers])
 
   // Players returning to draft pool
   const returningToDraft = rosterData.filter(rp => rp.keeper_status === 'not-keeping' && rp.players)
@@ -240,8 +265,10 @@ export function KeepersUI() {
                       const statusInfo = STATUS_DISPLAY[rp.keeper_status] ?? STATUS_DISPLAY.undecided
                       const costRound = rp.keeper_cost_round ?? rp.players.keeper_cost_round
                       const costLabel = rp.keeper_cost_label ?? rp.players.keeper_cost_label
+                      const resolved = teamStackingMaps[mgr.displayName]?.get(rp.id)
+                      const isStacked = resolved?.stacked_from !== null && resolved?.stacked_from !== undefined
                       return (
-                        <div key={rp.id} className="flex items-center gap-2 px-2 py-1.5 rounded-md bg-background/30">
+                        <div key={rp.id} className={`flex items-center gap-2 px-2 py-1.5 rounded-md ${isStacked ? 'bg-amber-500/10' : 'bg-background/30'}`}>
                           <span className="text-sm">{statusInfo.icon}</span>
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-1.5 text-xs font-mono font-bold text-foreground truncate">
@@ -254,11 +281,29 @@ export function KeepersUI() {
                                   NA
                                 </span>
                               )}
+                              {isStacked && (
+                                <span
+                                  className="shrink-0 px-1 py-0.5 text-[8px] font-mono font-bold uppercase bg-amber-500/20 text-amber-400 border border-amber-500/30 rounded leading-none"
+                                  title={`Stacked from Rd ${resolved.stacked_from} to Rd ${resolved.effective_round}`}
+                                >
+                                  ↓ STACKED
+                                </span>
+                              )}
                             </div>
                             <div className="text-[10px] font-mono text-muted-foreground">
                               {rp.players.primary_position ?? '—'} · {rp.players.mlb_team ?? '—'}
-                              {costRound && ` · Rd ${costRound}`}
-                              {costLabel && !costRound && ` · ${costLabel}`}
+                              {isStacked && resolved ? (
+                                <>
+                                  {' · '}
+                                  <span className="text-amber-400 font-bold">Rd {resolved.effective_round}</span>
+                                  <span className="text-amber-400/70 ml-1">↓ from Rd {resolved.stacked_from}</span>
+                                </>
+                              ) : (
+                                <>
+                                  {costRound && ` · Rd ${costRound}`}
+                                  {costLabel && !costRound && ` · ${costLabel}`}
+                                </>
+                              )}
                             </div>
                           </div>
                           {rp.players.fantasypros_ecr && (
