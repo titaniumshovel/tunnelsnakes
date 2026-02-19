@@ -1329,10 +1329,11 @@
       {
         "slot": 6,
         "originalOwner": "Thomas",
-        "currentOwner": "Thomas",
-        "traded": false,
+        "currentOwner": "Chris",
+        "traded": true,
         "path": [
-          "Thomas"
+          "Thomas",
+          "Chris"
         ]
       },
       {
@@ -1781,10 +1782,11 @@
       {
         "slot": 6,
         "originalOwner": "Thomas",
-        "currentOwner": "Thomas",
-        "traded": false,
+        "currentOwner": "Chris",
+        "traded": true,
         "path": [
-          "Thomas"
+          "Thomas",
+          "Chris"
         ]
       },
       {
@@ -2479,10 +2481,11 @@
       {
         "slot": 7,
         "originalOwner": "Chris",
-        "currentOwner": "Chris",
-        "traded": false,
+        "currentOwner": "Thomas",
+        "traded": true,
         "path": [
-          "Chris"
+          "Chris",
+          "Thomas"
         ]
       },
       {
@@ -2598,10 +2601,11 @@
       {
         "slot": 7,
         "originalOwner": "Chris",
-        "currentOwner": "Chris",
-        "traded": false,
+        "currentOwner": "Thomas",
+        "traded": true,
         "path": [
-          "Chris"
+          "Chris",
+          "Thomas"
         ]
       },
       {
@@ -3096,91 +3100,91 @@
   },
   "trades": [
     {
-      "description": "TX256: Alex\u2194Mike (Mookie mega trade)",
+      "description": "TX256: Alex↔Mike (Mookie mega trade)",
       "source": "yahoo_2025"
     },
     {
-      "description": "TX358: Bob\u2194Chris (Polanco/Garcia)",
+      "description": "TX358: Bob↔Chris (Polanco/Garcia)",
       "source": "yahoo_2025"
     },
     {
-      "description": "TX537: Bob\u2194Nick (Buxton/Arraez)",
+      "description": "TX537: Bob↔Nick (Buxton/Arraez)",
       "source": "yahoo_2025"
     },
     {
-      "description": "TX750: Bob\u2194Greasy (Henderson/Torres)",
+      "description": "TX750: Bob↔Greasy (Henderson/Torres)",
       "source": "yahoo_2025"
     },
     {
-      "description": "TX803: Bob\u2194Tom (Caglianone/Suarez)",
+      "description": "TX803: Bob↔Tom (Caglianone/Suarez)",
       "source": "yahoo_2025"
     },
     {
-      "description": "TX821: Mike\u2194Nick (Peterson+Burns for Fried+Ryan)",
+      "description": "TX821: Mike↔Nick (Peterson+Burns for Fried+Ryan)",
       "source": "yahoo_2025"
     },
     {
-      "description": "TX840: Sean\u2194Tom (Profar for Hader+King)",
+      "description": "TX840: Sean↔Tom (Profar for Hader+King)",
       "source": "yahoo_2025"
     },
     {
-      "description": "TX881: Bob\u2194Nick (Leiter/Helsley)",
+      "description": "TX881: Bob↔Nick (Leiter/Helsley)",
       "source": "yahoo_2025"
     },
     {
-      "description": "TX983: Chris\u2194Pudge (Nimmo+Schultz for Munoz)",
+      "description": "TX983: Chris↔Pudge (Nimmo+Schultz for Munoz)",
       "source": "yahoo_2025"
     },
     {
-      "description": "TX985: Bob\u2194Nick (Severino/Bello)",
+      "description": "TX985: Bob↔Nick (Severino/Bello)",
       "source": "yahoo_2025"
     },
     {
-      "description": "TX993: Chris\u2194Nick (Paddack/Rasmussen)",
+      "description": "TX993: Chris↔Nick (Paddack/Rasmussen)",
       "source": "yahoo_2025"
     },
     {
-      "description": "TX995: Web\u2194Mike (Woodruff for Campbell+Rodriguez)",
+      "description": "TX995: Web↔Mike (Woodruff for Campbell+Rodriguez)",
       "source": "yahoo_2025"
     },
     {
-      "description": "TX996: Web\u2194Bob (Kirby+Miller for Faucher+Jenkins+Soriano)",
+      "description": "TX996: Web↔Bob (Kirby+Miller for Faucher+Jenkins+Soriano)",
       "source": "yahoo_2025"
     },
     {
-      "description": "TX1003: Web\u2194Bob (Jansen/Shaw)",
+      "description": "TX1003: Web↔Bob (Jansen/Shaw)",
       "source": "yahoo_2025"
     },
     {
-      "description": "TX1004: Alex\u2194Chris (Pivetta/Gallen)",
+      "description": "TX1004: Alex↔Chris (Pivetta/Gallen)",
       "source": "yahoo_2025"
     },
     {
-      "description": "OS0: Bob\u2194Chris (Bellinger+Rd9 for Alonso+Rd13)",
+      "description": "OS0: Bob↔Chris (Bellinger+Rd9 for Alonso+Rd13)",
       "source": "offseason_email"
     },
     {
-      "description": "OS1: Sean\u2194Alex (Olson+Rd13 for Rd7)",
+      "description": "OS1: Sean↔Alex (Olson+Rd13 for Rd7)",
       "source": "offseason_email"
     },
     {
-      "description": "OS2: Greasy\u2194Sean (Jazz+Rd18 for Rd7)",
+      "description": "OS2: Greasy↔Sean (Jazz+Rd18 for Rd7)",
       "source": "offseason_email"
     },
     {
-      "description": "OS3: Alex\u2194Tyler (Bregman+Turner+Rd18,19,20 for Rd6,9,13)",
+      "description": "OS3: Alex↔Tyler (Bregman+Turner+Rd18,19,20 for Rd6,9,13)",
       "source": "offseason_email"
     },
     {
-      "description": "OS4: Alex\u2194Nick (Mookie+Rd19,20,21,22,23 for Rd7,8,9,10,11)",
+      "description": "OS4: Alex↔Nick (Mookie+Rd19,20,21,22,23 for Rd7,8,9,10,11)",
       "source": "offseason_email"
     },
     {
-      "description": "OS5: Mike\u2194Alex (McLean+Rd15 for Woo+Salas+Rd12)",
+      "description": "OS5: Mike↔Alex (McLean+Rd15 for Woo+Salas+Rd12)",
       "source": "offseason_email"
     },
     {
-      "description": "OS6: Mike\u2194Tyler (Brown+Fried+Rd21,22,23 for Rd7,8,10)",
+      "description": "OS6: Mike↔Tyler (Brown+Fried+Rd21,22,23 for Rd7,8,10)",
       "source": "offseason_email"
     },
     {
@@ -3192,19 +3196,19 @@
       "source": "offseason"
     },
     {
-      "description": "OS7: Nick\u2194Alex (Buxton+Rd8 for Machado+Rd22)",
+      "description": "OS7: Nick↔Alex (Buxton+Rd8 for Machado+Rd22)",
       "source": "offseason"
     },
     {
-      "description": "OS8: Mike\u2194Alex (Burns+Herrera+Rd23 for Rd13)",
+      "description": "OS8: Mike↔Alex (Burns+Herrera+Rd23 for Rd13)",
       "source": "offseason"
     },
     {
-      "description": "OS9: Tom\u2194Alex (Ward+Rd8+Rd10 for Duran+Rd13+Rd18)",
+      "description": "OS9: Tom↔Alex (Ward+Rd8+Rd10 for Duran+Rd13+Rd18)",
       "source": "offseason"
     },
     {
-      "description": "OS10: Alex\u2194Tyler (Yelich+Ward+Rd8.8+Rd10.4 for Rd2.5+Rd6.6)",
+      "description": "OS10: Alex↔Tyler (Yelich+Ward+Rd8.8+Rd10.4 for Rd2.5+Rd6.6)",
       "source": "offseason"
     }
   ]
