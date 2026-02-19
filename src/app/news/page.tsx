@@ -377,7 +377,8 @@ function DateNav({
             click to pick date · ← → to navigate
           </span>
         </button>
-        {/* Hidden native date input */}
+        {/* Hidden native date input — pointer-events-none so clicks
+             pass through to the button which calls showPicker() */}
         <input
           ref={dateInputRef}
           type="date"
@@ -403,7 +404,7 @@ function DateNav({
               }
             }
           }}
-          className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+          className="absolute inset-0 w-full h-full opacity-0 pointer-events-none"
           tabIndex={-1}
         />
       </div>
