@@ -320,7 +320,7 @@ OUTPUT FORMAT — respond with valid JSON only, no markdown code fences:
     }}
   ],
   "hot_take": "A fun, opinionated editorial paragraph from Smalls (the league AI). Be witty, make predictions, call out managers by name, reference the league. 3-5 sentences.",
-  "hero_image_prompt": "A descriptive prompt for generating a hero banner image based on today's top story. Style: warm vintage baseball illustration with earth tones (cream, brown, green), classic sandlot/field aesthetic, hand-painted feel. NO neon, NO terminal screens, NO green glow."
+  "hero_image_prompt": "Brief 1-sentence description of the top story's visual theme (e.g., 'A star pitcher returning from injury takes the mound at spring training'). This is used as a seed for detailed image prompt generation."
 }}
 
 GUIDELINES:
@@ -402,6 +402,122 @@ def generate_fallback_edition(news_items: list[dict]) -> dict:
     }
 
 
+# ─── News-Driven Hero Image Prompt ────────────────────────────────
+
+def generate_news_driven_image_prompt(edition: dict, news_items: list[dict]) -> str:
+    """
+    Generate a news-driven hero image prompt using a dedicated AI call.
+
+    Instead of relying on a brief instruction buried in the main analysis prompt,
+    this function takes the edition's top story and crafts a vivid, specific scene
+    prompt that visually represents the day's most important baseball news.
+
+    Inspired by news.aatf.ai's approach of creating banners that depict the actual
+    news content rather than generic imagery.
+    """
+    print("🎨 Generating news-driven image prompt...")
+
+    if not RDSEC_API_KEY:
+        print("  ⚠ No API key — using fallback prompt from edition")
+        return edition.get("hero_image_prompt", "A vintage baseball newspaper front page")
+
+    # Gather the top story context
+    top_headline = ""
+    top_summary = ""
+    hot_take = edition.get("hot_take", "")
+
+    # Use the #1 MLB headline as the primary story
+    mlb_headlines = edition.get("mlb_headlines", [])
+    if mlb_headlines:
+        top_headline = mlb_headlines[0].get("title", "")
+        top_summary = mlb_headlines[0].get("summary", "")
+
+    # Also gather the next 2-3 headlines for secondary context
+    secondary_headlines = []
+    for h in mlb_headlines[1:4]:
+        secondary_headlines.append(h.get("title", ""))
+
+    # Find the richest source article for the top story
+    top_story_detail = ""
+    if news_items and top_headline:
+        for item in news_items:
+            if any(word.lower() in item.get("title", "").lower()
+                   for word in top_headline.split()[:3] if len(word) > 3):
+                top_story_detail = item.get("summary", "")[:300]
+                break
+
+    edition_headline = edition.get("headline", "")
+
+    system_prompt = """You are an expert editorial art director for The Sandlot Times, a fantasy baseball newsletter. Your job is to create a single, vivid image generation prompt that will produce a hero banner depicting today's top baseball news story.
+
+RULES:
+1. The image must VISUALLY TELL THE STORY — a viewer should understand the news from the image alone
+2. Focus on the PRIMARY story. Don't try to cram multiple stories into one image.
+3. Describe a SPECIFIC SCENE, not abstract concepts. Think editorial illustration, not stock photo.
+4. Include concrete visual elements: specific players (describe their appearance/uniform), stadiums, actions, emotions
+5. The style should be: warm vintage baseball illustration with rich earth tones (cream, burnt sienna, forest green, deep brown), painterly brushstrokes, golden hour lighting, classic Americana feel
+6. NO text, NO logos, NO overlays in the image — pure illustration
+7. NO neon colors, NO digital/tech aesthetics, NO terminal screens
+8. DO NOT mention player names in the prompt (image models can't render specific people) — instead describe the scene, action, uniform colors/numbers, and context clues
+9. Keep the prompt under 200 words but make every word count
+10. Think like a newspaper illustrator capturing THE moment of the day
+
+OUTPUT: Return ONLY the image generation prompt text. No JSON, no explanation, no preamble."""
+
+    user_prompt = f"""TODAY'S EDITION: "{edition_headline}"
+
+TOP STORY:
+Headline: {top_headline}
+Summary: {top_summary}
+{f"Detail: {top_story_detail}" if top_story_detail else ""}
+
+{f"OTHER HEADLINES: {'; '.join(secondary_headlines)}" if secondary_headlines else ""}
+
+{f"EDITORIAL ANGLE: {hot_take[:200]}" if hot_take else ""}
+
+Create a vivid image prompt that visually depicts the top story as an editorial illustration for today's Sandlot Times banner."""
+
+    payload = {
+        "model": RDSEC_MODEL,
+        "messages": [
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": user_prompt},
+        ],
+        "temperature": 0.8,
+        "max_tokens": 500,
+        "stream": False,
+    }
+
+    headers = {
+        "Authorization": f"Bearer {RDSEC_API_KEY}",
+        "Content-Type": "application/json",
+    }
+
+    try:
+        resp = requests.post(RDSEC_API_URL, json=payload, headers=headers, timeout=60)
+        resp.raise_for_status()
+        result = resp.json()
+        prompt = result["choices"][0]["message"]["content"].strip()
+
+        # Clean up any markdown formatting the model might add
+        prompt = prompt.strip('"').strip("'")
+        if prompt.startswith("```"):
+            prompt = prompt.split("```")[1] if "```" in prompt[3:] else prompt[3:]
+        prompt = prompt.strip()
+
+        print(f"  ✓ News-driven prompt generated ({len(prompt)} chars)")
+        print(f"    Preview: {prompt[:120]}...")
+        return prompt
+
+    except Exception as e:
+        print(f"  ⚠ News-driven prompt generation failed: {e}")
+        # Fall back to the edition's basic prompt
+        fallback = edition.get("hero_image_prompt",
+            "A warm vintage baseball illustration, golden hour at a sandlot field, earth tones and classic Americana")
+        print(f"    Using fallback: {fallback[:80]}...")
+        return fallback
+
+
 # ─── Hero Image Generation ───────────────────────────────────────
 
 def generate_hero_image(prompt: str) -> str | None:
@@ -413,6 +529,7 @@ def generate_hero_image(prompt: str) -> str | None:
     output_path = f"/tmp/sandlot-times-hero-{datetime.now().strftime('%Y%m%d')}.png"
 
     print("🎨 Generating hero image...")
+    print(f"  Prompt: {prompt[:150]}...")
     try:
         result = subprocess.run(
             [str(IMAGE_SCRIPT), prompt, output_path, "16:9"],
@@ -560,11 +677,16 @@ def main():
     print("\n─── STEP 3: AI Analysis ───")
     edition = analyze_with_ai(all_items, roster_context)
 
-    # Step 4: Hero image
+    # Step 4: News-driven hero image
     hero_url = None
-    if not args.no_image and edition.get("hero_image_prompt"):
-        print("\n─── STEP 4: Hero Image ───")
-        hero_url = generate_hero_image(edition["hero_image_prompt"])
+    if not args.no_image:
+        print("\n─── STEP 4: Hero Image (News-Driven) ───")
+        # Two-step process:
+        # 1. Generate a vivid, story-specific prompt from the top headline
+        # 2. Use that prompt to generate the actual image
+        image_prompt = generate_news_driven_image_prompt(edition, all_items)
+        edition["hero_image_prompt"] = image_prompt  # Update edition with the better prompt
+        hero_url = generate_hero_image(image_prompt)
     else:
         print("\n─── STEP 4: Hero Image (skipped) ───")
 
@@ -578,6 +700,10 @@ def main():
         print(f"    Fantasy Impact: {len(edition.get('fantasy_impact', []))}")
         print(f"    League Watch: {len(edition.get('league_watch', []))}")
         print(f"    Hot Take: {(edition.get('hot_take', '') or '')[:100]}...")
+        print(f"\n  🎨 Hero Image Prompt (news-driven):")
+        print(f"    {edition.get('hero_image_prompt', 'N/A')}")
+        if hero_url:
+            print(f"\n  🖼 Hero Image URL: {hero_url}")
         print(f"\n  Full JSON:")
         print(json.dumps(edition, indent=2))
     else:
