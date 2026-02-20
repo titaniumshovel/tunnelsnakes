@@ -4,6 +4,7 @@ import { useEffect, useState, useMemo } from 'react'
 import Link from 'next/link'
 import { MANAGERS, TEAM_COLORS, getManagerByYahooTeamKey, type Manager } from '@/data/managers'
 import { resolveKeeperStacking, getEffectiveKeeperCostRound, type ResolvedKeeper, type KeeperInput } from '@/lib/keeper-stacking'
+import { ECRDisplay } from '@/components/ECRDisplay'
 
 type RosterPlayer = {
   id: string
@@ -21,6 +22,7 @@ type RosterPlayer = {
     keeper_cost_label: string | null
     is_na_eligible: boolean | null
     na_eligibility_reason: string | null
+    ecr_override_note: string | null
   } | null
 }
 
@@ -307,9 +309,10 @@ export function KeepersUI() {
                             </div>
                           </div>
                           {rp.players.fantasypros_ecr && (
-                            <span className="text-[10px] font-mono text-accent shrink-0">
-                              ECR #{rp.players.fantasypros_ecr}
-                            </span>
+                            <ECRDisplay 
+                              ecr={rp.players.fantasypros_ecr}
+                              overrideNote={rp.players.ecr_override_note}
+                            />
                           )}
                         </div>
                       )
@@ -349,9 +352,10 @@ export function KeepersUI() {
                             </div>
                           </div>
                           {rp.players.fantasypros_ecr && (
-                            <span className="text-[10px] font-mono text-accent shrink-0">
-                              ECR #{rp.players.fantasypros_ecr}
-                            </span>
+                            <ECRDisplay 
+                              ecr={rp.players.fantasypros_ecr}
+                              overrideNote={rp.players.ecr_override_note}
+                            />
                           )}
                         </div>
                       )
@@ -417,9 +421,10 @@ export function KeepersUI() {
                       </div>
                     </div>
                     {rp.players.fantasypros_ecr && (
-                      <span className="text-[10px] font-mono text-accent shrink-0">
-                        ECR #{rp.players.fantasypros_ecr}
-                      </span>
+                      <ECRDisplay 
+                        ecr={rp.players.fantasypros_ecr}
+                        overrideNote={rp.players.ecr_override_note}
+                      />
                     )}
                   </div>
                 )

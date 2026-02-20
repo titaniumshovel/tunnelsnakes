@@ -5,6 +5,7 @@ import { createClient } from '@supabase/supabase-js'
 import { MANAGERS, TEAM_COLORS, getManagerBySlug } from '@/data/managers'
 import { getEffectiveKeeperCostRound } from '@/lib/keeper-stacking'
 import TeamLogo from '@/components/TeamLogo'
+import { ECRDisplay } from '@/components/ECRDisplay'
 
 export const revalidate = 300 // Revalidate every 5 minutes
 
@@ -31,6 +32,7 @@ type RosterPlayer = {
     na_eligibility_reason: string | null
     career_ab: number | null
     career_ip: number | null
+    ecr_override_note: string | null
   } | null
 }
 
@@ -337,9 +339,11 @@ export default async function TeamProfilePage({ params }: Props) {
 
                         {/* ECR */}
                         {p.fantasypros_ecr && (
-                          <span className="text-[10px] font-mono text-muted-foreground shrink-0">
-                            ECR #{p.fantasypros_ecr}
-                          </span>
+                          <ECRDisplay 
+                            ecr={p.fantasypros_ecr}
+                            overrideNote={p.ecr_override_note}
+                            className="text-muted-foreground"
+                          />
                         )}
                       </div>
                     )

@@ -7,6 +7,7 @@ import { createClient } from '@/lib/supabase/client'
 import { MANAGERS, TEAM_COLORS, getManagerByEmail, type Manager } from '@/data/managers'
 import draftBoardData from '@/data/draft-board.json'
 import { resolveKeeperStacking, checkStackingConflict, getEffectiveKeeperCostRound, type ResolvedKeeper, type KeeperInput } from '@/lib/keeper-stacking'
+import { ECRDisplay } from '@/components/ECRDisplay'
 
 type DraftPick = {
   slot: number
@@ -40,6 +41,7 @@ type RosterPlayer = {
     eligible_positions: string[] | null
     is_na_eligible: boolean | null
     na_eligibility_reason: string | null
+    ecr_override_note: string | null
   } | null
 }
 
@@ -506,9 +508,11 @@ export default function DashboardPage() {
                         </div>
                       </div>
                       {rp.players.fantasypros_ecr && (
-                        <span className="text-xs font-mono text-accent shrink-0">
-                          ECR #{rp.players.fantasypros_ecr}
-                        </span>
+                        <ECRDisplay 
+                          ecr={rp.players.fantasypros_ecr}
+                          overrideNote={rp.players.ecr_override_note}
+                          className="text-xs"
+                        />
                       )}
                     </div>
                     {isPopoverOpen && (
