@@ -221,8 +221,18 @@ export function KeepersUI() {
                   </div>
                 ) : (
                   <div className="space-y-1">
-                    {/* Show keepers first, then 7th keeper, then NA, then undecided (limited), then not-keeping (limited) */}
-                    {[...keepers, ...seventhKeepers, ...naKeepers].map(rp => {
+                    {/* Show keepers sorted by effective round (stacking-aware), then NA */}
+                    {[...keepers, ...seventhKeepers].sort((a, b) => {
+                      const aResolved = teamStackingMaps[mgr.displayName]?.get(a.id)
+                      const bResolved = teamStackingMaps[mgr.displayName]?.get(b.id)
+                      const aRound = aResolved?.effective_round ?? getEffectiveKeeperCostRound(a.keeper_status, a.keeper_cost_round ?? a.players?.keeper_cost_round ?? 99, a.players?.fantasypros_ecr ?? null) ?? 99
+                      const bRound = bResolved?.effective_round ?? getEffectiveKeeperCostRound(b.keeper_status, b.keeper_cost_round ?? b.players?.keeper_cost_round ?? 99, b.players?.fantasypros_ecr ?? null) ?? 99
+                      if (aRound !== bRound) return aRound - bRound
+                      // Same effective round: sort by ECR (lower = better = first)
+                      const aEcr = a.players?.fantasypros_ecr ?? 9999
+                      const bEcr = b.players?.fantasypros_ecr ?? 9999
+                      return aEcr - bEcr
+                    }).concat(naKeepers).map(rp => {
                       if (!rp.players) return null
                       const statusInfo = STATUS_DISPLAY[rp.keeper_status] ?? STATUS_DISPLAY.undecided
                       const costRound = getEffectiveKeeperCostRound(rp.keeper_status, rp.keeper_cost_round ?? rp.players.keeper_cost_round, rp.players.fantasypros_ecr)

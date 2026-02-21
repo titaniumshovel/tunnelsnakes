@@ -29,7 +29,11 @@ export function getEffectiveKeeperCostRound(
   fantasyprosEcr: number | null
 ): number | null {
   if (keeperStatus === 'keeping-7th' && fantasyprosEcr != null) {
-    return Math.ceil(fantasyprosEcr / 12)
+    return Math.min(Math.ceil(fantasyprosEcr / 12), MAX_REGULAR_ROUND)
+  }
+  // Cap any keeper cost at MAX_REGULAR_ROUND
+  if (keeperCostRound != null && keeperCostRound > MAX_REGULAR_ROUND) {
+    return MAX_REGULAR_ROUND
   }
   return keeperCostRound
 }
