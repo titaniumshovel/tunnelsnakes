@@ -68,7 +68,7 @@ function getKeeperStatusIcon(status: KeeperInfo['keeperStatus']): string {
 
 export default function DraftBoardPage() {
   const [showTrades, setShowTrades] = useState(false)
-  const [viewMode, setViewMode] = useState<'board' | 'owner' | 'clicky'>('board')
+  const [viewMode, setViewMode] = useState<'board' | 'owner' | 'clicky'>('clicky')
   const [fontSize, setFontSize] = useState(0.75)
   const [keepers, setKeepers] = useState<Map<string, Map<number, KeeperInfo>>>(new Map())
   const [keepersLoading, setKeepersLoading] = useState(true)
@@ -169,6 +169,16 @@ export default function DraftBoardPage() {
             {/* View Toggle */}
             <div className="flex items-center gap-1 bg-card rounded-lg border border-primary/20 p-0.5">
               <button
+                onClick={() => setViewMode('clicky')}
+                className={`px-3 py-1.5 rounded text-xs font-semibold font-bold transition-colors ${
+                  viewMode === 'clicky'
+                    ? 'bg-primary text-primary-foreground'
+                    : 'text-muted-foreground hover:text-foreground'
+                }`}
+              >
+                📋 PICKS
+              </button>
+              <button
                 onClick={() => setViewMode('board')}
                 className={`px-3 py-1.5 rounded text-xs font-semibold font-bold transition-colors ${
                   viewMode === 'board'
@@ -187,16 +197,6 @@ export default function DraftBoardPage() {
                 }`}
               >
                 👥 OWNERS
-              </button>
-              <button
-                onClick={() => setViewMode('clicky')}
-                className={`px-3 py-1.5 rounded text-xs font-semibold font-bold transition-colors ${
-                  viewMode === 'clicky'
-                    ? 'bg-primary text-primary-foreground'
-                    : 'text-muted-foreground hover:text-foreground'
-                }`}
-              >
-                📋 PICKS
               </button>
             </div>
 
