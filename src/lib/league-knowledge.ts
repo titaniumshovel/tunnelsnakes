@@ -35,6 +35,7 @@ const KEEPER_RULES = `
 
 ## ECR Source
 FantasyPros Expert Consensus Ranking (fantasypros.com/mlb/rankings/overall.php)
+IMPORTANT: The league uses the Thursday, February 19, 2026 ECR snapshot for ALL keeper cost calculations. Do NOT reference any other date's rankings. This was a deliberate league decision.
 
 ## IMPORTANT — How to Answer Keeper Cost Questions
 - The keeper_cost_label in the data shows the CURRENT YEAR cost only
@@ -53,9 +54,18 @@ const LEAGUE_INFO = `
 - Format: Head-to-Head, 5x5 Category
 - Teams: 12
 - Draft Date: Friday, March 6, 2026
-- Keeper Deadline: Thursday, February 20, 2026
+- Keeper Deadline: Thursday, February 20, 2026 — 🔒 KEEPERS ARE NOW LOCKED
+- Offseason Trading: CLOSED — All future trades go through Yahoo starting after the March 6 draft
 - Entry Fee: $200
 - Season: March 25 – September 6, 2026
+
+## Current Status (as of Feb 21, 2026)
+- All 12 teams have submitted keepers (107 total: 68 regular + 6 seventh-keeper-rule + 33 NA)
+- Keeper costs have been validated, corrected, and locked in the database
+- Offseason trading is closed — no more trades until after the draft
+- ECR rankings are based on the Thursday, February 19 FantasyPros snapshot (league decision)
+- Draft board is set with all traded picks accounted for (17 offseason trades, ~60 picks moved)
+- The March 6 draft will be a 23-round snake draft with 4 additional NA rounds (24-27)
 
 ## Payouts
 - 1st Place: $1,200
@@ -317,9 +327,11 @@ function buildEcrSection(): string {
     `${p.rank}. ${p.name} (${p.position || '?'}, ${p.team}) — ${p.pos_rank}`
   )
 
-  return `## Top ${players.length} FantasyPros ECR Rankings (2026 Preseason)
+  return `## Top ${players.length} FantasyPros ECR Rankings (Thursday, February 19, 2026 Snapshot)
+These are the OFFICIAL ECR rankings used for all 2026 keeper cost calculations (league decision to use Thursday's snapshot).
 Use these to evaluate keeper costs, trade values, and draft targets.
 Players NOT on any Sandlot roster are available in the March 6 draft.
+ECR Round = ceil(ECR_rank / 12). Example: ECR #25 = Rd 3, ECR #48 = Rd 4.
 
 ${lines.join('\n')}`
 }
