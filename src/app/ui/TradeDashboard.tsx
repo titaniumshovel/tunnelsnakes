@@ -518,12 +518,12 @@ export function TradeDashboard({ players }: { players: TradePlayer[] }) {
                   return (
                     <div
                       key={p.rosterRowId}
-                      onClick={() => (isKeeper ? null : setSelected(p))}
-                      className={`player-row ${selected?.rosterRowId === p.rosterRowId ? 'selected' : ''} ${
-                        style ? `${style.bg} ${style.border} ${isKeeper ? 'cursor-not-allowed' : ''}` : ''
+                      onClick={() => null}
+                      className={`player-row cursor-not-allowed ${selected?.rosterRowId === p.rosterRowId ? 'selected' : ''} ${
+                        style ? `${style.bg} ${style.border}` : ''
                       }`}
-                      aria-disabled={isKeeper}
-                      title={isKeeper ? 'KEEPER — Not available for trade' : style ? style.label : undefined}
+                      aria-disabled={true}
+                      title={isKeeper ? 'KEEPER — Not available for trade' : 'OFFSEASON TRADING CLOSED — All trades go through Yahoo starting March 6'}
                     >
                       {/* Avatar */}
                       <div className="w-9 h-9 rounded-md bg-secondary flex items-center justify-center text-xs font-bold text-muted-foreground shrink-0 overflow-hidden border border-border">
@@ -633,14 +633,14 @@ export function TradeDashboard({ players }: { players: TradePlayer[] }) {
                     exit={{ opacity: 0 }}
                     className="flex-1 flex flex-col items-center justify-center py-12 text-center"
                   >
-                    <div className="w-16 h-16 rounded-lg bg-secondary flex items-center justify-center mb-4 border border-border" style={{ boxShadow: '0 0 15px hsl(121 99% 54% / 0.08)' }}>
-                      <Zap className="w-7 h-7 text-primary/40" />
+                    <div className="w-16 h-16 rounded-lg bg-red-500/20 flex items-center justify-center mb-4 border border-red-500/30" style={{ boxShadow: '0 0 15px hsl(0 84% 60% / 0.2)' }}>
+                      <span className="text-2xl">🔒</span>
                     </div>
-                    <p className="text-muted-foreground text-sm font-mono px-4">
-                      {vaultQuote}
+                    <p className="text-red-400 text-sm font-mono font-bold uppercase tracking-wider px-4 mb-2">
+                      OFFSEASON TRADING CLOSED
                     </p>
-                    <p className="text-primary/50 text-xs mt-3">
-                      Awaiting input
+                    <p className="text-muted-foreground text-xs font-mono">
+                      All trades go through Yahoo starting March 6
                     </p>
                   </motion.div>
                 ) : submitted ? (

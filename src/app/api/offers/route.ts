@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server'
 import { z } from 'zod'
 import { createClient } from '@supabase/supabase-js'
 
+const TRADES_LOCKED = true
+
 const BodySchema = z.object({
   teamName: z.string().min(1).max(80),
   displayName: z.string().max(80).optional().or(z.literal('')),
@@ -27,6 +29,11 @@ async function notifyTelegram(text: string) {
 }
 
 export async function POST(req: Request) {
+  // Check if trades are locked
+  if (TRADES_LOCKED) {
+    return new NextResponse('Offseason trading is closed. All trades go through Yahoo starting March 6.', { status: 403 })
+  }
+
   const leagueKey = process.env.YAHOO_LEAGUE_KEY
   const teamKey = process.env.YAHOO_TEAM_KEY
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL

@@ -140,12 +140,13 @@ export function TradesUI() {
     setLoading(false)
   }, [])
 
-  // Read URL tab param
+  // Read URL tab param - trades are locked so ignore propose param
   const searchParams = useSearchParams()
   useEffect(() => {
     const tab = searchParams.get('tab')
+    // Trading is locked - ignore propose tab
     if (tab === 'propose') {
-      setFilter('propose')
+      // Don't set filter to propose - keep as 'all'
     }
   }, [searchParams])
 
@@ -275,28 +276,11 @@ export function TradesUI() {
           </div>
         )}
 
-        {/* Report Trade CTA */}
-        <button
-          onClick={() => setFilter(filter === 'propose' ? 'all' : 'propose')}
-          className={`w-full py-3 px-4 rounded-lg text-sm font-bold uppercase tracking-wider transition-all duration-200 flex items-center justify-center gap-2 ${
-            filter === 'propose'
-              ? 'bg-accent text-white shadow-lg shadow-accent/25 border-2 border-accent'
-              : 'bg-gradient-to-r from-accent/15 to-accent/5 text-accent border-2 border-accent/40 hover:border-accent hover:bg-accent/20 hover:shadow-md'
-          }`}
-        >
-          {filter === 'propose' ? (
-            <>
-              <span className="text-lg">✕</span>
-              Close Trade Report Form
-            </>
-          ) : (
-            <>
-              <span className="text-lg">⚾</span>
-              Report a Trade
-              <span className="text-lg">→</span>
-            </>
-          )}
-        </button>
+        {/* Trade Locked Banner */}
+        <div className="w-full py-3 px-4 rounded-lg text-sm font-bold uppercase tracking-wider border-2 border-red-500/40 bg-red-500/10 text-red-400 flex items-center justify-center gap-2">
+          <span className="text-lg">🔒</span>
+          OFFSEASON TRADING CLOSED — All trades go through Yahoo starting March 6
+        </div>
 
         {/* Filter Tabs */}
         <div className="flex gap-2 flex-wrap">
@@ -331,115 +315,14 @@ export function TradesUI() {
           ))}
         </div>
 
-        {/* Content: propose form, pick trail, or trade feed */}
+        {/* Content: pick trail, or trade feed (propose form disabled) */}
         {filter === 'propose' ? (
-          <div className="dashboard-card p-6">
-            <h2 className="text-lg font-bold text-primary font-serif mb-2 flex items-center gap-2">
-              ⚾ Report a Trade
-            </h2>
-            <p className="text-sm text-muted-foreground font-mono mb-4">
-              Already agreed on a deal? Report it here in plain English. Include picks, players, whatever was exchanged.
-              The Commissioner will review and process it.
+          <div className="dashboard-card p-6 text-center">
+            <div className="text-4xl mb-3">🔒</div>
+            <div className="font-bold text-red-400 text-lg uppercase tracking-wider mb-2">OFFSEASON TRADING CLOSED</div>
+            <p className="text-sm text-muted-foreground font-mono">
+              All trades go through Yahoo starting March 6
             </p>
-            {offerStatus === 'success' ? (
-              <div className="text-center py-8">
-                <div className="text-4xl mb-3">⚾</div>
-                <div className="font-bold text-primary text-lg uppercase tracking-wider">Trade Reported!</div>
-                <p className="mt-2 text-sm text-muted-foreground font-mono">
-                  The Commissioner will review your trade report and process it.
-                </p>
-                <button
-                  onClick={() => {
-                    setOfferStatus('idle')
-                    setOfferTeam('')
-                    setOfferName('')
-                    setOfferEmail('')
-                    setOfferText('')
-                    setOfferMessage('')
-                  }}
-                  className="mt-4 px-4 py-2 rounded-md border border-primary/30 text-sm font-semibold text-primary hover:bg-primary/10 transition-colors"
-                >
-                  Submit Another
-                </button>
-              </div>
-            ) : (
-              <form onSubmit={handleOffer} className="space-y-4">
-                <div>
-                  <label className="block text-sm font-semibold uppercase tracking-wider text-primary/80">Your Team</label>
-                  <select
-                    className="mt-1 w-full rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary/50 font-mono"
-                    value={offerTeam}
-                    onChange={(e) => setOfferTeam(e.target.value)}
-                    required
-                  >
-                    <option value="">Select your team…</option>
-                    {MANAGERS.map((m) => (
-                      <option key={m.teamSlug} value={m.teamName}>{m.teamName}</option>
-                    ))}
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-semibold uppercase tracking-wider text-primary/80">
-                    Your Name <span className="normal-case text-muted-foreground font-normal">(optional)</span>
-                  </label>
-                  <input
-                    className="mt-1 w-full rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary/50 font-mono"
-                    value={offerName}
-                    onChange={(e) => setOfferName(e.target.value)}
-                    placeholder="Your name"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-semibold uppercase tracking-wider text-primary/80">
-                    Email <span className="normal-case text-muted-foreground font-normal">(optional)</span>
-                  </label>
-                  <input
-                    className="mt-1 w-full rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary/50 font-mono"
-                    value={offerEmail}
-                    onChange={(e) => setOfferEmail(e.target.value)}
-                    type="email"
-                    placeholder="you@example.com"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-semibold uppercase tracking-wider text-primary/80">Your Offer</label>
-                  <textarea
-                    className="mt-1 w-full min-h-[120px] rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary/50 font-mono"
-                    value={offerText}
-                    onChange={(e) => setOfferText(e.target.value)}
-                    required
-                    placeholder="Include picks, players, whatever you've got."
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-semibold uppercase tracking-wider text-primary/80">
-                    Additional Notes <span className="normal-case text-muted-foreground font-normal">(optional)</span>
-                  </label>
-                  <textarea
-                    className="mt-1 w-full min-h-[80px] rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary/50 font-mono"
-                    value={offerMessage}
-                    onChange={(e) => setOfferMessage(e.target.value)}
-                    placeholder="Anything else the Commissioner should know..."
-                  />
-                </div>
-
-                {offerStatus === 'error' && (
-                  <p className="text-sm text-red-500 font-mono">&gt; ERROR: {offerError}</p>
-                )}
-
-                <button
-                  type="submit"
-                  disabled={offerStatus === 'submitting'}
-                  className="w-full px-4 py-3 rounded-md bg-primary text-primary-foreground font-bold text-sm uppercase tracking-wider hover:bg-primary/90 transition-colors disabled:opacity-50"
-                >
-                  {offerStatus === 'submitting' ? '⏳ SUBMITTING...' : '📋 SUBMIT TRADE REPORT'}
-                </button>
-              </form>
-            )}
           </div>
         ) : filter === 'picktrail' ? (
           <PickOriginTrail />
