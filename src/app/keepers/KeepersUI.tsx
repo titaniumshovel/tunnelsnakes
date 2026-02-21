@@ -258,7 +258,7 @@ export function KeepersUI() {
                                   className="shrink-0 px-1 py-0.5 text-[8px] font-mono font-bold uppercase bg-amber-500/20 text-amber-400 border border-amber-500/30 rounded leading-none"
                                   title={`Stacked from Rd ${resolved.stacked_from} to Rd ${resolved.effective_round}`}
                                 >
-                                  ↓ STACKED
+                                  {resolved.effective_round < resolved.stacked_from! ? '↑' : '↓'} STACKED
                                 </span>
                               )}
                             </div>
@@ -268,7 +268,7 @@ export function KeepersUI() {
                                 <>
                                   {' · '}
                                   <span className="text-amber-400 font-bold">Rd {resolved.effective_round}</span>
-                                  <span className="text-amber-400/70 ml-1">↓ from Rd {resolved.stacked_from}</span>
+                                  <span className="text-amber-400/70 ml-1">{resolved.effective_round < resolved.stacked_from! ? '↑' : '↓'} from Rd {resolved.stacked_from}</span>
                                 </>
                               ) : (
                                 <>
