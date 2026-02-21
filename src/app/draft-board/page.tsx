@@ -1,8 +1,9 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Calendar, Users, ChevronDown, ChevronUp } from 'lucide-react'
 import draftBoardData from '@/data/draft-board.json'
+import { MANAGERS } from '@/data/managers'
 
 type DraftPick = {
   slot: number
@@ -18,6 +19,14 @@ type DraftBoard = {
   naRounds: number[]
   trades: Array<{ description: string; source: string }>
   picks: Record<string, DraftPick[]>
+}
+
+type KeeperInfo = {
+  playerName: string
+  keeperStatus: 'keeping' | 'keeping-7th' | 'keeping-na'
+  costRound: number
+  effectiveRound: number
+  stackedFrom: number | null
 }
 
 const TEAM_COLORS: Record<string, { bg: string; border: string; text: string; dot: string }> = {
@@ -45,11 +54,79 @@ export function snakePickInRound(round: number, slot: number): number {
   return round % 2 === 0 ? 13 - slot : slot
 }
 
+/**
+ * Get keeper status indicator emoji
+ */
+function getKeeperStatusIcon(status: KeeperInfo['keeperStatus']): string {
+  switch (status) {
+    case 'keeping': return '🔒'
+    case 'keeping-7th': return '⭐'
+    case 'keeping-na': return '🔷'
+    default: return '🔒'
+  }
+}
+
 export default function DraftBoardPage() {
   const [showTrades, setShowTrades] = useState(false)
   const [viewMode, setViewMode] = useState<'board' | 'owner' | 'clicky'>('board')
   const [fontSize, setFontSize] = useState(0.75)
+  const [keepers, setKeepers] = useState<Map<string, Map<number, KeeperInfo>>>(new Map())
+  const [keepersLoading, setKeepersLoading] = useState(true)
   const data = draftBoardData as DraftBoard
+
+  // Fetch keeper data on mount
+  useEffect(() => {
+    const fetchKeepers = async () => {
+      try {
+        const response = await fetch('/api/keepers')
+        if (response.ok) {
+          const keeperRows = await response.json()
+          
+          // Build lookup map: displayName → round → KeeperInfo
+          const keeperMap = new Map<string, Map<number, KeeperInfo>>()
+          
+          for (const row of keeperRows) {
+            // Skip keepers without valid cost rounds (like Bubba Chandler)
+            if (!row.keeper_cost_round) continue
+            
+            // Skip non-keeping statuses
+            if (!['keeping', 'keeping-7th', 'keeping-na'].includes(row.keeper_status)) continue
+            
+            // Map yahoo_team_key to displayName using MANAGERS
+            const manager = MANAGERS.find(m => m.yahooTeamKey === row.yahoo_team_key)
+            if (!manager) continue
+            
+            const displayName = manager.displayName
+            const effectiveRound = row.stacking?.effective_round ?? row.keeper_cost_round
+            
+            const keeperInfo: KeeperInfo = {
+              playerName: row.players?.full_name ?? 'Unknown Player',
+              keeperStatus: row.keeper_status,
+              costRound: row.keeper_cost_round,
+              effectiveRound,
+              stackedFrom: row.stacking?.stacked_from ?? null
+            }
+            
+            if (!keeperMap.has(displayName)) {
+              keeperMap.set(displayName, new Map())
+            }
+            
+            const ownerMap = keeperMap.get(displayName)!
+            ownerMap.set(effectiveRound, keeperInfo)
+          }
+          
+          setKeepers(keeperMap)
+        }
+      } catch (error) {
+        console.error('Failed to fetch keepers:', error)
+        // Graceful fallback - just show board without keepers
+      } finally {
+        setKeepersLoading(false)
+      }
+    }
+    
+    fetchKeepers()
+  }, [])
 
   // Build owner→round→picks map for Owner View
   const ownerRoundMap = new Map<string, Map<number, DraftPick[]>>()
@@ -221,6 +298,10 @@ export default function DraftBoardPage() {
                           return <td key={slot} className="p-1 text-center border border-border/10"><span className="text-muted-foreground" style={{ fontSize: `${fontSize}rem` }}>—</span></td>
                         }
 
+                        // Check if there's a keeper for this owner in this round
+                        const ownerKeepers = keepers.get(pick.currentOwner)
+                        const keeper = ownerKeepers?.get(round)
+
                         const colors = TEAM_COLORS[pick.currentOwner]
                         const isTraded = pick.traded
                         const path = pick.path ?? [pick.originalOwner]
@@ -231,27 +312,45 @@ export default function DraftBoardPage() {
                           <td
                             key={slot}
                             className="p-0.5 text-center border border-border/10"
-                            title={isTraded
+                            title={keeper 
+                              ? `${keeper.playerName} — ${pick.currentOwner} Keeper (${getKeeperStatusIcon(keeper.keeperStatus)}${keeper.stackedFrom ? ` stacked from Rd ${keeper.stackedFrom}` : ''})`
+                              : isTraded
                               ? `Pick ${round}.${snakePickInRound(round, slot)} — Path: ${pathDisplay}`
                               : `Pick ${round}.${snakePickInRound(round, slot)} — ${pick.currentOwner}`}
                           >
                             <div className={`rounded px-1 py-1.5 border ${
                               colors ? `${colors.bg} ${colors.border}` : 'bg-muted border-border'
-                            } ${isTraded ? 'ring-1 ring-accent/30' : ''}`}>
-                              <div className={`font-mono font-bold leading-tight ${colors?.text ?? 'text-foreground'} flex items-center justify-center gap-0.5`} style={{ fontSize: `${fontSize}rem` }}>
-                                {pick.currentOwner}
-                              </div>
-                              {isTraded && (
-                                <div className={`font-mono leading-tight ${isMultiHop ? 'text-yellow-700' : 'text-accent'}`} style={{ fontSize: `${fontSize * 0.75}rem` }}>
-                                  {isMultiHop
-                                    ? path.slice(0, -1).map((p, i) => (
-                                        <span key={i}>
-                                          {i > 0 && '→'}
-                                          <span className={TEAM_COLORS[p]?.text ?? 'text-muted-foreground'}>{p}</span>
-                                        </span>
-                                      ))
-                                    : <>↔ {pick.originalOwner}</>
-                                  }
+                            } ${keeper ? 'ring-2 ring-green-500/50' : isTraded ? 'ring-1 ring-accent/30' : ''}`}>
+                              {keeper ? (
+                                // Show keeper
+                                <div>
+                                  <div className={`font-mono font-bold leading-tight ${colors?.text ?? 'text-foreground'} flex items-center justify-center gap-1`} style={{ fontSize: `${fontSize * 0.85}rem` }}>
+                                    <span className="truncate" title={keeper.playerName}>{keeper.playerName.length > 12 ? keeper.playerName.substring(0, 10) + '…' : keeper.playerName}</span>
+                                    <span style={{ fontSize: `${fontSize * 0.6}rem` }}>{getKeeperStatusIcon(keeper.keeperStatus)}</span>
+                                  </div>
+                                  <div className={`text-xs leading-tight ${colors?.text ?? 'text-foreground'} opacity-70`} style={{ fontSize: `${fontSize * 0.65}rem` }}>
+                                    Rd {round}{keeper.stackedFrom && <span className="text-yellow-600"> ↕{keeper.stackedFrom}</span>}
+                                  </div>
+                                </div>
+                              ) : (
+                                // Show regular pick
+                                <div>
+                                  <div className={`font-mono font-bold leading-tight ${colors?.text ?? 'text-foreground'} flex items-center justify-center gap-0.5`} style={{ fontSize: `${fontSize}rem` }}>
+                                    {pick.currentOwner}
+                                  </div>
+                                  {isTraded && (
+                                    <div className={`font-mono leading-tight ${isMultiHop ? 'text-yellow-700' : 'text-accent'}`} style={{ fontSize: `${fontSize * 0.75}rem` }}>
+                                      {isMultiHop
+                                        ? path.slice(0, -1).map((p, i) => (
+                                            <span key={i}>
+                                              {i > 0 && '→'}
+                                              <span className={TEAM_COLORS[p]?.text ?? 'text-muted-foreground'}>{p}</span>
+                                            </span>
+                                          ))
+                                        : <>↔ {pick.originalOwner}</>
+                                      }
+                                    </div>
+                                  )}
                                 </div>
                               )}
                             </div>
@@ -307,6 +406,35 @@ export default function DraftBoardPage() {
                         const isNA = data.naRounds.includes(round)
                         const picks = roundMap.get(round) ?? []
                         const pickCount = picks.length
+
+                        // Check if there's a keeper for this owner in this round
+                        const ownerKeepers = keepers.get(owner)
+                        const keeper = ownerKeepers?.get(round)
+
+                        if (keeper) {
+                          // Show keeper - takes priority over regular picks
+                          return (
+                            <td
+                              key={round}
+                              className={`p-0.5 text-center border border-border/10 ${isNA ? 'bg-amber-950/10' : ''}`}
+                              title={`${keeper.playerName} — ${owner} Keeper (${getKeeperStatusIcon(keeper.keeperStatus)}${keeper.stackedFrom ? ` stacked from Rd ${keeper.stackedFrom}` : ''})`}
+                            >
+                              <div className={`rounded px-0.5 py-1 border ring-2 ring-green-500/50 ${colors?.bg} ${colors?.border}`}>
+                                <div className={`font-mono font-bold leading-tight ${colors?.text}`} style={{ fontSize: `${Math.max(fontSize * 0.8, 0.5)}rem` }}>
+                                  <div className="flex items-center justify-center gap-1">
+                                    <span className="truncate" title={keeper.playerName}>
+                                      {keeper.playerName.length > 8 ? keeper.playerName.substring(0, 6) + '…' : keeper.playerName}
+                                    </span>
+                                    <span style={{ fontSize: `${Math.max(fontSize * 0.6, 0.4)}rem` }}>{getKeeperStatusIcon(keeper.keeperStatus)}</span>
+                                  </div>
+                                </div>
+                                {keeper.stackedFrom && (
+                                  <div className="text-yellow-600 leading-tight" style={{ fontSize: `${Math.max(fontSize * 0.55, 0.4)}rem` }}>↕{keeper.stackedFrom}</div>
+                                )}
+                              </div>
+                            </td>
+                          )
+                        }
 
                         if (pickCount === 0) {
                           // Gap — no pick this round
@@ -434,6 +562,38 @@ export default function DraftBoardPage() {
                         const picks = roundMap.get(round) ?? []
                         const pickCount = picks.length
 
+                        // Check if there's a keeper for this owner in this round
+                        const ownerKeepers = keepers.get(owner)
+                        const keeper = ownerKeepers?.get(round)
+
+                        if (keeper) {
+                          // Show keeper - takes priority over regular picks
+                          return (
+                            <td
+                              key={owner}
+                              className={`p-0.5 text-center border border-border/10 ${isNA ? 'bg-amber-950/10' : ''}`}
+                              title={`${keeper.playerName} — ${owner} Keeper (${getKeeperStatusIcon(keeper.keeperStatus)}${keeper.stackedFrom ? ` stacked from Rd ${keeper.stackedFrom}` : ''})`}
+                            >
+                              <div className={`rounded px-1 py-2 border ring-2 ring-green-500/50 ${colors?.bg} ${colors?.border}`}>
+                                <div className={`font-mono font-bold leading-tight ${colors?.text}`} style={{ fontSize: `${Math.max(fontSize * 0.85, 0.55)}rem` }}>
+                                  <div className="flex items-center justify-center gap-1 mb-1">
+                                    <span className="truncate" title={keeper.playerName}>
+                                      {keeper.playerName.length > 10 ? keeper.playerName.substring(0, 8) + '…' : keeper.playerName}
+                                    </span>
+                                    <span style={{ fontSize: `${Math.max(fontSize * 0.6, 0.4)}rem` }}>{getKeeperStatusIcon(keeper.keeperStatus)}</span>
+                                  </div>
+                                  <div className="text-xs opacity-70">Rd {round}</div>
+                                </div>
+                                {keeper.stackedFrom && (
+                                  <div className="text-yellow-600 leading-tight mt-0.5" style={{ fontSize: `${Math.max(fontSize * 0.6, 0.4)}rem` }}>
+                                    ↕ from Rd {keeper.stackedFrom}
+                                  </div>
+                                )}
+                              </div>
+                            </td>
+                          )
+                        }
+
                         if (pickCount === 0) {
                           return (
                             <td
@@ -552,7 +712,13 @@ export default function DraftBoardPage() {
               <li>• <span className="text-accent">↔ symbol:</span> Pick was traded once (shows original owner)</li>
               <li>• <span className="text-yellow-700">Multi-hop path:</span> Pick traded through multiple teams (e.g. Mike→Nick→Alex)</li>
               <li>• <span className="text-foreground">← arrow:</span> Even rounds flow right-to-left</li>
-              <li className="pt-2 border-t border-border">• <span className="text-foreground">Hover</span> any cell for full trade details</li>
+              <li className="pt-2 border-t border-border space-y-1">
+                <div>• <span className="text-green-600">🔒 = Keeper (locked)</span></div>
+                <div>• <span className="text-yellow-600">⭐ = 7th Keeper</span></div>
+                <div>• <span className="text-blue-600">🔷 = NA Keeper (minor league)</span></div>
+                <div>• <span className="text-yellow-600">↕ = Stacked from different round</span></div>
+              </li>
+              <li className="pt-2 border-t border-border">• <span className="text-foreground">Hover</span> any cell for full details</li>
             </ul>
           </div>
         </div>
