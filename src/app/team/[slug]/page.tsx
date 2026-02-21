@@ -139,9 +139,13 @@ export default async function TeamProfilePage({ params }: Props) {
   const roster = await getTeamRoster(manager.yahooTeamKey)
   const recentTrades = await getTeamTrades(manager.teamName)
 
-  // Group players by position
+  // Separate keepers from cut players
+  const keptPlayers = roster.filter(r => r.keeper_status !== 'not-keeping')
+  const cutPlayers = roster.filter(r => r.keeper_status === 'not-keeping')
+
+  // Group kept players by position
   const grouped: Record<string, RosterPlayer[]> = {}
-  for (const rp of roster) {
+  for (const rp of keptPlayers) {
     if (!rp.players) continue
     const group = getPositionGroup(rp.players.primary_position)
     if (!grouped[group]) grouped[group] = []
@@ -153,7 +157,7 @@ export default async function TeamProfilePage({ params }: Props) {
     ([a], [b]) => getPositionGroupOrder(a) - getPositionGroupOrder(b)
   )
 
-  const keeperCount = roster.filter(r => r.keeper_status === 'keeping' || r.keeper_status === 'keeping-na').length
+  const keeperCount = roster.filter(r => r.keeper_status === 'keeping' || r.keeper_status === 'keeping-na' || r.keeper_status === 'keeping-7th').length
 
   return (
     <main className="min-h-[80vh] bg-background">
@@ -352,6 +356,67 @@ export default async function TeamProfilePage({ params }: Props) {
               </div>
             ))}
           </div>
+        )}
+
+        {/* Cut Players (collapsed by default) */}
+        {cutPlayers.length > 0 && (
+          <details className="mt-6 sandlot-card overflow-hidden border-l-4 border-l-red-500/40">
+            <summary className="px-4 py-3 bg-muted border-b border-border cursor-pointer hover:bg-muted/80 transition-colors select-none list-none [&::-webkit-details-marker]:hidden">
+              <h2 className="text-sm font-serif font-bold text-muted-foreground flex items-center gap-2">
+                <span className="text-xs transition-transform duration-200 [[open]>&]:rotate-90">▶</span>
+                ❌ Cut Players ({cutPlayers.length})
+              </h2>
+            </summary>
+            <div className="divide-y divide-border">
+              {cutPlayers
+                .filter(rp => rp.players)
+                .sort((a, b) => {
+                  const groupA = getPositionGroupOrder(getPositionGroup(a.players!.primary_position))
+                  const groupB = getPositionGroupOrder(getPositionGroup(b.players!.primary_position))
+                  if (groupA !== groupB) return groupA - groupB
+                  return a.players!.full_name.localeCompare(b.players!.full_name)
+                })
+                .map((rp) => {
+                  const p = rp.players!
+                  return (
+                    <div key={rp.id} className="flex items-center gap-3 px-4 py-2 hover:bg-muted/50 transition-colors">
+                      <div className="w-8 h-8 rounded-full bg-muted flex-shrink-0 overflow-hidden border border-border opacity-60">
+                        {p.headshot_url ? (
+                          <Image
+                            src={p.headshot_url}
+                            alt={p.full_name}
+                            width={32}
+                            height={32}
+                            className="w-full h-full object-cover"
+                            unoptimized
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center text-[10px] text-muted-foreground">
+                            ⚾
+                          </div>
+                        )}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <span className="text-sm text-muted-foreground">{p.full_name}</span>
+                      </div>
+                      <span className="text-[10px] text-muted-foreground font-mono">
+                        {p.primary_position ?? '—'}
+                      </span>
+                      <span className="text-[10px] text-muted-foreground">
+                        {p.mlb_team ?? 'FA'}
+                      </span>
+                      {p.fantasypros_ecr && (
+                        <ECRDisplay 
+                          ecr={p.fantasypros_ecr}
+                          overrideNote={p.ecr_override_note}
+                          className="text-muted-foreground opacity-60"
+                        />
+                      )}
+                    </div>
+                  )
+                })}
+            </div>
+          </details>
         )}
 
         {/* Recent Trades */}
