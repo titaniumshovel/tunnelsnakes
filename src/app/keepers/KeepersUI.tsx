@@ -26,7 +26,6 @@ type RosterPlayer = {
   } | null
 }
 
-const KEEPER_DEADLINE = new Date('2026-02-20T23:59:59-05:00')
 const MAX_KEEPERS = 6
 const MAX_NA = 4
 
@@ -38,30 +37,10 @@ const STATUS_DISPLAY: Record<string, { icon: string; label: string; color: strin
   'not-keeping': { icon: '❌', label: 'Not Keeping', color: 'text-red-400' },
 }
 
-function useCountdown(target: Date) {
-  const [now, setNow] = useState(new Date())
-
-  useEffect(() => {
-    const timer = setInterval(() => setNow(new Date()), 1000)
-    return () => clearInterval(timer)
-  }, [])
-
-  const diff = target.getTime() - now.getTime()
-  if (diff <= 0) return { days: 0, hours: 0, minutes: 0, seconds: 0, expired: true }
-
-  const days = Math.floor(diff / (1000 * 60 * 60 * 24))
-  const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
-  const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))
-  const seconds = Math.floor((diff % (1000 * 60)) / 1000)
-
-  return { days, hours, minutes, seconds, expired: false }
-}
-
 export function KeepersUI() {
   const [rosterData, setRosterData] = useState<RosterPlayer[]>([])
   const [loading, setLoading] = useState(true)
   const [sortBy, setSortBy] = useState<'team' | 'round' | 'ecr'>('team')
-  const countdown = useCountdown(KEEPER_DEADLINE)
 
   useEffect(() => {
     async function fetchKeepers() {
@@ -164,32 +143,13 @@ export function KeepersUI() {
           </div>
         </div>
 
-        {/* Countdown */}
+        {/* Keepers Locked Banner */}
         <div className="dashboard-card p-6 text-center border-accent/20">
-          <div className="text-xs font-mono text-accent uppercase tracking-widest mb-2">
-            ⏰ KEEPER DEADLINE
+          <div className="text-2xl font-bold text-green-400 font-mono">
+            🔒 KEEPERS LOCKED
           </div>
-          {countdown.expired ? (
-            <div className="text-2xl font-bold text-red-400 font-mono">DEADLINE PASSED</div>
-          ) : (
-            <div className="flex items-center justify-center gap-4">
-              {[
-                { value: countdown.days, label: 'DAYS' },
-                { value: countdown.hours, label: 'HRS' },
-                { value: countdown.minutes, label: 'MIN' },
-                { value: countdown.seconds, label: 'SEC' },
-              ].map(({ value, label }) => (
-                <div key={label} className="text-center">
-                  <div className="text-3xl sm:text-4xl font-bold text-primary font-mono">
-                    {String(value).padStart(2, '0')}
-                  </div>
-                  <div className="text-[10px] font-mono text-muted-foreground tracking-widest">{label}</div>
-                </div>
-              ))}
-            </div>
-          )}
           <div className="text-xs font-mono text-muted-foreground mt-2">
-            February 20, 2026 • {MAX_KEEPERS} keepers + {MAX_NA} NA slots per team
+            February 20, 2026 • All 12 teams confirmed
           </div>
         </div>
 

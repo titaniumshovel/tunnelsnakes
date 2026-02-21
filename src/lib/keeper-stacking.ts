@@ -9,6 +9,10 @@
  * The worse-ECR keeper gets bumped to the next round. If that round also has
  * a conflict, cascade-bump continues.
  *
+ * FA stacking: Multiple Rd 23 (FA pickup) keepers stack BACKWARD: 23, 22, 21...
+ * When forward stacking would exceed Rd 23, the algorithm reverses direction
+ * and looks for the nearest available round below the original cost.
+ *
  * Max draft round is 23 for regular keepers (rounds 24-27 are NA-only).
  */
 
@@ -89,19 +93,25 @@ export function resolveKeeperStacking(allKeepers: KeeperInput[]): StackingResult
     let targetRound = keeper.keeper_cost_round
     const originalRound = keeper.keeper_cost_round
 
-    // Find the next available round starting from the keeper's cost round
-    while (occupiedRounds.has(targetRound)) {
+    // Find the next available round starting from the keeper's cost round (forward)
+    while (occupiedRounds.has(targetRound) && targetRound <= MAX_REGULAR_ROUND) {
       targetRound++
     }
 
-    // Check if we've exceeded the maximum regular round
+    // If forward stacking exceeds max round, stack BACKWARD from original round
     if (targetRound > MAX_REGULAR_ROUND) {
-      errors.push({
-        player_name: keeper.player_name,
-        original_round: originalRound,
-        message: `Stacking pushes ${keeper.player_name} beyond Rd ${MAX_REGULAR_ROUND} (would be Rd ${targetRound}). Cannot keep this many players in adjacent rounds.`,
-      })
-      continue
+      targetRound = originalRound - 1
+      while (targetRound >= 1 && occupiedRounds.has(targetRound)) {
+        targetRound--
+      }
+      if (targetRound < 1) {
+        errors.push({
+          player_name: keeper.player_name,
+          original_round: originalRound,
+          message: `Stacking exhausted: no available round for ${keeper.player_name} (tried forward past Rd ${MAX_REGULAR_ROUND} and backward to Rd 1).`,
+        })
+        continue
+      }
     }
 
     occupiedRounds.set(targetRound, keeper.id)

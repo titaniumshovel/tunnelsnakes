@@ -72,21 +72,73 @@ describe('resolveKeeperStacking', () => {
     expect(c.effective_round).toBe(7) // cascade-bumped from 6 to 7 (6 now taken by B)
   })
 
-  it('errors when stacking pushes beyond round 23', () => {
+  it('stacks backward when forward would exceed round 23', () => {
     const keepers: KeeperInput[] = [
       { id: '1', player_name: 'Player A', keeper_cost_round: 22, ecr: 10, keeper_status: 'keeping' },
       { id: '2', player_name: 'Player B', keeper_cost_round: 22, ecr: 20, keeper_status: 'keeping' },
       { id: '3', player_name: 'Player C', keeper_cost_round: 23, ecr: 15, keeper_status: 'keeping' },
     ]
     const result = resolveKeeperStacking(keepers)
-    expect(result.errors).toHaveLength(1)
-    expect(result.errors[0].player_name).toBe('Player C')
-    expect(result.errors[0].message).toContain('beyond Rd 23')
+    expect(result.errors).toHaveLength(0)
+    expect(result.keepers).toHaveLength(3)
 
-    // A and B should still be resolved
-    expect(result.keepers).toHaveLength(2)
+    // A stays at 22, B bumps forward to 23, C can't go to 24 so stacks backward to 21
     expect(result.keepers.find(k => k.player_name === 'Player A')!.effective_round).toBe(22)
     expect(result.keepers.find(k => k.player_name === 'Player B')!.effective_round).toBe(23)
+    expect(result.keepers.find(k => k.player_name === 'Player C')!.effective_round).toBe(21)
+  })
+
+  it('FA backward stacking: 2 players at Rd 23 stack to 23, 22', () => {
+    const keepers: KeeperInput[] = [
+      { id: '1', player_name: 'Mike Trout', keeper_cost_round: 23, ecr: 193, keeper_status: 'keeping' },
+      { id: '2', player_name: 'Chase Burns', keeper_cost_round: 23, ecr: 121, keeper_status: 'keeping' },
+    ]
+    const result = resolveKeeperStacking(keepers)
+    expect(result.has_stacking).toBe(true)
+    expect(result.errors).toHaveLength(0)
+
+    // Burns has better ECR, stays at 23. Trout stacks backward to 22.
+    const burns = result.keepers.find(k => k.player_name === 'Chase Burns')!
+    const trout = result.keepers.find(k => k.player_name === 'Mike Trout')!
+    expect(burns.effective_round).toBe(23)
+    expect(trout.effective_round).toBe(22)
+    expect(trout.stacked_from).toBe(23)
+  })
+
+  it('FA backward stacking: 3 players at Rd 23 stack to 23, 22, 21', () => {
+    const keepers: KeeperInput[] = [
+      { id: '1', player_name: 'Player A', keeper_cost_round: 23, ecr: 200, keeper_status: 'keeping' },
+      { id: '2', player_name: 'Player B', keeper_cost_round: 23, ecr: 250, keeper_status: 'keeping' },
+      { id: '3', player_name: 'Player C', keeper_cost_round: 23, ecr: 300, keeper_status: 'keeping' },
+    ]
+    const result = resolveKeeperStacking(keepers)
+    expect(result.has_stacking).toBe(true)
+    expect(result.errors).toHaveLength(0)
+
+    expect(result.keepers.find(k => k.player_name === 'Player A')!.effective_round).toBe(23)
+    expect(result.keepers.find(k => k.player_name === 'Player B')!.effective_round).toBe(22)
+    expect(result.keepers.find(k => k.player_name === 'Player C')!.effective_round).toBe(21)
+  })
+
+  it('FA backward stacking skips occupied rounds (Tom scenario)', () => {
+    // Tom: Caglianone Rd 21, then 3 FA pickups at Rd 23
+    const keepers: KeeperInput[] = [
+      { id: '1', player_name: 'Jac Caglianone', keeper_cost_round: 21, ecr: 240, keeper_status: 'keeping' },
+      { id: '2', player_name: 'George Springer', keeper_cost_round: 23, ecr: 76, keeper_status: 'keeping' },
+      { id: '3', player_name: 'Hunter Goodman', keeper_cost_round: 23, ecr: 85, keeper_status: 'keeping' },
+      { id: '4', player_name: 'Framber Valdez', keeper_cost_round: 23, ecr: 74, keeper_status: 'keeping' },
+    ]
+    const result = resolveKeeperStacking(keepers)
+    expect(result.has_stacking).toBe(true)
+    expect(result.errors).toHaveLength(0)
+    expect(result.keepers).toHaveLength(4)
+
+    // Caglianone stays at 21. Best ECR (Valdez 74) gets 23, Springer (76) gets 22,
+    // Goodman (85) tries 22 (taken), tries backward from 23... 22 taken, 21 taken, lands on 20
+    expect(result.keepers.find(k => k.player_name === 'Jac Caglianone')!.effective_round).toBe(21)
+    expect(result.keepers.find(k => k.player_name === 'Framber Valdez')!.effective_round).toBe(23)
+    expect(result.keepers.find(k => k.player_name === 'George Springer')!.effective_round).toBe(22)
+    expect(result.keepers.find(k => k.player_name === 'Hunter Goodman')!.effective_round).toBe(20)
   })
 
   it('Tyler scenario: Turner Rd 3, Fried Rd 4, Bregman Rd 8, Brown Rd 10, Yelich Rd 10→11, Ward Rd 16', () => {
