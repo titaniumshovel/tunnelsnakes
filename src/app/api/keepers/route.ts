@@ -65,8 +65,18 @@ export async function GET() {
   return NextResponse.json(annotatedRows)
 }
 
+// 🔒 Keepers locked — toggle to false to re-enable editing
+const KEEPERS_LOCKED = true
+
 // PATCH: update keeper status (auth required, own team only)
 export async function PATCH(req: Request) {
+  if (KEEPERS_LOCKED) {
+    return NextResponse.json(
+      { error: 'Keepers are locked. All 12 teams have been confirmed for the 2026 season.' },
+      { status: 403 }
+    )
+  }
+
   const supabase = await createClient()
 
   const { data: { user } } = await supabase.auth.getUser()

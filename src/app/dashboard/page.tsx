@@ -55,6 +55,7 @@ function isNAEligible(rp: RosterPlayer): boolean {
 
 const MAX_KEEPERS = 6
 const MAX_NA = 4
+const KEEPERS_LOCKED = true
 
 const STATUS_DISPLAY: Record<string, { icon: string; label: string; color: string; bg: string; border: string }> = {
   keeping: { icon: '🔒', label: 'KEEPING', color: 'text-secondary', bg: 'bg-secondary/10', border: 'border-secondary/30' },
@@ -463,8 +464,8 @@ export default function DashboardPage() {
                 return (
                   <div key={rp.id} className="relative">
                     <div
-                      className={`flex items-center gap-3 px-3 py-2.5 rounded-md border transition-all cursor-pointer hover:scale-[1.005] active:scale-[0.995] ${statusInfo.bg} ${statusInfo.border} ${isUpdating ? 'opacity-60' : ''} ${isPopoverOpen ? 'ring-2 ring-primary/40' : ''}`}
-                      onClick={() => !isUpdating && setOpenPopoverId(isPopoverOpen ? null : rp.id)}
+                      className={`flex items-center gap-3 px-3 py-2.5 rounded-md border transition-all ${KEEPERS_LOCKED ? '' : 'cursor-pointer hover:scale-[1.005] active:scale-[0.995]'} ${statusInfo.bg} ${statusInfo.border} ${isUpdating ? 'opacity-60' : ''} ${isPopoverOpen ? 'ring-2 ring-primary/40' : ''}`}
+                      onClick={() => !KEEPERS_LOCKED && !isUpdating && setOpenPopoverId(isPopoverOpen ? null : rp.id)}
                     >
                       <span className="text-lg shrink-0">{statusInfo.icon}</span>
                       <div className="flex-1 min-w-0">
@@ -515,7 +516,7 @@ export default function DashboardPage() {
                         />
                       )}
                     </div>
-                    {isPopoverOpen && (
+                    {isPopoverOpen && !KEEPERS_LOCKED && (
                       <div className="absolute z-50 left-0 right-0 mt-1 rounded-md border border-border bg-card shadow-xl overflow-hidden">
                         {getStatusOptions(rp).map(opt => {
                           const display = STATUS_DISPLAY[opt.status] ?? STATUS_DISPLAY.undecided
@@ -568,7 +569,13 @@ export default function DashboardPage() {
             </div>
           )}
 
-          <ValidateKeepers roster={roster} stackingMap={stackingMap} stackingErrors={stackingErrors} />
+          {KEEPERS_LOCKED ? (
+            <div className="mt-4 px-4 py-3 rounded-md text-sm font-mono bg-green-500/10 border border-green-500/30 text-green-400 text-center">
+              🔒 Keepers are locked — all 12 teams confirmed for 2026
+            </div>
+          ) : (
+            <ValidateKeepers roster={roster} stackingMap={stackingMap} stackingErrors={stackingErrors} />
+          )}
         </div>
 
         {/* Draft Picks */}
