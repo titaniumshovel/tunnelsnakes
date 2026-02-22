@@ -68,7 +68,7 @@ function getKeeperStatusIcon(status: KeeperInfo['keeperStatus']): string {
 
 export default function DraftBoardPage() {
   const [showTrades, setShowTrades] = useState(false)
-  const [viewMode, setViewMode] = useState<'board' | 'owner' | 'clicky'>('clicky')
+  const [viewMode, setViewMode] = useState<'board' | 'owner' | 'clicky' | 'snake'>('clicky')
   const [fontSize, setFontSize] = useState(0.75)
   const [keepers, setKeepers] = useState<Map<string, Map<number, KeeperInfo>>>(new Map())
   const [keepersLoading, setKeepersLoading] = useState(true)
@@ -228,6 +228,16 @@ export default function DraftBoardPage() {
                 }`}
               >
                 👥 OWNERS
+              </button>
+              <button
+                onClick={() => setViewMode('snake')}
+                className={`px-3 py-1.5 rounded text-xs font-semibold font-bold transition-colors ${
+                  viewMode === 'snake'
+                    ? 'bg-primary text-primary-foreground'
+                    : 'text-muted-foreground hover:text-foreground'
+                }`}
+              >
+                🐍 SNAKE
               </button>
             </div>
 
@@ -696,6 +706,100 @@ export default function DraftBoardPage() {
                               >
                                 ×{pickCount}
                               </div>
+                            </div>
+                          </td>
+                        )
+                      })}
+                    </tr>
+                  )
+                })}
+              </tbody>
+            </table>
+          </div>
+        )}
+
+        {/* Snake View — blank snake-order draft board (Clicky Draft style) */}
+        {viewMode === 'snake' && (
+          <div className="overflow-x-auto rounded-lg border border-primary/20">
+            <table className="border-collapse w-full" style={{ minWidth: '960px', fontSize: `${fontSize}rem` }}>
+              <thead>
+                <tr className="bg-card">
+                  <th className="sticky left-0 z-[5] bg-card p-2 text-center font-mono text-xs text-muted-foreground border-b border-r border-primary/20 w-14">
+                    RND
+                  </th>
+                  {data.draftOrder.map((owner) => {
+                    const colors = TEAM_COLORS[owner]
+                    return (
+                      <th key={owner} className={`p-2 text-center border-b border-primary/20 min-w-[72px] ${colors?.bg}`}>
+                        <div className="flex flex-col items-center gap-0.5">
+                          <div className={`h-2.5 w-2.5 rounded-full ${colors?.dot}`} />
+                          <div className={`font-mono font-bold ${colors?.text}`} style={{ fontSize: `${Math.max(fontSize * 0.85, 0.55)}rem` }}>{owner}</div>
+                        </div>
+                      </th>
+                    )
+                  })}
+                </tr>
+              </thead>
+              <tbody>
+                {Array.from({ length: 23 }, (_, i) => i + 1).map((round) => {
+                  const isEven = round % 2 === 0
+                  const roundPicks = (data.picks[round.toString()] ?? []) as DraftPick[]
+
+                  // Build slot → pick lookup
+                  const slotMap = new Map<number, DraftPick>()
+                  for (const p of roundPicks) {
+                    slotMap.set(p.slot, p)
+                  }
+
+                  return (
+                    <tr key={round} className={`${round % 2 === 0 ? 'bg-card/50' : ''} hover:bg-primary/5 transition-colors`}>
+                      <td className={`sticky left-0 z-[5] p-2 text-center font-mono font-bold border-r border-primary/20 ${
+                        round % 2 === 0 ? 'bg-card/90' : 'bg-background'
+                      }`} style={{ fontSize: `${fontSize * 1.1}rem` }}>
+                        <div className="flex items-center justify-center gap-1">
+                          <span>{round}</span>
+                          <span className="text-muted-foreground" style={{ fontSize: `${fontSize * 0.75}rem` }}>
+                            {isEven ? '←' : '→'}
+                          </span>
+                        </div>
+                      </td>
+                      {data.draftOrder.map((owner, teamIdx) => {
+                        const slot = teamIdx + 1
+                        const pick = slotMap.get(slot)
+                        const pickInRound = snakePickInRound(round, slot)
+                        const overallPick = (round - 1) * 12 + pickInRound
+
+                        // Determine whose color to show
+                        const currentOwner = pick?.currentOwner ?? owner
+                        const colors = TEAM_COLORS[currentOwner]
+                        const isTraded = pick?.traded ?? false
+                        const originalOwner = pick?.originalOwner ?? owner
+
+                        return (
+                          <td
+                            key={owner}
+                            className="p-0.5 text-center border border-border/10"
+                            title={isTraded
+                              ? `Pick #${overallPick} (Rd ${round}, Pick ${pickInRound}) — ${currentOwner}'s pick (from ${originalOwner})`
+                              : `Pick #${overallPick} (Rd ${round}, Pick ${pickInRound}) — ${currentOwner}`}
+                          >
+                            <div className={`rounded px-1 py-2 border ${colors?.bg ?? 'bg-muted'} ${colors?.border ?? 'border-border'} ${
+                              isTraded ? 'ring-1 ring-accent/40' : ''
+                            } min-h-[44px] flex flex-col items-center justify-center`}
+                              style={{ opacity: 0.85 }}
+                            >
+                              <div className={`font-mono font-bold leading-tight ${colors?.text ?? 'text-foreground'}`}
+                                style={{ fontSize: `${Math.max(fontSize * 1.1, 0.7)}rem` }}
+                              >
+                                {overallPick}
+                              </div>
+                              {isTraded && (
+                                <div className="font-mono leading-tight text-accent mt-0.5"
+                                  style={{ fontSize: `${Math.max(fontSize * 0.6, 0.4)}rem` }}
+                                >
+                                  from {originalOwner}
+                                </div>
+                              )}
                             </div>
                           </td>
                         )
