@@ -719,98 +719,84 @@ export default function DraftBoardPage() {
         )}
 
         {/* Snake View — blank snake-order draft board (Clicky Draft style) */}
-        {viewMode === 'snake' && (
-          <div className="overflow-x-auto rounded-lg border border-primary/20">
-            <table className="border-collapse w-full" style={{ minWidth: '960px', fontSize: `${fontSize}rem` }}>
-              <thead>
-                <tr className="bg-card">
-                  <th className="sticky left-0 z-[5] bg-card p-2 text-center font-mono text-xs text-muted-foreground border-b border-r border-primary/20 w-14">
-                    RND
-                  </th>
-                  {data.draftOrder.map((owner) => {
-                    const colors = TEAM_COLORS[owner]
-                    return (
-                      <th key={owner} className={`p-2 text-center border-b border-primary/20 min-w-[72px] ${colors?.bg}`}>
-                        <div className="flex flex-col items-center gap-0.5">
-                          <div className={`h-2.5 w-2.5 rounded-full ${colors?.dot}`} />
-                          <div className={`font-mono font-bold ${colors?.text}`} style={{ fontSize: `${Math.max(fontSize * 0.85, 0.55)}rem` }}>{owner}</div>
-                        </div>
+        {viewMode === 'snake' && (() => {
+          const draftOrder = data.draftOrder // [Pudge, Nick, Web, Tom, Tyler, Thomas, Chris, Alex, Greasy, Bob, Mike, Sean]
+          const totalRounds = 23
+          const teamCount = draftOrder.length // 12
+
+          return (
+            <div className="overflow-x-auto rounded-lg border border-primary/20">
+              <table className="border-collapse w-full" style={{ minWidth: '960px', fontSize: `${fontSize}rem` }}>
+                <thead>
+                  <tr className="bg-card">
+                    <th className="sticky left-0 z-[5] bg-card p-2 text-center font-mono text-xs text-muted-foreground border-b border-r border-primary/20 w-14">
+                      RND
+                    </th>
+                    {Array.from({ length: teamCount }, (_, i) => (
+                      <th key={i} className="p-2 text-center border-b border-primary/20 min-w-[80px] bg-card">
+                        <span className="font-mono font-bold text-muted-foreground" style={{ fontSize: `${Math.max(fontSize * 0.85, 0.55)}rem` }}>
+                          Pick {i + 1}
+                        </span>
                       </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {Array.from({ length: totalRounds }, (_, i) => i + 1).map((round) => {
+                    const isOdd = round % 2 === 1
+                    // Odd rounds: draftOrder as-is (Pudge first). Even rounds: reversed (Sean first).
+                    const roundOrder = isOdd ? [...draftOrder] : [...draftOrder].reverse()
+
+                    return (
+                      <tr key={round} className="hover:bg-primary/5 transition-colors">
+                        <td className={`sticky left-0 z-[5] p-2 text-center font-mono font-bold border-r border-primary/20 ${
+                          isOdd ? 'bg-background' : 'bg-card/90'
+                        }`} style={{ fontSize: `${fontSize * 1.1}rem` }}>
+                          <div className="flex items-center justify-center gap-1">
+                            <span>{round}</span>
+                            <span className="text-muted-foreground" style={{ fontSize: `${fontSize * 0.75}rem` }}>
+                              {isOdd ? '→' : '←'}
+                            </span>
+                          </div>
+                        </td>
+                        {roundOrder.map((owner, pickIdx) => {
+                          const pickNum = pickIdx + 1
+                          const colors = TEAM_COLORS[owner]
+
+                          return (
+                            <td
+                              key={pickIdx}
+                              className="p-0.5 text-center border border-border/10"
+                              title={`Round ${round}, Pick ${pickNum} — ${owner}`}
+                            >
+                              <div
+                                className={`rounded px-1 py-2 border ${colors?.bg ?? 'bg-muted'} ${colors?.border ?? 'border-border'} min-h-[48px] flex flex-col items-center justify-center gap-0.5`}
+                                style={{ opacity: 0.9 }}
+                              >
+                                <div
+                                  className={`font-mono font-bold leading-tight ${colors?.text ?? 'text-foreground'}`}
+                                  style={{ fontSize: `${Math.max(fontSize * 1.05, 0.65)}rem` }}
+                                >
+                                  {owner}
+                                </div>
+                                <div
+                                  className="font-mono leading-tight text-muted-foreground"
+                                  style={{ fontSize: `${Math.max(fontSize * 0.7, 0.45)}rem` }}
+                                >
+                                  {round}.{pickNum}
+                                </div>
+                              </div>
+                            </td>
+                          )
+                        })}
+                      </tr>
                     )
                   })}
-                </tr>
-              </thead>
-              <tbody>
-                {Array.from({ length: 23 }, (_, i) => i + 1).map((round) => {
-                  const isEven = round % 2 === 0
-                  const roundPicks = (data.picks[round.toString()] ?? []) as DraftPick[]
-
-                  // Build slot → pick lookup
-                  const slotMap = new Map<number, DraftPick>()
-                  for (const p of roundPicks) {
-                    slotMap.set(p.slot, p)
-                  }
-
-                  return (
-                    <tr key={round} className={`${round % 2 === 0 ? 'bg-card/50' : ''} hover:bg-primary/5 transition-colors`}>
-                      <td className={`sticky left-0 z-[5] p-2 text-center font-mono font-bold border-r border-primary/20 ${
-                        round % 2 === 0 ? 'bg-card/90' : 'bg-background'
-                      }`} style={{ fontSize: `${fontSize * 1.1}rem` }}>
-                        <div className="flex items-center justify-center gap-1">
-                          <span>{round}</span>
-                          <span className="text-muted-foreground" style={{ fontSize: `${fontSize * 0.75}rem` }}>
-                            {isEven ? '←' : '→'}
-                          </span>
-                        </div>
-                      </td>
-                      {data.draftOrder.map((owner, teamIdx) => {
-                        const slot = teamIdx + 1
-                        const pick = slotMap.get(slot)
-                        const pickInRound = snakePickInRound(round, slot)
-                        const overallPick = (round - 1) * 12 + pickInRound
-
-                        // Determine whose color to show
-                        const currentOwner = pick?.currentOwner ?? owner
-                        const colors = TEAM_COLORS[currentOwner]
-                        const isTraded = pick?.traded ?? false
-                        const originalOwner = pick?.originalOwner ?? owner
-
-                        return (
-                          <td
-                            key={owner}
-                            className="p-0.5 text-center border border-border/10"
-                            title={isTraded
-                              ? `Pick #${overallPick} (Rd ${round}, Pick ${pickInRound}) — ${currentOwner}'s pick (from ${originalOwner})`
-                              : `Pick #${overallPick} (Rd ${round}, Pick ${pickInRound}) — ${currentOwner}`}
-                          >
-                            <div className={`rounded px-1 py-2 border ${colors?.bg ?? 'bg-muted'} ${colors?.border ?? 'border-border'} ${
-                              isTraded ? 'ring-1 ring-accent/40' : ''
-                            } min-h-[44px] flex flex-col items-center justify-center`}
-                              style={{ opacity: 0.85 }}
-                            >
-                              <div className={`font-mono font-bold leading-tight ${colors?.text ?? 'text-foreground'}`}
-                                style={{ fontSize: `${Math.max(fontSize * 1.1, 0.7)}rem` }}
-                              >
-                                {overallPick}
-                              </div>
-                              {isTraded && (
-                                <div className="font-mono leading-tight text-accent mt-0.5"
-                                  style={{ fontSize: `${Math.max(fontSize * 0.6, 0.4)}rem` }}
-                                >
-                                  from {originalOwner}
-                                </div>
-                              )}
-                            </div>
-                          </td>
-                        )
-                      })}
-                    </tr>
-                  )
-                })}
-              </tbody>
-            </table>
-          </div>
-        )}
+                </tbody>
+              </table>
+            </div>
+          )
+        })()}
 
         {/* Legend & Stats */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
