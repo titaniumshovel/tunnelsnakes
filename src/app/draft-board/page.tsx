@@ -83,16 +83,17 @@ export default function DraftBoardPage() {
           const keeperRows = await response.json()
           
           // Build lookup map: displayName → round → KeeperInfo
+          // NA keepers go into NA rounds (24-27), not their cost round
           const keeperMap = new Map<string, Map<number, KeeperInfo>>()
           
+          // Track NA keeper assignments per owner (rounds 24-27)
+          const naCounters = new Map<string, number>()
+          
+          // First pass: regular + 7th keepers (they use their effective round)
           for (const row of keeperRows) {
-            // Skip keepers without valid cost rounds (like Bubba Chandler)
             if (!row.keeper_cost_round) continue
+            if (!['keeping', 'keeping-7th'].includes(row.keeper_status)) continue
             
-            // Skip non-keeping statuses
-            if (!['keeping', 'keeping-7th', 'keeping-na'].includes(row.keeper_status)) continue
-            
-            // Map yahoo_team_key to displayName using MANAGERS
             const manager = MANAGERS.find(m => m.yahooTeamKey === row.yahoo_team_key)
             if (!manager) continue
             
@@ -113,6 +114,36 @@ export default function DraftBoardPage() {
             
             const ownerMap = keeperMap.get(displayName)!
             ownerMap.set(effectiveRound, keeperInfo)
+          }
+          
+          // Second pass: NA keepers → assign to rounds 24-27 sequentially
+          for (const row of keeperRows) {
+            if (row.keeper_status !== 'keeping-na') continue
+            
+            const manager = MANAGERS.find(m => m.yahooTeamKey === row.yahoo_team_key)
+            if (!manager) continue
+            
+            const displayName = manager.displayName
+            const naIdx = naCounters.get(displayName) ?? 0
+            const naRound = 24 + naIdx // NA rounds: 24, 25, 26, 27
+            naCounters.set(displayName, naIdx + 1)
+            
+            if (naRound > 27) continue // Max 4 NA slots
+            
+            const keeperInfo: KeeperInfo = {
+              playerName: row.players?.full_name ?? 'Unknown Player',
+              keeperStatus: 'keeping-na',
+              costRound: row.keeper_cost_round,
+              effectiveRound: naRound,
+              stackedFrom: null
+            }
+            
+            if (!keeperMap.has(displayName)) {
+              keeperMap.set(displayName, new Map())
+            }
+            
+            const ownerMap = keeperMap.get(displayName)!
+            ownerMap.set(naRound, keeperInfo)
           }
           
           setKeepers(keeperMap)
