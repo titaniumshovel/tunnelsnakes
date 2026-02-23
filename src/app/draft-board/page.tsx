@@ -620,85 +620,53 @@ export default function DraftBoardPage() {
                                   : `Round ${round}, Pick ${pickNum} — ${owner}`
                               }
                             >
-                              {keeper ? (
-                                /* === KEEPER CELL — 3-row layout matching draft board style === */
-                                <div
-                                  className={`rounded border-2 ${colors?.bg ?? 'bg-muted'} ${colors?.border ?? 'border-border'} flex flex-col overflow-hidden`}
-                                  style={{ minHeight: '76px', opacity: 0.95 }}
-                                >
-                                  {/* Row 1: Owner name (small, centered, with divider) */}
-                                  <div
-                                    className={`text-center border-b border-black/15 px-1 py-0.5 ${colors?.text ?? 'text-foreground'}`}
-                                    style={{ fontSize: `${Math.max(fontSize * 0.65, 0.42)}rem` }}
-                                  >
-                                    {owner}
-                                  </div>
-                                  {/* Row 2: POS (left) | First Name (center) | TEAM (right) */}
-                                  <div className="flex items-center justify-between px-1" style={{ lineHeight: 1.2 }}>
-                                    <span
-                                      className="font-mono text-black/70"
-                                      style={{ fontSize: `${Math.max(fontSize * 0.55, 0.38)}rem` }}
-                                    >
-                                      {keeper.pos}
-                                    </span>
-                                    <span
-                                      className="font-bold text-black"
-                                      style={{ fontSize: `${Math.max(fontSize * 0.7, 0.45)}rem` }}
-                                    >
-                                      {keeper.first}
-                                    </span>
-                                    <span
-                                      className="font-mono text-black/70"
-                                      style={{ fontSize: `${Math.max(fontSize * 0.55, 0.38)}rem` }}
-                                    >
-                                      {keeper.team}
-                                    </span>
-                                  </div>
-                                  {/* Row 3: LAST NAME (large, centered) + (K) superscript */}
-                                  <div className="flex-1 flex items-center justify-center px-0.5 pb-0.5">
-                                    <span
-                                      className={`font-bold text-center leading-tight ${colors?.text ?? 'text-black'}`}
-                                      style={{ fontSize: `${Math.max(fontSize * 1.1, 0.7)}rem` }}
-                                    >
-                                      {keeper.last}
-                                    </span>
-                                    <sup
-                                      className="text-black/60 ml-0.5"
-                                      style={{ fontSize: `${Math.max(fontSize * 0.45, 0.32)}rem` }}
-                                    >
-                                      (K)
-                                    </sup>
-                                  </div>
-                                </div>
-                              ) : (
-                                /* === NON-KEEPER CELL — owner + pick number === */
-                                <div
-                                  className={`rounded px-1 border ${colors?.bg ?? 'bg-muted'} ${colors?.border ?? 'border-border'} h-[56px] min-h-[56px] max-h-[56px] flex flex-col items-center justify-center ${isTraded ? 'ring-2 ring-black' : ''}`}
-                                  style={{ opacity: 0.9 }}
-                                >
-                                  <div
-                                    className={`font-mono font-bold leading-tight ${colors?.text ?? 'text-foreground'}`}
-                                    style={{ fontSize: `${Math.max(fontSize * 1.05, 0.65)}rem` }}
-                                  >
-                                    {owner}
-                                  </div>
-                                  {isTraded ? (
+                              <div
+                                className={`rounded border ${colors?.bg ?? 'bg-muted'} ${colors?.border ?? 'border-border'} h-[56px] min-h-[56px] max-h-[56px] flex flex-col overflow-hidden`}
+                                style={{ opacity: 0.9 }}
+                              >
+                                {keeper ? (
+                                  <>
+                                    {/* Row 1: Owner name (small, centered, with divider) */}
                                     <div
-                                      className="font-mono font-bold leading-tight text-black"
-                                      style={{ fontSize: `${Math.max(fontSize * 0.65, 0.45)}rem` }}
+                                      className={`text-center border-b border-black/15 px-1 ${colors?.text ?? 'text-foreground'}`}
+                                      style={{ fontSize: `${Math.max(fontSize * 0.55, 0.38)}rem`, lineHeight: 1.3 }}
                                     >
-                                      {round}.{pickNum} ← {originalOwner}
+                                      {owner}
                                     </div>
-                                  ) : (
+                                    {/* Row 2: POS | First Name | TEAM */}
+                                    <div className="flex items-center justify-between px-0.5" style={{ lineHeight: 1.1 }}>
+                                      <span className="font-mono text-black/60" style={{ fontSize: `${Math.max(fontSize * 0.45, 0.33)}rem` }}>{keeper.pos}</span>
+                                      <span className="font-bold text-black" style={{ fontSize: `${Math.max(fontSize * 0.6, 0.4)}rem` }}>{keeper.first}</span>
+                                      <span className="font-mono text-black/60" style={{ fontSize: `${Math.max(fontSize * 0.45, 0.33)}rem` }}>{keeper.team}</span>
+                                    </div>
+                                    {/* Row 3: Last Name (same size/color as first) + (K) */}
+                                    <div className="flex-1 flex items-center justify-center px-0.5">
+                                      <span className="font-bold text-black text-center leading-tight" style={{ fontSize: `${Math.max(fontSize * 0.6, 0.4)}rem` }}>
+                                        {keeper.last}
+                                      </span>
+                                      <sup className="text-black/50 ml-0.5" style={{ fontSize: `${Math.max(fontSize * 0.4, 0.28)}rem` }}>(K)</sup>
+                                    </div>
+                                  </>
+                                ) : (
+                                  <>
                                     <div
-                                      className="font-mono leading-tight text-black/60"
-                                      style={{ fontSize: `${Math.max(fontSize * 0.7, 0.45)}rem` }}
+                                      className={`font-mono font-bold leading-tight text-center pt-1 ${colors?.text ?? 'text-foreground'}`}
+                                      style={{ fontSize: `${Math.max(fontSize * 1.05, 0.65)}rem` }}
                                     >
-                                      {round}.{pickNum}
+                                      {owner}
                                     </div>
-                                  )}
-                                </div>
-                              )}
+                                    {isTraded ? (
+                                      <div className="font-mono font-bold leading-tight text-black text-center" style={{ fontSize: `${Math.max(fontSize * 0.65, 0.45)}rem` }}>
+                                        {round}.{pickNum} ← {originalOwner}
+                                      </div>
+                                    ) : (
+                                      <div className="font-mono leading-tight text-black/60 text-center" style={{ fontSize: `${Math.max(fontSize * 0.7, 0.45)}rem` }}>
+                                        {round}.{pickNum}
+                                      </div>
+                                    )}
+                                  </>
+                                )}
+                              </div>
                             </td>
                           )
                         })}
@@ -732,30 +700,25 @@ export default function DraftBoardPage() {
                               <td key={colIdx} className="p-0.5 text-center border border-border/10">
                                 {keeper ? (
                                   <div
-                                    className={`rounded border-2 ${colors?.bg ?? 'bg-muted'} ${colors?.border ?? 'border-border'} flex flex-col overflow-hidden`}
-                                    style={{ minHeight: '76px', opacity: 0.95 }}
+                                    className={`rounded border ${colors?.bg ?? 'bg-muted'} ${colors?.border ?? 'border-border'} h-[56px] min-h-[56px] max-h-[56px] flex flex-col overflow-hidden`}
+                                    style={{ opacity: 0.9 }}
                                   >
-                                    {/* Row 1: Owner name */}
                                     <div
-                                      className={`text-center border-b border-black/15 px-1 py-0.5 ${colors?.text ?? 'text-foreground'}`}
-                                      style={{ fontSize: `${Math.max(fontSize * 0.65, 0.42)}rem` }}
+                                      className={`text-center border-b border-black/15 px-1 ${colors?.text ?? 'text-foreground'}`}
+                                      style={{ fontSize: `${Math.max(fontSize * 0.55, 0.38)}rem`, lineHeight: 1.3 }}
                                     >
                                       {owner}
                                     </div>
-                                    {/* Row 2: POS | First Name | TEAM */}
-                                    <div className="flex items-center justify-between px-1" style={{ lineHeight: 1.2 }}>
-                                      <span className="font-mono text-black/70" style={{ fontSize: `${Math.max(fontSize * 0.55, 0.38)}rem` }}>{keeper.pos}</span>
-                                      <span className="font-bold text-black" style={{ fontSize: `${Math.max(fontSize * 0.7, 0.45)}rem` }}>{keeper.first}</span>
-                                      <span className="font-mono text-black/70" style={{ fontSize: `${Math.max(fontSize * 0.55, 0.38)}rem` }}>{keeper.team}</span>
+                                    <div className="flex items-center justify-between px-0.5" style={{ lineHeight: 1.1 }}>
+                                      <span className="font-mono text-black/60" style={{ fontSize: `${Math.max(fontSize * 0.45, 0.33)}rem` }}>{keeper.pos}</span>
+                                      <span className="font-bold text-black" style={{ fontSize: `${Math.max(fontSize * 0.6, 0.4)}rem` }}>{keeper.first}</span>
+                                      <span className="font-mono text-black/60" style={{ fontSize: `${Math.max(fontSize * 0.45, 0.33)}rem` }}>{keeper.team}</span>
                                     </div>
-                                    {/* Row 3: LAST NAME + (NA) */}
-                                    <div className="flex-1 flex items-center justify-center px-0.5 pb-0.5">
-                                      <span className={`font-bold text-center leading-tight ${colors?.text ?? 'text-black'}`} style={{ fontSize: `${Math.max(fontSize * 1.1, 0.7)}rem` }}>
+                                    <div className="flex-1 flex items-center justify-center px-0.5">
+                                      <span className="font-bold text-black text-center leading-tight" style={{ fontSize: `${Math.max(fontSize * 0.6, 0.4)}rem` }}>
                                         {keeper.last}
                                       </span>
-                                      <sup className="text-blue-600 ml-0.5" style={{ fontSize: `${Math.max(fontSize * 0.45, 0.32)}rem` }}>
-                                        (NA)
-                                      </sup>
+                                      <sup className="text-blue-600 ml-0.5" style={{ fontSize: `${Math.max(fontSize * 0.4, 0.28)}rem` }}>(NA)</sup>
                                     </div>
                                   </div>
                                 ) : (
