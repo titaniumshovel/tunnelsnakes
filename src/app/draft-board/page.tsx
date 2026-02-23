@@ -635,19 +635,25 @@ export default function DraftBoardPage() {
                                 <div className="flex-1 flex flex-col items-center justify-center">
                                   {keeper ? (
                                     <>
-                                      <div className="flex items-center justify-between w-full px-0.5" style={{ lineHeight: 1.1 }}>
-                                        <span className="font-mono text-black/50" style={{ fontSize: `${Math.max(fontSize * 0.45, 0.32)}rem` }}>{keeper.pos}</span>
-                                        <span className="font-bold text-black text-center" style={{ fontSize: `${Math.max(fontSize * 0.6, 0.4)}rem` }}>{keeper.first} {keeper.last}</span>
-                                        <span className="font-mono text-black/50" style={{ fontSize: `${Math.max(fontSize * 0.45, 0.32)}rem` }}>{keeper.team}</span>
+                                      <div className="font-bold text-black text-center leading-tight" style={{ fontSize: `${Math.max(fontSize * 0.6, 0.4)}rem` }}>
+                                        {keeper.first}
+                                      </div>
+                                      <div className="font-bold text-black text-center leading-tight" style={{ fontSize: `${Math.max(fontSize * 0.6, 0.4)}rem` }}>
+                                        {keeper.last}
                                       </div>
                                       <div className="text-center text-black/40" style={{ fontSize: `${Math.max(fontSize * 0.4, 0.28)}rem`, lineHeight: 1 }}>
                                         (K)
                                       </div>
                                     </>
                                   ) : isTraded ? (
-                                    <div className="font-mono font-bold leading-tight text-black text-center" style={{ fontSize: `${Math.max(fontSize * 0.65, 0.45)}rem` }}>
-                                      {round}.{pickNum} ← {originalOwner}
-                                    </div>
+                                    <>
+                                      <div className="font-mono font-bold text-black text-center" style={{ fontSize: `${Math.max(fontSize * 0.85, 0.55)}rem` }}>
+                                        {round}.{pickNum}
+                                      </div>
+                                      <div className="font-mono font-bold text-black text-center" style={{ fontSize: `${Math.max(fontSize * 0.55, 0.38)}rem` }}>
+                                        ← {originalOwner}
+                                      </div>
+                                    </>
                                   ) : (
                                     <div className="font-mono font-bold text-black text-center" style={{ fontSize: `${Math.max(fontSize * 0.85, 0.55)}rem` }}>
                                       {round}.{pickNum}
@@ -698,10 +704,11 @@ export default function DraftBoardPage() {
                                       {owner}
                                     </div>
                                     <div className="flex-1 flex flex-col items-center justify-center">
-                                      <div className="flex items-center justify-between w-full px-0.5" style={{ lineHeight: 1.1 }}>
-                                        <span className="font-mono text-black/50" style={{ fontSize: `${Math.max(fontSize * 0.45, 0.32)}rem` }}>{keeper.pos}</span>
-                                        <span className="font-bold text-black text-center" style={{ fontSize: `${Math.max(fontSize * 0.6, 0.4)}rem` }}>{keeper.first} {keeper.last}</span>
-                                        <span className="font-mono text-black/50" style={{ fontSize: `${Math.max(fontSize * 0.45, 0.32)}rem` }}>{keeper.team}</span>
+                                      <div className="font-bold text-black text-center leading-tight" style={{ fontSize: `${Math.max(fontSize * 0.6, 0.4)}rem` }}>
+                                        {keeper.first}
+                                      </div>
+                                      <div className="font-bold text-black text-center leading-tight" style={{ fontSize: `${Math.max(fontSize * 0.6, 0.4)}rem` }}>
+                                        {keeper.last}
                                       </div>
                                       <div className="text-center text-black/40" style={{ fontSize: `${Math.max(fontSize * 0.4, 0.28)}rem`, lineHeight: 1 }}>
                                         (NA)
