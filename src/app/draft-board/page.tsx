@@ -71,8 +71,10 @@ function getKeeperStatusIcon(status: KeeperInfo['keeperStatus']): string {
  * NA keepers use virtual rounds 24-27 (one per slot).
  */
 type SnakeKeeper = {
-  player: string      // Display name
-  pos: string         // Primary position
+  first: string       // First name
+  last: string        // Last name
+  pos: string         // Primary position (CF, SP, C, etc.)
+  team: string        // Team abbreviation (NYY, LAD, etc.)
   year?: string       // e.g. "5yr", "1yr"
   isNA?: boolean
   is7th?: boolean
@@ -80,15 +82,15 @@ type SnakeKeeper = {
 
 const SNAKE_KEEPERS: Record<string, Record<number, SnakeKeeper>> = {
   Chris: {
-    3:  { player: 'Yordan Alvarez', pos: 'OF', year: '5yr' },
-    4:  { player: 'Chris Sale', pos: 'SP', year: '2yr' },
-    5:  { player: 'Jackson Merrill', pos: 'OF', year: '2yr' },
-    6:  { player: 'Cody Bellinger', pos: 'OF', year: '3yr' },
-    9:  { player: 'Cal Raleigh', pos: 'C', year: '1yr' },
-    23: { player: 'Eury Pérez', pos: 'SP', year: '1yr' },
-    24: { player: 'Josue De Paula', pos: 'SP', isNA: true },
-    25: { player: 'Lazaro Montes', pos: 'OF', isNA: true },
-    26: { player: 'Ethan Salas', pos: 'C', isNA: true },
+    3:  { first: 'Yordan', last: 'Alvarez', pos: 'OF', team: 'HOU', year: '5yr' },
+    4:  { first: 'Chris', last: 'Sale', pos: 'SP', team: 'ATL', year: '2yr' },
+    5:  { first: 'Jackson', last: 'Merrill', pos: 'CF', team: 'SD', year: '2yr' },
+    6:  { first: 'Cody', last: 'Bellinger', pos: 'OF', team: 'NYY', year: '3yr' },
+    9:  { first: 'Cal', last: 'Raleigh', pos: 'C', team: 'SEA', year: '1yr' },
+    23: { first: 'Eury', last: 'Pérez', pos: 'SP', team: 'MIA', year: '1yr' },
+    24: { first: 'Josue', last: 'De Paula', pos: 'SP', team: 'LAD', isNA: true },
+    25: { first: 'Lazaro', last: 'Montes', pos: 'OF', team: 'SEA', isNA: true },
+    26: { first: 'Ethan', last: 'Salas', pos: 'C', team: 'SD', isNA: true },
   },
 }
 
@@ -612,41 +614,75 @@ export default function DraftBoardPage() {
                               key={colIdx}
                               className="p-0.5 text-center border border-border/10"
                               title={keeper
-                                ? `${keeper.player} (${keeper.pos}) — ${owner}, Round ${round}`
+                                ? `${keeper.first} ${keeper.last} (${keeper.pos}, ${keeper.team}) — ${owner}, Round ${round}`
                                 : isTraded
                                   ? `Round ${round}, Pick ${pickNum} — ${owner} (from ${originalOwner})`
                                   : `Round ${round}, Pick ${pickNum} — ${owner}`
                               }
                             >
-                              <div
-                                className={`rounded border ${colors?.bg ?? 'bg-muted'} ${colors?.border ?? 'border-border'} min-h-[56px] flex flex-col ${isTraded && !keeper ? 'ring-2 ring-black dark:ring-white' : ''} ${keeper ? 'ring-2 ring-yellow-500' : ''}`}
-                                style={{ opacity: 0.9 }}
-                              >
-                                {/* Owner name — sectioned off at top */}
+                              {keeper ? (
+                                /* === KEEPER CELL — 3-row layout matching draft board style === */
                                 <div
-                                  className={`font-mono font-bold leading-tight text-center px-1 pt-0.5 ${colors?.text ?? 'text-foreground'} ${keeper ? 'border-b border-black/20' : ''}`}
-                                  style={{ fontSize: `${Math.max(fontSize * 0.85, 0.55)}rem` }}
+                                  className={`rounded border-2 ${colors?.bg ?? 'bg-muted'} ${colors?.border ?? 'border-border'} flex flex-col overflow-hidden`}
+                                  style={{ minHeight: '76px', opacity: 0.95 }}
                                 >
-                                  {owner}
+                                  {/* Row 1: Owner name (small, centered, with divider) */}
+                                  <div
+                                    className={`text-center border-b border-black/15 px-1 py-0.5 ${colors?.text ?? 'text-foreground'}`}
+                                    style={{ fontSize: `${Math.max(fontSize * 0.65, 0.42)}rem` }}
+                                  >
+                                    {owner}
+                                  </div>
+                                  {/* Row 2: POS (left) | First Name (center) | TEAM (right) */}
+                                  <div className="flex items-center justify-between px-1" style={{ lineHeight: 1.2 }}>
+                                    <span
+                                      className="font-mono text-black/70"
+                                      style={{ fontSize: `${Math.max(fontSize * 0.55, 0.38)}rem` }}
+                                    >
+                                      {keeper.pos}
+                                    </span>
+                                    <span
+                                      className="font-bold text-black"
+                                      style={{ fontSize: `${Math.max(fontSize * 0.7, 0.45)}rem` }}
+                                    >
+                                      {keeper.first}
+                                    </span>
+                                    <span
+                                      className="font-mono text-black/70"
+                                      style={{ fontSize: `${Math.max(fontSize * 0.55, 0.38)}rem` }}
+                                    >
+                                      {keeper.team}
+                                    </span>
+                                  </div>
+                                  {/* Row 3: LAST NAME (large, centered) + (K) superscript */}
+                                  <div className="flex-1 flex items-center justify-center px-0.5 pb-0.5">
+                                    <span
+                                      className={`font-bold text-center leading-tight ${colors?.text ?? 'text-black'}`}
+                                      style={{ fontSize: `${Math.max(fontSize * 1.1, 0.7)}rem` }}
+                                    >
+                                      {keeper.last}
+                                    </span>
+                                    <sup
+                                      className="text-black/60 ml-0.5"
+                                      style={{ fontSize: `${Math.max(fontSize * 0.45, 0.32)}rem` }}
+                                    >
+                                      (K)
+                                    </sup>
+                                  </div>
                                 </div>
-                                {/* Content: keeper player or pick number */}
-                                <div className="flex-1 flex flex-col items-center justify-center px-0.5">
-                                  {keeper ? (
-                                    <>
-                                      <div
-                                        className="font-bold leading-tight text-black text-center"
-                                        style={{ fontSize: `${Math.max(fontSize * 0.7, 0.45)}rem` }}
-                                      >
-                                        {keeper.player}
-                                      </div>
-                                      <div
-                                        className="font-mono text-black/70 leading-tight"
-                                        style={{ fontSize: `${Math.max(fontSize * 0.6, 0.4)}rem` }}
-                                      >
-                                        ({keeper.pos}){keeper.year ? ` ${keeper.year}` : ''}
-                                      </div>
-                                    </>
-                                  ) : isTraded ? (
+                              ) : (
+                                /* === NON-KEEPER CELL — owner + pick number === */
+                                <div
+                                  className={`rounded px-1 border ${colors?.bg ?? 'bg-muted'} ${colors?.border ?? 'border-border'} h-[56px] min-h-[56px] max-h-[56px] flex flex-col items-center justify-center ${isTraded ? 'ring-2 ring-black dark:ring-white' : ''}`}
+                                  style={{ opacity: 0.9 }}
+                                >
+                                  <div
+                                    className={`font-mono font-bold leading-tight ${colors?.text ?? 'text-foreground'}`}
+                                    style={{ fontSize: `${Math.max(fontSize * 1.05, 0.65)}rem` }}
+                                  >
+                                    {owner}
+                                  </div>
+                                  {isTraded ? (
                                     <div
                                       className="font-mono font-bold leading-tight text-black"
                                       style={{ fontSize: `${Math.max(fontSize * 0.65, 0.45)}rem` }}
@@ -662,7 +698,7 @@ export default function DraftBoardPage() {
                                     </div>
                                   )}
                                 </div>
-                              </div>
+                              )}
                             </td>
                           )
                         })}
@@ -696,28 +732,30 @@ export default function DraftBoardPage() {
                               <td key={colIdx} className="p-0.5 text-center border border-border/10">
                                 {keeper ? (
                                   <div
-                                    className={`rounded border ${colors?.bg ?? 'bg-muted'} ${colors?.border ?? 'border-border'} min-h-[56px] flex flex-col ring-2 ring-blue-400`}
-                                    style={{ opacity: 0.9 }}
+                                    className={`rounded border-2 ${colors?.bg ?? 'bg-muted'} ${colors?.border ?? 'border-border'} flex flex-col overflow-hidden`}
+                                    style={{ minHeight: '76px', opacity: 0.95 }}
                                   >
+                                    {/* Row 1: Owner name */}
                                     <div
-                                      className={`font-mono font-bold leading-tight text-center px-1 pt-0.5 ${colors?.text ?? 'text-foreground'} border-b border-black/20`}
-                                      style={{ fontSize: `${Math.max(fontSize * 0.85, 0.55)}rem` }}
+                                      className={`text-center border-b border-black/15 px-1 py-0.5 ${colors?.text ?? 'text-foreground'}`}
+                                      style={{ fontSize: `${Math.max(fontSize * 0.65, 0.42)}rem` }}
                                     >
                                       {owner}
                                     </div>
-                                    <div className="flex-1 flex flex-col items-center justify-center px-0.5">
-                                      <div
-                                        className="font-bold leading-tight text-black text-center"
-                                        style={{ fontSize: `${Math.max(fontSize * 0.7, 0.45)}rem` }}
-                                      >
-                                        {keeper.player}
-                                      </div>
-                                      <div
-                                        className="font-mono text-black/70 leading-tight"
-                                        style={{ fontSize: `${Math.max(fontSize * 0.6, 0.4)}rem` }}
-                                      >
-                                        ({keeper.pos}) 🔷
-                                      </div>
+                                    {/* Row 2: POS | First Name | TEAM */}
+                                    <div className="flex items-center justify-between px-1" style={{ lineHeight: 1.2 }}>
+                                      <span className="font-mono text-black/70" style={{ fontSize: `${Math.max(fontSize * 0.55, 0.38)}rem` }}>{keeper.pos}</span>
+                                      <span className="font-bold text-black" style={{ fontSize: `${Math.max(fontSize * 0.7, 0.45)}rem` }}>{keeper.first}</span>
+                                      <span className="font-mono text-black/70" style={{ fontSize: `${Math.max(fontSize * 0.55, 0.38)}rem` }}>{keeper.team}</span>
+                                    </div>
+                                    {/* Row 3: LAST NAME + (NA) */}
+                                    <div className="flex-1 flex items-center justify-center px-0.5 pb-0.5">
+                                      <span className={`font-bold text-center leading-tight ${colors?.text ?? 'text-black'}`} style={{ fontSize: `${Math.max(fontSize * 1.1, 0.7)}rem` }}>
+                                        {keeper.last}
+                                      </span>
+                                      <sup className="text-blue-600 ml-0.5" style={{ fontSize: `${Math.max(fontSize * 0.45, 0.32)}rem` }}>
+                                        (NA)
+                                      </sup>
                                     </div>
                                   </div>
                                 ) : (
