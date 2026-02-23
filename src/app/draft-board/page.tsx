@@ -223,6 +223,41 @@ const DRAFT_TRADES = [
       { rounds: [6, 9, 13], fromSlotOwner: 'Tyler', toOwner: 'Alex' },
     ],
   },
+  {
+    date: 'Feb 15, 2026',
+    parties: ['Alex', 'Nick'],
+    swaps: [
+      { rounds: [19, 20, 21], fromSlotOwner: 'Mike', toOwner: 'Nick' },  // Mike's slots Alex had
+      { rounds: [21, 22], fromSlotOwner: 'Alex', toOwner: 'Nick' },  // Alex's original slots
+      { rounds: [7, 9], fromSlotOwner: 'Mike', toOwner: 'Alex' },  // Mike's slots Nick had
+      { rounds: [8, 10], fromSlotOwner: 'Nick', toOwner: 'Alex' },  // Nick's original slots
+      { rounds: [11], fromSlotOwner: 'Bob', toOwner: 'Alex' },  // Bob's slot Nick had
+    ],
+  },
+  {
+    date: 'Feb 15, 2026',
+    parties: ['Alex', 'Mike'],
+    swaps: [
+      { rounds: [15], fromSlotOwner: 'Alex', toOwner: 'Mike' },  // Alex's original
+      { rounds: [12], fromSlotOwner: 'Mike', toOwner: 'Alex' },  // Mike's original
+    ],
+  },
+  {
+    date: 'Feb 15, 2026',
+    parties: ['Mike', 'Tyler'],
+    swaps: [
+      { rounds: [21, 22, 23], fromSlotOwner: 'Nick', toOwner: 'Tyler' },  // Nick's slots Mike had
+      { rounds: [7, 8, 10], fromSlotOwner: 'Tyler', toOwner: 'Mike' },  // Tyler's original slots
+    ],
+  },
+  {
+    date: 'Feb 15, 2026',
+    parties: ['Chris', 'Bob'],
+    swaps: [
+      { rounds: [11], fromSlotOwner: 'Chris', toOwner: 'Bob' },  // Chris's original
+      { rounds: [7], fromSlotOwner: 'Bob', toOwner: 'Chris' },  // Bob's original (7.10)
+    ],
+  },
 ]
 
 /**
