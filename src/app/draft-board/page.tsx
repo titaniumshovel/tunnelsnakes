@@ -542,7 +542,7 @@ export default function DraftBoardPage() {
         {/* Snake View — snake-order draft board with trade overrides */}
         {(() => {
           const draftOrder = data.draftOrder
-          const totalRounds = 23
+          const totalRounds = 27
           const teamCount = draftOrder.length // 12
           const tradeMap = buildTradeMap(draftOrder)
 
@@ -550,7 +550,6 @@ export default function DraftBoardPage() {
           const keeperPlacements = new Map<string, SnakeKeeper>()
           for (const [ownerName, keepers] of Object.entries(SNAKE_KEEPERS)) {
             for (const keeper of keepers) {
-              if (keeper.isNA || keeper.round > 23) continue // NA handled separately
               // Find which slots this owner has in this round
               const ownerSlots: number[] = []
               for (let s = 0; s < teamCount; s++) {
@@ -565,18 +564,6 @@ export default function DraftBoardPage() {
               }
             }
           }
-
-          // Collect NA keepers per owner for NA rows
-          const naKeepers: Record<string, SnakeKeeper[]> = {}
-          for (const [ownerName, keepers] of Object.entries(SNAKE_KEEPERS)) {
-            for (const keeper of keepers) {
-              if (keeper.isNA) {
-                if (!naKeepers[ownerName]) naKeepers[ownerName] = []
-                naKeepers[ownerName].push(keeper)
-              }
-            }
-          }
-          const maxNA = Math.max(1, ...Object.values(naKeepers).map(arr => arr.length))
 
           return (
             <div className="overflow-x-auto rounded-lg border border-primary/20">
@@ -606,10 +593,12 @@ export default function DraftBoardPage() {
                           isOdd ? 'bg-background' : 'bg-card/90'
                         }`} style={{ fontSize: `${fontSize * 1.1}rem` }}>
                           <div className="flex items-center justify-center gap-1">
-                            <span>{round}</span>
-                            <span className="text-muted-foreground" style={{ fontSize: `${fontSize * 0.75}rem` }}>
-                              {isOdd ? '→' : '←'}
-                            </span>
+                            <span>{round > 23 ? 'NA' : round}</span>
+                            {round <= 23 && (
+                              <span className="text-muted-foreground" style={{ fontSize: `${fontSize * 0.75}rem` }}>
+                                {isOdd ? '→' : '←'}
+                              </span>
+                            )}
                           </div>
                         </td>
                         {Array.from({ length: teamCount }, (_, colIdx) => {
@@ -655,9 +644,11 @@ export default function DraftBoardPage() {
                                         {keeper.last}
                                       </div>
                                       <div className="text-center text-black/40" style={{ fontSize: `${Math.max(fontSize * 0.4, 0.28)}rem`, lineHeight: 1 }}>
-                                        (K)
+                                        {keeper.isNA ? '(NA)' : keeper.is7th ? '(7th)' : '(K)'}
                                       </div>
                                     </>
+                                  ) : round > 23 ? (
+                                    null
                                   ) : isTraded ? (
                                     <>
                                       <div className="font-mono font-bold text-black text-center" style={{ fontSize: `${Math.max(fontSize * 0.85, 0.55)}rem` }}>
@@ -680,64 +671,7 @@ export default function DraftBoardPage() {
                       </tr>
                     )
                   })}
-                  {/* NA Keeper Rows */}
-                  {maxNA > 0 && (
-                    <>
-                      <tr>
-                        <td colSpan={teamCount + 1} className="p-0">
-                          <div className="border-t-2 border-primary/40" />
-                        </td>
-                      </tr>
-                      {Array.from({ length: maxNA }, (_, naIdx) => (
-                        <tr key={`na-${naIdx}`} className="bg-card/50">
-                          <td className="sticky left-0 z-[5] p-2 text-center font-mono font-bold border-r border-primary/20 bg-card/50"
-                            style={{ fontSize: `${fontSize * 0.9}rem` }}>
-                            <div className="flex items-center justify-center">
-                              <span className="text-muted-foreground">NA</span>
-                            </div>
-                          </td>
-                          {Array.from({ length: teamCount }, (_, colIdx) => {
-                            // NA rows aren't snake-ordered — each column = that slot's owner
-                            const owner = draftOrder[colIdx]
-                            const ownerNA = naKeepers[owner] ?? []
-                            const keeper = ownerNA[naIdx]
-                            const colors = TEAM_COLORS[owner]
-
-                            return (
-                              <td key={colIdx} className="p-0.5 text-center border border-border/10">
-                                {keeper ? (
-                                  <div
-                                    className={`rounded border ${colors?.bg ?? 'bg-muted'} ${colors?.border ?? 'border-border'} h-[60px] min-h-[60px] max-h-[60px] flex flex-col overflow-hidden`}
-                                    style={{ opacity: 0.9 }}
-                                  >
-                                    <div
-                                      className={`text-center font-bold border-b border-black/10 shrink-0 ${colors?.text ?? 'text-foreground'}`}
-                                      style={{ fontSize: `${Math.max(fontSize * 0.72, 0.46)}rem`, lineHeight: 1.4 }}
-                                    >
-                                      {owner}
-                                    </div>
-                                    <div className="flex-1 flex flex-col items-center justify-center">
-                                      <div className="font-bold text-black text-center leading-tight" style={{ fontSize: `${Math.max(fontSize * 0.6, 0.4)}rem` }}>
-                                        {keeper.first}
-                                      </div>
-                                      <div className="font-bold text-black text-center leading-tight" style={{ fontSize: `${Math.max(fontSize * 0.6, 0.4)}rem` }}>
-                                        {keeper.last}
-                                      </div>
-                                      <div className="text-center text-black/40" style={{ fontSize: `${Math.max(fontSize * 0.4, 0.28)}rem`, lineHeight: 1 }}>
-                                        (NA)
-                                      </div>
-                                    </div>
-                                  </div>
-                                ) : (
-                                  <div className="rounded border border-border/20 bg-muted/30 h-[60px]" />
-                                )}
-                              </td>
-                            )
-                          })}
-                        </tr>
-                      ))}
-                    </>
-                  )}
+                  {/* NA rounds (24-27) rendered inline via totalRounds=27 */}
                 </tbody>
               </table>
             </div>
