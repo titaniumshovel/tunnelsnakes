@@ -67,6 +67,32 @@ function getKeeperStatusIcon(status: KeeperInfo['keeperStatus']): string {
 }
 
 /**
+ * Snake board keepers — maps owner → round → player display info.
+ * NA keepers use virtual rounds 24-27 (one per slot).
+ */
+type SnakeKeeper = {
+  player: string      // Display name
+  pos: string         // Primary position
+  year?: string       // e.g. "5yr", "1yr"
+  isNA?: boolean
+  is7th?: boolean
+}
+
+const SNAKE_KEEPERS: Record<string, Record<number, SnakeKeeper>> = {
+  Chris: {
+    3:  { player: 'Yordan Alvarez', pos: 'OF', year: '5yr' },
+    4:  { player: 'Chris Sale', pos: 'SP', year: '2yr' },
+    5:  { player: 'Jackson Merrill', pos: 'OF', year: '2yr' },
+    6:  { player: 'Cody Bellinger', pos: 'OF', year: '3yr' },
+    9:  { player: 'Cal Raleigh', pos: 'C', year: '1yr' },
+    23: { player: 'Eury Pérez', pos: 'SP', year: '1yr' },
+    24: { player: 'Josue De Paula', pos: 'SP', isNA: true },
+    25: { player: 'Lazaro Montes', pos: 'OF', isNA: true },
+    26: { player: 'Ethan Salas', pos: 'C', isNA: true },
+  },
+}
+
+/**
  * 2025 Draft Pick Trades — applied to snake board
  * Each trade swaps pick SLOTS between two owners for specific rounds.
  */
@@ -504,6 +530,39 @@ export default function DraftBoardPage() {
           const teamCount = draftOrder.length // 12
           const tradeMap = buildTradeMap(draftOrder)
 
+          // Build keeper placement map: "round-slotIdx" → SnakeKeeper
+          const keeperPlacements = new Map<string, SnakeKeeper>()
+          for (const [ownerName, rounds] of Object.entries(SNAKE_KEEPERS)) {
+            for (const [roundStr, keeper] of Object.entries(rounds)) {
+              const round = parseInt(roundStr)
+              if (round > 23) continue // NA handled separately
+              // Find which slots this owner has in this round
+              const ownerSlots: number[] = []
+              for (let s = 0; s < teamCount; s++) {
+                const tradeOverride = tradeMap.get(round)?.get(s)
+                const cellOwner = tradeOverride ? tradeOverride.newOwner : draftOrder[s]
+                if (cellOwner === ownerName) ownerSlots.push(s)
+              }
+              if (ownerSlots.length > 0) {
+                // Place keeper in first available slot not already taken by another keeper
+                const slot = ownerSlots.find(s => !keeperPlacements.has(`${round}-${s}`)) ?? ownerSlots[0]
+                keeperPlacements.set(`${round}-${slot}`, keeper)
+              }
+            }
+          }
+
+          // Collect NA keepers per owner for NA rows
+          const naKeepers: Record<string, SnakeKeeper[]> = {}
+          for (const [ownerName, rounds] of Object.entries(SNAKE_KEEPERS)) {
+            for (const [roundStr, keeper] of Object.entries(rounds)) {
+              if (keeper.isNA) {
+                if (!naKeepers[ownerName]) naKeepers[ownerName] = []
+                naKeepers[ownerName].push(keeper)
+              }
+            }
+          }
+          const maxNA = Math.max(1, ...Object.values(naKeepers).map(arr => arr.length))
+
           return (
             <div className="overflow-x-auto rounded-lg border border-primary/20">
               <table className="border-collapse w-full" style={{ minWidth: '960px', fontSize: `${fontSize}rem` }}>
@@ -540,50 +599,69 @@ export default function DraftBoardPage() {
                         </td>
                         {Array.from({ length: teamCount }, (_, colIdx) => {
                           const pickNum = colIdx + 1
-                          // Map column back to original slot index in draftOrder
                           const slotIdx = isOdd ? colIdx : (teamCount - 1 - colIdx)
-
-                          // Check for trade override on this slot
                           const tradeOverride = roundTrades?.get(slotIdx)
                           const owner = tradeOverride ? tradeOverride.newOwner : draftOrder[slotIdx]
                           const isTraded = !!tradeOverride
                           const originalOwner = tradeOverride?.originalOwner ?? ''
                           const colors = TEAM_COLORS[owner]
+                          const keeper = keeperPlacements.get(`${round}-${slotIdx}`)
 
                           return (
                             <td
                               key={colIdx}
                               className="p-0.5 text-center border border-border/10"
-                              title={isTraded
-                                ? `Round ${round}, Pick ${pickNum} — ${owner} (from ${originalOwner})`
-                                : `Round ${round}, Pick ${pickNum} — ${owner}`
+                              title={keeper
+                                ? `${keeper.player} (${keeper.pos}) — ${owner}, Round ${round}`
+                                : isTraded
+                                  ? `Round ${round}, Pick ${pickNum} — ${owner} (from ${originalOwner})`
+                                  : `Round ${round}, Pick ${pickNum} — ${owner}`
                               }
                             >
                               <div
-                                className={`rounded px-1 border ${colors?.bg ?? 'bg-muted'} ${colors?.border ?? 'border-border'} h-[56px] min-h-[56px] max-h-[56px] flex flex-col items-center justify-center ${isTraded ? 'ring-2 ring-black dark:ring-white' : ''}`}
+                                className={`rounded border ${colors?.bg ?? 'bg-muted'} ${colors?.border ?? 'border-border'} min-h-[56px] flex flex-col ${isTraded && !keeper ? 'ring-2 ring-black dark:ring-white' : ''} ${keeper ? 'ring-2 ring-yellow-500' : ''}`}
                                 style={{ opacity: 0.9 }}
                               >
+                                {/* Owner name — sectioned off at top */}
                                 <div
-                                  className={`font-mono font-bold leading-tight ${colors?.text ?? 'text-foreground'}`}
-                                  style={{ fontSize: `${Math.max(fontSize * 1.05, 0.65)}rem` }}
+                                  className={`font-mono font-bold leading-tight text-center px-1 pt-0.5 ${colors?.text ?? 'text-foreground'} ${keeper ? 'border-b border-black/20' : ''}`}
+                                  style={{ fontSize: `${Math.max(fontSize * 0.85, 0.55)}rem` }}
                                 >
                                   {owner}
                                 </div>
-                                {isTraded ? (
-                                  <div
-                                    className="font-mono font-bold leading-tight text-black"
-                                    style={{ fontSize: `${Math.max(fontSize * 0.65, 0.45)}rem` }}
-                                  >
-                                    {round}.{pickNum} ← {originalOwner}
-                                  </div>
-                                ) : (
-                                  <div
-                                    className="font-mono leading-tight text-black/60"
-                                    style={{ fontSize: `${Math.max(fontSize * 0.7, 0.45)}rem` }}
-                                  >
-                                    {round}.{pickNum}
-                                  </div>
-                                )}
+                                {/* Content: keeper player or pick number */}
+                                <div className="flex-1 flex flex-col items-center justify-center px-0.5">
+                                  {keeper ? (
+                                    <>
+                                      <div
+                                        className="font-bold leading-tight text-black text-center"
+                                        style={{ fontSize: `${Math.max(fontSize * 0.7, 0.45)}rem` }}
+                                      >
+                                        {keeper.player}
+                                      </div>
+                                      <div
+                                        className="font-mono text-black/70 leading-tight"
+                                        style={{ fontSize: `${Math.max(fontSize * 0.6, 0.4)}rem` }}
+                                      >
+                                        ({keeper.pos}){keeper.year ? ` ${keeper.year}` : ''}
+                                      </div>
+                                    </>
+                                  ) : isTraded ? (
+                                    <div
+                                      className="font-mono font-bold leading-tight text-black"
+                                      style={{ fontSize: `${Math.max(fontSize * 0.65, 0.45)}rem` }}
+                                    >
+                                      {round}.{pickNum} ← {originalOwner}
+                                    </div>
+                                  ) : (
+                                    <div
+                                      className="font-mono leading-tight text-black/60"
+                                      style={{ fontSize: `${Math.max(fontSize * 0.7, 0.45)}rem` }}
+                                    >
+                                      {round}.{pickNum}
+                                    </div>
+                                  )}
+                                </div>
                               </div>
                             </td>
                           )
@@ -591,6 +669,67 @@ export default function DraftBoardPage() {
                       </tr>
                     )
                   })}
+                  {/* NA Keeper Rows */}
+                  {maxNA > 0 && (
+                    <>
+                      <tr>
+                        <td colSpan={teamCount + 1} className="p-0">
+                          <div className="border-t-2 border-primary/40" />
+                        </td>
+                      </tr>
+                      {Array.from({ length: maxNA }, (_, naIdx) => (
+                        <tr key={`na-${naIdx}`} className="bg-card/50">
+                          <td className="sticky left-0 z-[5] p-2 text-center font-mono font-bold border-r border-primary/20 bg-card/50"
+                            style={{ fontSize: `${fontSize * 0.9}rem` }}>
+                            <div className="flex items-center justify-center">
+                              <span className="text-muted-foreground">NA</span>
+                            </div>
+                          </td>
+                          {Array.from({ length: teamCount }, (_, colIdx) => {
+                            // NA rows aren't snake-ordered — each column = that slot's owner
+                            const owner = draftOrder[colIdx]
+                            const ownerNA = naKeepers[owner] ?? []
+                            const keeper = ownerNA[naIdx]
+                            const colors = TEAM_COLORS[owner]
+
+                            return (
+                              <td key={colIdx} className="p-0.5 text-center border border-border/10">
+                                {keeper ? (
+                                  <div
+                                    className={`rounded border ${colors?.bg ?? 'bg-muted'} ${colors?.border ?? 'border-border'} min-h-[56px] flex flex-col ring-2 ring-blue-400`}
+                                    style={{ opacity: 0.9 }}
+                                  >
+                                    <div
+                                      className={`font-mono font-bold leading-tight text-center px-1 pt-0.5 ${colors?.text ?? 'text-foreground'} border-b border-black/20`}
+                                      style={{ fontSize: `${Math.max(fontSize * 0.85, 0.55)}rem` }}
+                                    >
+                                      {owner}
+                                    </div>
+                                    <div className="flex-1 flex flex-col items-center justify-center px-0.5">
+                                      <div
+                                        className="font-bold leading-tight text-black text-center"
+                                        style={{ fontSize: `${Math.max(fontSize * 0.7, 0.45)}rem` }}
+                                      >
+                                        {keeper.player}
+                                      </div>
+                                      <div
+                                        className="font-mono text-black/70 leading-tight"
+                                        style={{ fontSize: `${Math.max(fontSize * 0.6, 0.4)}rem` }}
+                                      >
+                                        ({keeper.pos}) 🔷
+                                      </div>
+                                    </div>
+                                  </div>
+                                ) : (
+                                  <div className="rounded border border-border/20 bg-muted/30 min-h-[56px]" />
+                                )}
+                              </td>
+                            )
+                          })}
+                        </tr>
+                      ))}
+                    </>
+                  )}
                 </tbody>
               </table>
             </div>
