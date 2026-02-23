@@ -39,7 +39,7 @@ const TEAM_COLORS: Record<string, { bg: string; border: string; text: string; do
   Chris:  { bg: 'bg-amber-100',    border: 'border-amber-400',    text: 'text-amber-800',    dot: 'bg-amber-500' },
   Alex:   { bg: 'bg-orange-100',   border: 'border-orange-400',   text: 'text-orange-800',   dot: 'bg-orange-500' },
   Greasy: { bg: 'bg-cyan-100',     border: 'border-cyan-400',     text: 'text-cyan-800',     dot: 'bg-cyan-500' },
-  Bob:    { bg: 'bg-slate-200',    border: 'border-slate-400',    text: 'text-slate-800',    dot: 'bg-slate-500' },
+  Bob:    { bg: 'bg-slate-200',    border: 'border-slate-400',    text: 'text-slate-600 dark:text-slate-300',    dot: 'bg-slate-500' },
   Mike:   { bg: 'bg-fuchsia-100',  border: 'border-fuchsia-400',  text: 'text-fuchsia-800',  dot: 'bg-fuchsia-500' },
   Sean:   { bg: 'bg-emerald-100',  border: 'border-emerald-400',  text: 'text-emerald-800',  dot: 'bg-emerald-500' },
 }
@@ -813,26 +813,23 @@ export default function DraftBoardPage() {
           <div className="p-4 bg-card rounded-lg border border-primary/20">
             <h3 className="font-bold text-primary mb-3 font-mono text-sm">FORMAT</h3>
             <ul className="text-xs space-y-1.5 font-mono text-muted-foreground">
-              <li>• <span className="text-foreground">Snake draft:</span> Odd rounds pick 1→12, even rounds 12→1</li>
+              <li>• <span className="text-foreground">Snake draft:</span> Odd rounds → (1→12), even rounds ← (12→1)</li>
               <li>• <span className="text-foreground">Rounds 1-23:</span> Regular players</li>
               <li>• <span className="text-amber-700">Rounds 24-27:</span> NA/Minor League only</li>
-              <li>• <span className="text-accent">↔ symbol:</span> Pick was traded once (shows original owner)</li>
-              <li>• <span className="text-yellow-700">Multi-hop path:</span> Pick traded through multiple teams (e.g. Mike→Nick→Alex)</li>
-              <li>• <span className="text-foreground">← arrow:</span> Even rounds flow right-to-left</li>
+              <li>• <span className="text-foreground">← Owner:</span> Pick was traded (shows original owner)</li>
               <li className="pt-2 border-t border-border space-y-1">
-                <div>• <span className="text-green-600">🔒 = Keeper (locked)</span></div>
-                <div>• <span className="text-yellow-600">⭐ = 7th Keeper</span></div>
-                <div>• <span className="text-blue-600">🔷 = NA Keeper (minor league)</span></div>
-                <div>• <span className="text-yellow-600">↕ = Stacked from different round</span></div>
+                <div>• <span className="text-foreground">(K)</span> = Keeper (locked)</div>
+                <div>• <span className="text-foreground">(7th)</span> = 7th Keeper (1st yr minor leaguer)</div>
+                <div>• <span className="text-foreground">(NA)</span> = NA Keeper (minor league)</div>
               </li>
               <li className="pt-2 border-t border-border">• <span className="text-foreground">Hover</span> any cell for full details</li>
             </ul>
           </div>
 
           {/* Trade Log */}
-          <div className="p-4 bg-card rounded-lg border border-primary/20">
-            <h3 className="font-bold text-primary mb-3 font-mono text-sm">📋 TRADES</h3>
-            <ul className="text-xs space-y-2 font-mono text-muted-foreground">
+          <div className="p-4 bg-card rounded-lg border border-primary/20 max-h-[400px] flex flex-col">
+            <h3 className="font-bold text-primary mb-3 font-mono text-sm shrink-0">📋 TRADES</h3>
+            <ul className="text-xs space-y-2 font-mono text-muted-foreground overflow-y-auto">
               {DRAFT_TRADES.map((trade, i) => (
                 <li key={i} className="leading-snug">
                   <span className="text-foreground font-bold">{trade.date}</span>
