@@ -258,6 +258,22 @@ const DRAFT_TRADES = [
       { rounds: [7], fromSlotOwner: 'Bob', toOwner: 'Chris' },  // Bob's original (7.10)
     ],
   },
+  {
+    date: 'Feb 15, 2026',
+    parties: ['Thomas', 'Tyler'],
+    swaps: [
+      { rounds: [4, 6, 8, 23], fromSlotOwner: 'Thomas', toOwner: 'Tyler' },
+      { rounds: [1, 11, 12, 14], fromSlotOwner: 'Tyler', toOwner: 'Thomas' },
+    ],
+  },
+  {
+    date: 'Feb 16, 2026',
+    parties: ['Nick', 'Alex'],
+    swaps: [
+      { rounds: [8], fromSlotOwner: 'Mike', toOwner: 'Alex' },  // Mike's slot Nick had (8.2)
+      { rounds: [22], fromSlotOwner: 'Mike', toOwner: 'Nick' },  // Mike's slot Alex had (22.2)
+    ],
+  },
 ]
 
 /**
