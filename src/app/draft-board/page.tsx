@@ -550,7 +550,7 @@ export default function DraftBoardPage() {
                               }
                             >
                               <div
-                                className={`rounded px-1 border ${colors?.bg ?? 'bg-muted'} ${colors?.border ?? 'border-border'} h-[56px] min-h-[56px] max-h-[56px] overflow-hidden flex flex-col items-center justify-center gap-0.5 ${isTraded ? 'ring-1 ring-black/30 dark:ring-white/30' : ''}`}
+                                className={`rounded px-1 border relative ${colors?.bg ?? 'bg-muted'} ${colors?.border ?? 'border-border'} h-[56px] min-h-[56px] max-h-[56px] flex flex-col items-center justify-center ${isTraded ? 'ring-2 ring-black/40 dark:ring-white/40' : ''}`}
                                 style={{ opacity: 0.9 }}
                               >
                                 <div
@@ -567,10 +567,10 @@ export default function DraftBoardPage() {
                                 </div>
                                 {isTraded && (
                                   <div
-                                    className="font-mono leading-tight text-foreground"
-                                    style={{ fontSize: `${Math.max(fontSize * 0.6, 0.4)}rem` }}
+                                    className="absolute bottom-0 left-0 right-0 bg-black/70 text-white text-center font-mono font-bold leading-none py-[2px]"
+                                    style={{ fontSize: `${Math.max(fontSize * 0.55, 0.4)}rem` }}
                                   >
-                                    ↔ {originalOwner}
+                                    ← {originalOwner}
                                   </div>
                                 )}
                               </div>
