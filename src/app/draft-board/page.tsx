@@ -160,6 +160,14 @@ const SNAKE_KEEPERS: Record<string, SnakeKeeper[]> = {
     { round: 26, first: 'Owen',    last: 'Caissie',    pos: 'OF', team: 'MIA', isNA: true },
     { round: 27, first: 'Andrew',  last: 'Painter',    pos: 'SP', team: 'PHI', isNA: true },
   ],
+  Tyler: [
+    { round: 3,  first: 'Trea',      last: 'Turner',      pos: 'SS', team: 'PHI', year: '6yr' },
+    { round: 8,  first: 'Christian',  last: 'Yelich',      pos: 'OF', team: 'MIL', year: '1yr' },
+    { round: 8,  first: 'Max',        last: 'Fried',       pos: 'SP', team: 'NYY', year: '1yr' },
+    { round: 10, first: 'Hunter',     last: 'Brown',       pos: 'SP', team: 'HOU', year: '1yr' },
+    { round: 13, first: 'Brice',      last: 'Turang',      pos: '2B', team: 'MIL', year: '1yr' },
+    { round: 16, first: 'Taylor',     last: 'Ward',        pos: 'OF', team: 'LAA', year: '1yr' },
+  ],
   Greasy: [
     { round: 1,  first: 'Ronald',  last: 'Acuña Jr.',  pos: 'OF', team: 'ATL', year: '1yr' },
     { round: 2,  first: 'Kyle',    last: 'Tucker',     pos: 'OF', team: 'LAD', year: '6yr' },
@@ -736,10 +744,10 @@ export default function DraftBoardPage() {
                                 <div className="flex-1 flex flex-col items-center justify-center">
                                   {keeper ? (
                                     <>
-                                      <div className="font-bold text-black text-center leading-tight" style={{ fontSize: `${Math.max(fontSize * 0.6, 0.4)}rem` }}>
+                                      <div className="font-bold text-black text-center leading-tight" style={{ fontSize: `${Math.max(fontSize * 0.75, 0.48)}rem` }}>
                                         {keeper.first}
                                       </div>
-                                      <div className="font-bold text-black text-center leading-tight" style={{ fontSize: `${Math.max(fontSize * 0.6, 0.4)}rem` }}>
+                                      <div className="font-bold text-black text-center leading-tight" style={{ fontSize: `${Math.max(fontSize * 0.75, 0.48)}rem` }}>
                                         {keeper.last}
                                       </div>
                                       <div className="text-center text-black/40" style={{ fontSize: `${Math.max(fontSize * 0.4, 0.28)}rem`, lineHeight: 1 }}>
