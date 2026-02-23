@@ -550,7 +550,7 @@ export default function DraftBoardPage() {
                               }
                             >
                               <div
-                                className={`rounded px-1 border relative ${colors?.bg ?? 'bg-muted'} ${colors?.border ?? 'border-border'} h-[56px] min-h-[56px] max-h-[56px] flex flex-col items-center justify-center ${isTraded ? 'ring-2 ring-black/40 dark:ring-white/40' : ''}`}
+                                className={`rounded px-1 border ${colors?.bg ?? 'bg-muted'} ${colors?.border ?? 'border-border'} h-[56px] min-h-[56px] max-h-[56px] flex flex-col items-center justify-center ${isTraded ? 'ring-2 ring-black dark:ring-white' : ''}`}
                                 style={{ opacity: 0.9 }}
                               >
                                 <div
@@ -559,18 +559,19 @@ export default function DraftBoardPage() {
                                 >
                                   {owner}
                                 </div>
-                                <div
-                                  className="font-mono leading-tight text-muted-foreground"
-                                  style={{ fontSize: `${Math.max(fontSize * 0.7, 0.45)}rem` }}
-                                >
-                                  {round}.{pickNum}
-                                </div>
-                                {isTraded && (
+                                {isTraded ? (
                                   <div
-                                    className="absolute bottom-0 left-0 right-0 bg-black/70 text-white text-center font-mono font-bold leading-none py-[2px]"
-                                    style={{ fontSize: `${Math.max(fontSize * 0.55, 0.4)}rem` }}
+                                    className="font-mono font-bold leading-tight text-black dark:text-white"
+                                    style={{ fontSize: `${Math.max(fontSize * 0.65, 0.45)}rem` }}
                                   >
-                                    ← {originalOwner}
+                                    {round}.{pickNum} ← {originalOwner}
+                                  </div>
+                                ) : (
+                                  <div
+                                    className="font-mono leading-tight text-muted-foreground"
+                                    style={{ fontSize: `${Math.max(fontSize * 0.7, 0.45)}rem` }}
+                                  >
+                                    {round}.{pickNum}
                                   </div>
                                 )}
                               </div>
