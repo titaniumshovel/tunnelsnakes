@@ -95,6 +95,17 @@ const SNAKE_KEEPERS: Record<string, SnakeKeeper[]> = {
     { round: 26, first: 'Bryce',  last: 'Eldridge',  pos: '1B', team: 'SF',  isNA: true },
     { round: 27, first: 'Carson', last: 'Benge',     pos: 'OF', team: 'NYM', isNA: true },
   ],
+  Pudge: [
+    { round: 2,  first: 'Cole',       last: 'Ragans',   pos: 'SP', team: 'KC',  year: '1yr' },
+    { round: 3,  first: 'Francisco',  last: 'Lindor',   pos: 'SS', team: 'NYM', year: '4yr' },
+    { round: 4,  first: 'Yoshinobu',  last: 'Yamamoto', pos: 'SP', team: 'LAD', year: '1yr' },
+    { round: 5,  first: 'Wyatt',      last: 'Langford', pos: 'OF', team: 'TEX', year: '2yr' },
+    { round: 6,  first: 'Edwin',      last: 'Díaz',     pos: 'RP', team: 'LAD', year: '1yr' },
+    { round: 21, first: 'Luisangel',  last: 'Acuña',    pos: '2B', team: 'CWS', year: '1yr', is7th: true },
+    { round: 22, first: 'Jesús',      last: 'Luzardo',  pos: 'SP', team: 'PHI', year: '1yr' },
+    { round: 24, first: 'Leo',        last: 'De Vries', pos: 'SS', team: 'OAK', isNA: true },
+    { round: 25, first: 'Noah',       last: 'Schultz',  pos: 'SP', team: 'CWS', isNA: true },
+  ],
   Chris: [
     { round: 3,  first: 'Yordan',  last: 'Alvarez',   pos: 'OF', team: 'HOU', year: '5yr' },
     { round: 4,  first: 'Chris',   last: 'Sale',      pos: 'SP', team: 'ATL', year: '2yr' },
