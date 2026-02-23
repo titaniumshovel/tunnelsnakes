@@ -626,8 +626,8 @@ export default function DraftBoardPage() {
                               >
                                 {/* Row 1: Owner name — always present, always the same */}
                                 <div
-                                  className={`text-center border-b border-black/10 shrink-0 ${colors?.text ?? 'text-foreground'}`}
-                                  style={{ fontSize: `${Math.max(fontSize * 0.6, 0.4)}rem`, lineHeight: 1.4 }}
+                                  className={`text-center font-bold border-b border-black/10 shrink-0 ${colors?.text ?? 'text-foreground'}`}
+                                  style={{ fontSize: `${Math.max(fontSize * 0.72, 0.46)}rem`, lineHeight: 1.4 }}
                                 >
                                   {owner}
                                 </div>
@@ -698,8 +698,8 @@ export default function DraftBoardPage() {
                                     style={{ opacity: 0.9 }}
                                   >
                                     <div
-                                      className={`text-center border-b border-black/10 shrink-0 ${colors?.text ?? 'text-foreground'}`}
-                                      style={{ fontSize: `${Math.max(fontSize * 0.6, 0.4)}rem`, lineHeight: 1.4 }}
+                                      className={`text-center font-bold border-b border-black/10 shrink-0 ${colors?.text ?? 'text-foreground'}`}
+                                      style={{ fontSize: `${Math.max(fontSize * 0.72, 0.46)}rem`, lineHeight: 1.4 }}
                                     >
                                       {owner}
                                     </div>
