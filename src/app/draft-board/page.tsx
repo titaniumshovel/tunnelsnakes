@@ -75,23 +75,37 @@ type SnakeKeeper = {
   last: string        // Last name
   pos: string         // Primary position (CF, SP, C, etc.)
   team: string        // Team abbreviation (NYY, LAD, etc.)
+  round: number       // Keeper cost round (for NA: virtual round 24+)
   year?: string       // e.g. "5yr", "1yr"
   isNA?: boolean
   is7th?: boolean
 }
 
-const SNAKE_KEEPERS: Record<string, Record<number, SnakeKeeper>> = {
-  Chris: {
-    3:  { first: 'Yordan', last: 'Alvarez', pos: 'OF', team: 'HOU', year: '5yr' },
-    4:  { first: 'Chris', last: 'Sale', pos: 'SP', team: 'ATL', year: '2yr' },
-    5:  { first: 'Jackson', last: 'Merrill', pos: 'CF', team: 'SD', year: '2yr' },
-    6:  { first: 'Cody', last: 'Bellinger', pos: 'OF', team: 'NYY', year: '3yr' },
-    9:  { first: 'Cal', last: 'Raleigh', pos: 'C', team: 'SEA', year: '1yr' },
-    23: { first: 'Eury', last: 'Pérez', pos: 'SP', team: 'MIA', year: '1yr' },
-    24: { first: 'Josue', last: 'De Paula', pos: 'SP', team: 'LAD', isNA: true },
-    25: { first: 'Lazaro', last: 'Montes', pos: 'OF', team: 'SEA', isNA: true },
-    26: { first: 'Ethan', last: 'Salas', pos: 'C', team: 'SD', isNA: true },
-  },
+const SNAKE_KEEPERS: Record<string, SnakeKeeper[]> = {
+  Alex: [
+    { round: 2,  first: 'Kyle',   last: 'Schwarber', pos: 'OF', team: 'PHI', year: '2yr' },
+    { round: 3,  first: 'Matt',   last: 'Olson',     pos: '1B', team: 'ATL', year: '5yr' },
+    { round: 5,  first: 'Roman',  last: 'Anthony',   pos: 'OF', team: 'BOS', year: '1yr', is7th: true },
+    { round: 12, first: 'Bryan',  last: 'Woo',       pos: 'SP', team: 'SEA', year: '1yr' },
+    { round: 19, first: 'Byron',  last: 'Buxton',    pos: 'OF', team: 'MIN', year: '1yr' },
+    { round: 23, first: 'Chase',  last: 'Burns',     pos: 'SP', team: 'CIN', year: '1yr' },
+    { round: 23, first: 'Mike',   last: 'Trout',     pos: 'OF', team: 'LAA', year: '1yr' },
+    { round: 24, first: 'Max',    last: 'Clark',     pos: 'OF', team: 'DET', isNA: true },
+    { round: 25, first: 'Colt',   last: 'Emerson',   pos: 'SS', team: 'SEA', isNA: true },
+    { round: 26, first: 'Bryce',  last: 'Eldridge',  pos: '1B', team: 'SF',  isNA: true },
+    { round: 27, first: 'Carson', last: 'Benge',     pos: 'OF', team: 'NYM', isNA: true },
+  ],
+  Chris: [
+    { round: 3,  first: 'Yordan',  last: 'Alvarez',   pos: 'OF', team: 'HOU', year: '5yr' },
+    { round: 4,  first: 'Chris',   last: 'Sale',      pos: 'SP', team: 'ATL', year: '2yr' },
+    { round: 5,  first: 'Jackson', last: 'Merrill',   pos: 'CF', team: 'SD',  year: '2yr' },
+    { round: 6,  first: 'Cody',    last: 'Bellinger', pos: 'OF', team: 'NYY', year: '3yr' },
+    { round: 9,  first: 'Cal',     last: 'Raleigh',   pos: 'C',  team: 'SEA', year: '1yr' },
+    { round: 23, first: 'Eury',    last: 'Pérez',     pos: 'SP', team: 'MIA', year: '1yr' },
+    { round: 24, first: 'Josue',   last: 'De Paula',  pos: 'SP', team: 'LAD', isNA: true },
+    { round: 25, first: 'Lazaro',  last: 'Montes',    pos: 'OF', team: 'SEA', isNA: true },
+    { round: 26, first: 'Ethan',   last: 'Salas',     pos: 'C',  team: 'SD',  isNA: true },
+  ],
 }
 
 /**
@@ -534,29 +548,28 @@ export default function DraftBoardPage() {
 
           // Build keeper placement map: "round-slotIdx" → SnakeKeeper
           const keeperPlacements = new Map<string, SnakeKeeper>()
-          for (const [ownerName, rounds] of Object.entries(SNAKE_KEEPERS)) {
-            for (const [roundStr, keeper] of Object.entries(rounds)) {
-              const round = parseInt(roundStr)
-              if (round > 23) continue // NA handled separately
+          for (const [ownerName, keepers] of Object.entries(SNAKE_KEEPERS)) {
+            for (const keeper of keepers) {
+              if (keeper.isNA || keeper.round > 23) continue // NA handled separately
               // Find which slots this owner has in this round
               const ownerSlots: number[] = []
               for (let s = 0; s < teamCount; s++) {
-                const tradeOverride = tradeMap.get(round)?.get(s)
+                const tradeOverride = tradeMap.get(keeper.round)?.get(s)
                 const cellOwner = tradeOverride ? tradeOverride.newOwner : draftOrder[s]
                 if (cellOwner === ownerName) ownerSlots.push(s)
               }
               if (ownerSlots.length > 0) {
                 // Place keeper in first available slot not already taken by another keeper
-                const slot = ownerSlots.find(s => !keeperPlacements.has(`${round}-${s}`)) ?? ownerSlots[0]
-                keeperPlacements.set(`${round}-${slot}`, keeper)
+                const slot = ownerSlots.find(s => !keeperPlacements.has(`${keeper.round}-${s}`)) ?? ownerSlots[0]
+                keeperPlacements.set(`${keeper.round}-${slot}`, keeper)
               }
             }
           }
 
           // Collect NA keepers per owner for NA rows
           const naKeepers: Record<string, SnakeKeeper[]> = {}
-          for (const [ownerName, rounds] of Object.entries(SNAKE_KEEPERS)) {
-            for (const [roundStr, keeper] of Object.entries(rounds)) {
+          for (const [ownerName, keepers] of Object.entries(SNAKE_KEEPERS)) {
+            for (const keeper of keepers) {
               if (keeper.isNA) {
                 if (!naKeepers[ownerName]) naKeepers[ownerName] = []
                 naKeepers[ownerName].push(keeper)
