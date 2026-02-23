@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Calendar, Users, ChevronDown, ChevronUp } from 'lucide-react'
+import { Calendar, Users } from 'lucide-react'
 import draftBoardData from '@/data/draft-board.json'
 import { MANAGERS } from '@/data/managers'
 
@@ -66,8 +66,65 @@ function getKeeperStatusIcon(status: KeeperInfo['keeperStatus']): string {
   }
 }
 
+/**
+ * 2025 Draft Pick Trades — applied to snake board
+ * Each trade swaps pick SLOTS between two owners for specific rounds.
+ */
+const DRAFT_TRADES = [
+  {
+    date: 'Apr 26, 2025',
+    parties: ['Alex', 'Mike'],
+    swaps: [
+      { rounds: [6, 7, 8, 9, 10, 11], fromSlotOwner: 'Alex', toOwner: 'Mike' },
+      { rounds: [18, 19, 20, 21, 22, 23], fromSlotOwner: 'Mike', toOwner: 'Alex' },
+    ],
+  },
+  {
+    date: 'May 8, 2025',
+    parties: ['Bob', 'Chris'],
+    swaps: [
+      { rounds: [12], fromSlotOwner: 'Chris', toOwner: 'Bob' },
+      { rounds: [22], fromSlotOwner: 'Bob', toOwner: 'Chris' },
+    ],
+  },
+  {
+    date: 'Jun 1, 2025',
+    parties: ['Bob', 'Nick'],
+    swaps: [
+      { rounds: [12], fromSlotOwner: 'Nick', toOwner: 'Bob' },
+      { rounds: [20], fromSlotOwner: 'Bob', toOwner: 'Nick' },
+    ],
+  },
+]
+
+/**
+ * Build trade override map: trades[round][slotIndex] = { newOwner, originalOwner }
+ * slotIndex = index in draftOrder array (0-based)
+ */
+function buildTradeMap(draftOrder: string[]): Map<number, Map<number, { newOwner: string; originalOwner: string }>> {
+  const tradeMap = new Map<number, Map<number, { newOwner: string; originalOwner: string }>>()
+
+  for (const trade of DRAFT_TRADES) {
+    for (const swap of trade.swaps) {
+      const slotIdx = draftOrder.indexOf(swap.fromSlotOwner)
+      if (slotIdx === -1) continue
+
+      for (const round of swap.rounds) {
+        if (!tradeMap.has(round)) {
+          tradeMap.set(round, new Map())
+        }
+        tradeMap.get(round)!.set(slotIdx, {
+          newOwner: swap.toOwner,
+          originalOwner: swap.fromSlotOwner,
+        })
+      }
+    }
+  }
+
+  return tradeMap
+}
+
 export default function DraftBoardPage() {
-  const [showTrades, setShowTrades] = useState(false)
   const [viewMode, setViewMode] = useState<'board' | 'owner' | 'clicky' | 'snake'>('clicky')
   const [fontSize, setFontSize] = useState(0.75)
   const [keepers, setKeepers] = useState<Map<string, Map<number, KeeperInfo>>>(new Map())
@@ -241,14 +298,6 @@ export default function DraftBoardPage() {
               </button>
             </div>
 
-            {/* Trade Log Toggle */}
-            <button
-              onClick={() => setShowTrades(!showTrades)}
-              className="flex items-center gap-2 text-sm font-mono text-primary hover:text-primary/80 transition-colors"
-            >
-              {showTrades ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
-              {showTrades ? 'Hide' : 'Show'} Trade Log ({data.trades.length} trades)
-            </button>
           </div>
 
           {/* Font Size Controls */}
@@ -270,19 +319,6 @@ export default function DraftBoardPage() {
             </button>
           </div>
         </div>
-
-        {showTrades && (
-          <div className="p-4 bg-card rounded-lg border border-primary/20 max-h-80 overflow-y-auto">
-            <div className="space-y-1.5">
-              {data.trades.map((trade, i) => (
-                <div key={i} className="text-xs font-mono flex gap-2">
-                  <span className="text-muted-foreground shrink-0">[{trade.source === 'yahoo_2025' ? 'IN-SEASON' : 'OFFSEASON'}]</span>
-                  <span className="text-foreground">{trade.description}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
 
         {/* Board View */}
         {viewMode === 'board' && (
@@ -718,11 +754,12 @@ export default function DraftBoardPage() {
           </div>
         )}
 
-        {/* Snake View — blank snake-order draft board (Clicky Draft style) */}
+        {/* Snake View — snake-order draft board with trade overrides */}
         {viewMode === 'snake' && (() => {
-          const draftOrder = data.draftOrder // [Pudge, Nick, Web, Tom, Tyler, Thomas, Chris, Alex, Greasy, Bob, Mike, Sean]
+          const draftOrder = data.draftOrder
           const totalRounds = 23
           const teamCount = draftOrder.length // 12
+          const tradeMap = buildTradeMap(draftOrder)
 
           return (
             <div className="overflow-x-auto rounded-lg border border-primary/20">
@@ -744,8 +781,7 @@ export default function DraftBoardPage() {
                 <tbody>
                   {Array.from({ length: totalRounds }, (_, i) => i + 1).map((round) => {
                     const isOdd = round % 2 === 1
-                    // Odd rounds: draftOrder as-is (Pudge first). Even rounds: reversed (Sean first).
-                    const roundOrder = isOdd ? [...draftOrder] : [...draftOrder].reverse()
+                    const roundTrades = tradeMap.get(round)
 
                     return (
                       <tr key={round} className="hover:bg-primary/5 transition-colors">
@@ -759,18 +795,29 @@ export default function DraftBoardPage() {
                             </span>
                           </div>
                         </td>
-                        {roundOrder.map((owner, pickIdx) => {
-                          const pickNum = pickIdx + 1
+                        {Array.from({ length: teamCount }, (_, colIdx) => {
+                          const pickNum = colIdx + 1
+                          // Map column back to original slot index in draftOrder
+                          const slotIdx = isOdd ? colIdx : (teamCount - 1 - colIdx)
+
+                          // Check for trade override on this slot
+                          const tradeOverride = roundTrades?.get(slotIdx)
+                          const owner = tradeOverride ? tradeOverride.newOwner : draftOrder[slotIdx]
+                          const isTraded = !!tradeOverride
+                          const originalOwner = tradeOverride?.originalOwner ?? ''
                           const colors = TEAM_COLORS[owner]
 
                           return (
                             <td
-                              key={pickIdx}
+                              key={colIdx}
                               className="p-0.5 text-center border border-border/10"
-                              title={`Round ${round}, Pick ${pickNum} — ${owner}`}
+                              title={isTraded
+                                ? `Round ${round}, Pick ${pickNum} — ${owner} (from ${originalOwner})`
+                                : `Round ${round}, Pick ${pickNum} — ${owner}`
+                              }
                             >
                               <div
-                                className={`rounded px-1 py-2 border ${colors?.bg ?? 'bg-muted'} ${colors?.border ?? 'border-border'} min-h-[48px] flex flex-col items-center justify-center gap-0.5`}
+                                className={`rounded px-1 py-2 border ${colors?.bg ?? 'bg-muted'} ${colors?.border ?? 'border-border'} min-h-[48px] flex flex-col items-center justify-center gap-0.5 ${isTraded ? 'ring-1 ring-accent/40' : ''}`}
                                 style={{ opacity: 0.9 }}
                               >
                                 <div
@@ -785,6 +832,14 @@ export default function DraftBoardPage() {
                                 >
                                   {round}.{pickNum}
                                 </div>
+                                {isTraded && (
+                                  <div
+                                    className="font-mono leading-tight text-accent"
+                                    style={{ fontSize: `${Math.max(fontSize * 0.6, 0.4)}rem` }}
+                                  >
+                                    ↔ {originalOwner}
+                                  </div>
+                                )}
                               </div>
                             </td>
                           )
@@ -799,7 +854,7 @@ export default function DraftBoardPage() {
         })()}
 
         {/* Legend & Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {/* Team Legend */}
           <div className="p-4 bg-card rounded-lg border border-primary/20">
             <h3 className="font-bold text-primary mb-3 font-mono text-sm">TEAMS</h3>
@@ -808,9 +863,6 @@ export default function DraftBoardPage() {
                 const colors = TEAM_COLORS[team]
                 const pickCount = Object.values(data.picks).reduce((acc, round) =>
                   acc + (round as DraftPick[]).filter(p => p.currentOwner === team).length, 0
-                )
-                const tradedIn = Object.values(data.picks).reduce((acc, round) =>
-                  acc + (round as DraftPick[]).filter(p => p.currentOwner === team && p.traded).length, 0
                 )
                 return (
                   <div key={team} className={`flex items-center gap-1.5 rounded px-2 py-1 ${colors?.bg} ${colors?.border} border`}>
@@ -840,6 +892,35 @@ export default function DraftBoardPage() {
                 <div>• <span className="text-yellow-600">↕ = Stacked from different round</span></div>
               </li>
               <li className="pt-2 border-t border-border">• <span className="text-foreground">Hover</span> any cell for full details</li>
+            </ul>
+          </div>
+
+          {/* Trade Log */}
+          <div className="p-4 bg-card rounded-lg border border-primary/20">
+            <h3 className="font-bold text-primary mb-3 font-mono text-sm">📋 TRADES</h3>
+            <ul className="text-xs space-y-2 font-mono text-muted-foreground">
+              {DRAFT_TRADES.map((trade, i) => (
+                <li key={i} className="leading-snug">
+                  <span className="text-foreground font-bold">{trade.date}</span>
+                  {' — '}
+                  <span className={TEAM_COLORS[trade.parties[0]]?.text}>{trade.parties[0]}</span>
+                  {' ↔ '}
+                  <span className={TEAM_COLORS[trade.parties[1]]?.text}>{trade.parties[1]}</span>
+                  <div className="mt-0.5 pl-2 text-muted-foreground">
+                    {trade.swaps.map((swap, j) => {
+                      const rounds = swap.rounds
+                      const rangeStr = rounds.length > 1 ? `Rd ${rounds[0]}-${rounds[rounds.length - 1]}` : `Rd ${rounds[0]}`
+                      return (
+                        <div key={j}>
+                          <span className={TEAM_COLORS[swap.toOwner]?.text}>{swap.toOwner}</span>
+                          {' gets '}
+                          {rangeStr}
+                        </div>
+                      )
+                    })}
+                  </div>
+                </li>
+              ))}
             </ul>
           </div>
         </div>
