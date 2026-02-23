@@ -673,7 +673,7 @@ export default function DraftBoardPage() {
                               ) : (
                                 /* === NON-KEEPER CELL — owner + pick number === */
                                 <div
-                                  className={`rounded px-1 border ${colors?.bg ?? 'bg-muted'} ${colors?.border ?? 'border-border'} h-[56px] min-h-[56px] max-h-[56px] flex flex-col items-center justify-center ${isTraded ? 'ring-2 ring-black dark:ring-white' : ''}`}
+                                  className={`rounded px-1 border ${colors?.bg ?? 'bg-muted'} ${colors?.border ?? 'border-border'} h-[56px] min-h-[56px] max-h-[56px] flex flex-col items-center justify-center ${isTraded ? 'ring-2 ring-black' : ''}`}
                                   style={{ opacity: 0.9 }}
                                 >
                                   <div
