@@ -621,51 +621,40 @@ export default function DraftBoardPage() {
                               }
                             >
                               <div
-                                className={`rounded border ${colors?.bg ?? 'bg-muted'} ${colors?.border ?? 'border-border'} h-[56px] min-h-[56px] max-h-[56px] flex flex-col overflow-hidden`}
+                                className={`rounded border ${colors?.bg ?? 'bg-muted'} ${colors?.border ?? 'border-border'} h-[60px] min-h-[60px] max-h-[60px] flex flex-col overflow-hidden`}
                                 style={{ opacity: 0.9 }}
                               >
-                                {keeper ? (
-                                  <>
-                                    {/* Row 1: Owner name (small, centered, with divider) */}
-                                    <div
-                                      className={`text-center border-b border-black/15 px-1 ${colors?.text ?? 'text-foreground'}`}
-                                      style={{ fontSize: `${Math.max(fontSize * 0.55, 0.38)}rem`, lineHeight: 1.3 }}
-                                    >
-                                      {owner}
-                                    </div>
-                                    {/* Row 2: POS | First Name | TEAM */}
-                                    <div className="flex items-center justify-between px-0.5" style={{ lineHeight: 1.1 }}>
-                                      <span className="font-mono text-black/60" style={{ fontSize: `${Math.max(fontSize * 0.45, 0.33)}rem` }}>{keeper.pos}</span>
-                                      <span className="font-bold text-black" style={{ fontSize: `${Math.max(fontSize * 0.6, 0.4)}rem` }}>{keeper.first}</span>
-                                      <span className="font-mono text-black/60" style={{ fontSize: `${Math.max(fontSize * 0.45, 0.33)}rem` }}>{keeper.team}</span>
-                                    </div>
-                                    {/* Row 3: Last Name (same size/color as first) + (K) */}
-                                    <div className="flex-1 flex items-center justify-center px-0.5">
-                                      <span className="font-bold text-black text-center leading-tight" style={{ fontSize: `${Math.max(fontSize * 0.6, 0.4)}rem` }}>
-                                        {keeper.last}
-                                      </span>
-                                      <sup className="text-black/50 ml-0.5" style={{ fontSize: `${Math.max(fontSize * 0.4, 0.28)}rem` }}>(K)</sup>
-                                    </div>
-                                  </>
-                                ) : (
-                                  <>
-                                    <div
-                                      className={`font-mono font-bold leading-tight text-center pt-1 ${colors?.text ?? 'text-foreground'}`}
-                                      style={{ fontSize: `${Math.max(fontSize * 1.05, 0.65)}rem` }}
-                                    >
-                                      {owner}
-                                    </div>
-                                    {isTraded ? (
-                                      <div className="font-mono font-bold leading-tight text-black text-center" style={{ fontSize: `${Math.max(fontSize * 0.65, 0.45)}rem` }}>
-                                        {round}.{pickNum} ← {originalOwner}
+                                {/* Row 1: Owner name — always present, always the same */}
+                                <div
+                                  className={`text-center border-b border-black/10 shrink-0 ${colors?.text ?? 'text-foreground'}`}
+                                  style={{ fontSize: `${Math.max(fontSize * 0.6, 0.4)}rem`, lineHeight: 1.4 }}
+                                >
+                                  {owner}
+                                </div>
+                                {/* Row 2: Content area */}
+                                <div className="flex-1 flex flex-col items-center justify-center">
+                                  {keeper ? (
+                                    <>
+                                      <div className="flex items-center justify-between w-full px-0.5" style={{ lineHeight: 1.1 }}>
+                                        <span className="font-mono text-black/50" style={{ fontSize: `${Math.max(fontSize * 0.45, 0.32)}rem` }}>{keeper.pos}</span>
+                                        <span className="font-bold text-black" style={{ fontSize: `${Math.max(fontSize * 0.6, 0.4)}rem` }}>{keeper.first}</span>
+                                        <span className="font-mono text-black/50" style={{ fontSize: `${Math.max(fontSize * 0.45, 0.32)}rem` }}>{keeper.team}</span>
                                       </div>
-                                    ) : (
-                                      <div className="font-mono leading-tight text-black/60 text-center" style={{ fontSize: `${Math.max(fontSize * 0.7, 0.45)}rem` }}>
-                                        {round}.{pickNum}
+                                      <div className="flex items-center justify-center">
+                                        <span className="font-bold text-black" style={{ fontSize: `${Math.max(fontSize * 0.6, 0.4)}rem` }}>{keeper.last}</span>
+                                        <sup className="text-black/40 ml-0.5" style={{ fontSize: `${Math.max(fontSize * 0.38, 0.26)}rem` }}>(K)</sup>
                                       </div>
-                                    )}
-                                  </>
-                                )}
+                                    </>
+                                  ) : isTraded ? (
+                                    <div className="font-mono font-bold leading-tight text-black text-center" style={{ fontSize: `${Math.max(fontSize * 0.65, 0.45)}rem` }}>
+                                      {round}.{pickNum} ← {originalOwner}
+                                    </div>
+                                  ) : (
+                                    <div className="font-mono text-black/50 text-center" style={{ fontSize: `${Math.max(fontSize * 0.7, 0.45)}rem` }}>
+                                      {round}.{pickNum}
+                                    </div>
+                                  )}
+                                </div>
                               </div>
                             </td>
                           )
@@ -700,29 +689,29 @@ export default function DraftBoardPage() {
                               <td key={colIdx} className="p-0.5 text-center border border-border/10">
                                 {keeper ? (
                                   <div
-                                    className={`rounded border ${colors?.bg ?? 'bg-muted'} ${colors?.border ?? 'border-border'} h-[56px] min-h-[56px] max-h-[56px] flex flex-col overflow-hidden`}
+                                    className={`rounded border ${colors?.bg ?? 'bg-muted'} ${colors?.border ?? 'border-border'} h-[60px] min-h-[60px] max-h-[60px] flex flex-col overflow-hidden`}
                                     style={{ opacity: 0.9 }}
                                   >
                                     <div
-                                      className={`text-center border-b border-black/15 px-1 ${colors?.text ?? 'text-foreground'}`}
-                                      style={{ fontSize: `${Math.max(fontSize * 0.55, 0.38)}rem`, lineHeight: 1.3 }}
+                                      className={`text-center border-b border-black/10 shrink-0 ${colors?.text ?? 'text-foreground'}`}
+                                      style={{ fontSize: `${Math.max(fontSize * 0.6, 0.4)}rem`, lineHeight: 1.4 }}
                                     >
                                       {owner}
                                     </div>
-                                    <div className="flex items-center justify-between px-0.5" style={{ lineHeight: 1.1 }}>
-                                      <span className="font-mono text-black/60" style={{ fontSize: `${Math.max(fontSize * 0.45, 0.33)}rem` }}>{keeper.pos}</span>
-                                      <span className="font-bold text-black" style={{ fontSize: `${Math.max(fontSize * 0.6, 0.4)}rem` }}>{keeper.first}</span>
-                                      <span className="font-mono text-black/60" style={{ fontSize: `${Math.max(fontSize * 0.45, 0.33)}rem` }}>{keeper.team}</span>
-                                    </div>
-                                    <div className="flex-1 flex items-center justify-center px-0.5">
-                                      <span className="font-bold text-black text-center leading-tight" style={{ fontSize: `${Math.max(fontSize * 0.6, 0.4)}rem` }}>
-                                        {keeper.last}
-                                      </span>
-                                      <sup className="text-blue-600 ml-0.5" style={{ fontSize: `${Math.max(fontSize * 0.4, 0.28)}rem` }}>(NA)</sup>
+                                    <div className="flex-1 flex flex-col items-center justify-center">
+                                      <div className="flex items-center justify-between w-full px-0.5" style={{ lineHeight: 1.1 }}>
+                                        <span className="font-mono text-black/50" style={{ fontSize: `${Math.max(fontSize * 0.45, 0.32)}rem` }}>{keeper.pos}</span>
+                                        <span className="font-bold text-black" style={{ fontSize: `${Math.max(fontSize * 0.6, 0.4)}rem` }}>{keeper.first}</span>
+                                        <span className="font-mono text-black/50" style={{ fontSize: `${Math.max(fontSize * 0.45, 0.32)}rem` }}>{keeper.team}</span>
+                                      </div>
+                                      <div className="flex items-center justify-center">
+                                        <span className="font-bold text-black" style={{ fontSize: `${Math.max(fontSize * 0.6, 0.4)}rem` }}>{keeper.last}</span>
+                                        <sup className="text-black/40 ml-0.5" style={{ fontSize: `${Math.max(fontSize * 0.38, 0.26)}rem` }}>(NA)</sup>
+                                      </div>
                                     </div>
                                   </div>
                                 ) : (
-                                  <div className="rounded border border-border/20 bg-muted/30 min-h-[56px]" />
+                                  <div className="rounded border border-border/20 bg-muted/30 h-[60px]" />
                                 )}
                               </td>
                             )
