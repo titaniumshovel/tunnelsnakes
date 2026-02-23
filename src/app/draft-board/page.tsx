@@ -561,14 +561,14 @@ export default function DraftBoardPage() {
                                 </div>
                                 {isTraded ? (
                                   <div
-                                    className="font-mono font-bold leading-tight text-black dark:text-white"
+                                    className="font-mono font-bold leading-tight text-black"
                                     style={{ fontSize: `${Math.max(fontSize * 0.65, 0.45)}rem` }}
                                   >
                                     {round}.{pickNum} ← {originalOwner}
                                   </div>
                                 ) : (
                                   <div
-                                    className="font-mono leading-tight text-muted-foreground"
+                                    className="font-mono leading-tight text-black/60"
                                     style={{ fontSize: `${Math.max(fontSize * 0.7, 0.45)}rem` }}
                                   >
                                     {round}.{pickNum}
