@@ -95,6 +95,23 @@ const SNAKE_KEEPERS: Record<string, SnakeKeeper[]> = {
     { round: 26, first: 'Bryce',  last: 'Eldridge',  pos: '1B', team: 'SF',  isNA: true },
     { round: 27, first: 'Carson', last: 'Benge',     pos: 'OF', team: 'NYM', isNA: true },
   ],
+  Mike: [
+    { round: 1,  first: 'Shohei',   last: 'Ohtani',          pos: 'DH', team: 'LAD', year: '1yr' },
+    { round: 2,  first: 'Juan',     last: 'Soto',            pos: 'OF', team: 'NYM', year: '6yr' },
+    { round: 3,  first: 'Junior',   last: 'Caminero',        pos: '3B', team: 'TB',  year: '2yr' },
+    { round: 4,  first: 'Garrett',  last: 'Crochet',         pos: 'SP', team: 'BOS', year: '2yr' },
+    { round: 5,  first: 'Jacob',    last: 'deGrom',          pos: 'SP', team: 'TEX', year: '2yr' },
+    { round: 10, first: 'Jacob',    last: 'Misiorowski',     pos: 'SP', team: 'MIL', year: '1yr', is7th: true },
+    { round: 11, first: 'Pete',     last: 'Crow-Armstrong',  pos: 'OF', team: 'CHC', year: '1yr' },
+    { round: 24, first: 'Payton',   last: 'Tolle',           pos: 'SP', team: 'BOS', isNA: true },
+    { round: 25, first: 'Jonah',    last: 'Tong',            pos: 'SP', team: 'NYM', isNA: true },
+    { round: 26, first: 'Parker',   last: 'Messick',         pos: 'SP', team: 'CLE', isNA: true },
+    { round: 27, first: 'Nolan',    last: 'McLean',          pos: 'SP', team: 'NYM', isNA: true },
+  ],
+  Thomas: [
+    { round: 17, first: 'Nick',     last: 'Pivetta',         pos: 'SP', team: 'SD',  year: '1yr' },
+    { round: 23, first: 'Yandy',    last: 'Díaz',            pos: '1B', team: 'TB',  year: '1yr' },
+  ],
   Web: [
     { round: 1,  first: 'Fernando', last: 'Tatis Jr.',    pos: 'OF', team: 'SD',  year: '1yr' },
     { round: 2,  first: 'Paul',     last: 'Skenes',       pos: 'SP', team: 'PIT', year: '2yr' },
