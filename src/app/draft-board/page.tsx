@@ -215,6 +215,14 @@ const DRAFT_TRADES = [
       { rounds: [7], fromSlotOwner: 'Sean', toOwner: 'Greasy' },  // Sean's original slot (7.12)
     ],
   },
+  {
+    date: 'Feb 14, 2026',
+    parties: ['Alex', 'Tyler'],
+    swaps: [
+      { rounds: [18, 19, 20], fromSlotOwner: 'Alex', toOwner: 'Tyler' },  // Alex's original slots (18.5, 19.8, 20.5)
+      { rounds: [6, 9, 13], fromSlotOwner: 'Tyler', toOwner: 'Alex' },
+    ],
+  },
 ]
 
 /**
