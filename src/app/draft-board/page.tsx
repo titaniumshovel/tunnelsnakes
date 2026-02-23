@@ -127,6 +127,54 @@ const DRAFT_TRADES = [
       { rounds: [8], fromSlotOwner: 'Sean', toOwner: 'Tom' },
     ],
   },
+  {
+    date: 'Jul 26, 2025',
+    parties: ['Bob', 'Nick'],
+    swaps: [
+      { rounds: [17], fromSlotOwner: 'Nick', toOwner: 'Bob' },
+      { rounds: [11], fromSlotOwner: 'Bob', toOwner: 'Nick' },
+    ],
+  },
+  {
+    date: 'Aug 7, 2025',
+    parties: ['Bob', 'Nick'],
+    swaps: [
+      { rounds: [20], fromSlotOwner: 'Nick', toOwner: 'Bob' },
+      { rounds: [14], fromSlotOwner: 'Bob', toOwner: 'Nick' },
+    ],
+  },
+  {
+    date: 'Aug 7, 2025',
+    parties: ['Chris', 'Pudge'],
+    swaps: [
+      { rounds: [20], fromSlotOwner: 'Pudge', toOwner: 'Chris' },
+      { rounds: [9], fromSlotOwner: 'Chris', toOwner: 'Pudge' },
+    ],
+  },
+  {
+    date: 'Aug 8, 2025',
+    parties: ['Chris', 'Nick'],
+    swaps: [
+      { rounds: [19], fromSlotOwner: 'Nick', toOwner: 'Chris' },
+      { rounds: [10], fromSlotOwner: 'Chris', toOwner: 'Nick' },
+    ],
+  },
+  {
+    date: 'Aug 9, 2025',
+    parties: ['Bob', 'Web'],
+    swaps: [
+      { rounds: [21, 23], fromSlotOwner: 'Web', toOwner: 'Bob' },
+      { rounds: [9, 10], fromSlotOwner: 'Bob', toOwner: 'Web' },
+    ],
+  },
+  {
+    date: 'Aug 9, 2025',
+    parties: ['Web', 'Mike'],
+    swaps: [
+      { rounds: [17], fromSlotOwner: 'Mike', toOwner: 'Web' },
+      { rounds: [20], fromSlotOwner: 'Web', toOwner: 'Mike' },
+    ],
+  },
 ]
 
 /**
