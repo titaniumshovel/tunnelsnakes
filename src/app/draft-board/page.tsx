@@ -517,7 +517,7 @@ function buildTradeMap(draftOrder: string[]): Map<number, Map<number, { newOwner
 }
 
 export default function DraftBoardPage() {
-  const [fontSize, setFontSize] = useState(0.75)
+  const [fontSize, setFontSize] = useState(1.0)
   const [keepers, setKeepers] = useState<Map<string, Map<number, KeeperInfo>>>(new Map())
   const [, setKeepersLoading] = useState(true)
   const data = draftBoardData as DraftBoard
@@ -674,14 +674,14 @@ export default function DraftBoardPage() {
 
           return (
             <div className="overflow-x-auto rounded-lg border border-primary/20">
-              <table className="border-collapse w-full" style={{ minWidth: '960px', fontSize: `${fontSize}rem` }}>
+              <table className="border-collapse w-full" style={{ minWidth: '960px', fontSize: `${fontSize}rem`, tableLayout: 'fixed' }}>
                 <thead>
                   <tr className="bg-card">
                     <th className="sticky left-0 z-[5] bg-card p-2 text-center font-mono text-xs text-muted-foreground border-b border-r border-primary/20 w-14">
                       RND
                     </th>
                     {Array.from({ length: teamCount }, (_, i) => (
-                      <th key={i} className="p-2 text-center border-b border-primary/20 min-w-[80px] bg-card">
+                      <th key={i} className="p-2 text-center border-b border-primary/20 bg-card">
                         <span className="font-mono font-bold text-muted-foreground" style={{ fontSize: `${Math.max(fontSize * 0.85, 0.55)}rem` }}>
                           Pick {i + 1}
                         </span>
@@ -755,7 +755,9 @@ export default function DraftBoardPage() {
                                       </div>
                                     </>
                                   ) : round > 23 ? (
-                                    null
+                                    <div className="font-mono font-bold text-black/40 text-center" style={{ fontSize: `${Math.max(fontSize * 0.85, 0.55)}rem` }}>
+                                      {round}.{pickNum}
+                                    </div>
                                   ) : isTraded ? (
                                     <>
                                       <div className="font-mono font-bold text-black text-center" style={{ fontSize: `${Math.max(fontSize * 0.85, 0.55)}rem` }}>
