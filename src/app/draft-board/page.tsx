@@ -1001,7 +1001,7 @@ export default function DraftBoardPage() {
                               <div
                                 className={`rounded border ${colors?.bg ?? 'bg-muted'} ${colors?.border ?? 'border-border'} h-[60px] min-h-[60px] max-h-[60px] flex flex-col overflow-hidden ${
                                   isOnTheClock ? 'ring-2 ring-amber-400 ring-offset-1' : ''
-                                } ${canClick && isEmpty ? 'hover:ring-2 hover:ring-primary/40' : ''} ${canClick && draftPick ? 'hover:ring-2 hover:ring-blue-400/40' : ''}`}
+                                } ${canClick && isEmpty ? 'hover:ring-2 hover:ring-primary/40 hover:shadow-lg hover:shadow-primary/20 hover:brightness-110 transition-all' : ''} ${canClick && draftPick ? 'hover:ring-2 hover:ring-blue-400/40 hover:shadow-lg hover:shadow-blue-400/20 hover:brightness-110 transition-all' : ''}`}
                                 style={{ opacity: 0.9 }}
                               >
                                 {/* Row 1: Owner name */}

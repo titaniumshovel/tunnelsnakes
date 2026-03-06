@@ -205,8 +205,8 @@ export default function DraftPickModal({ cell, draftedNames, ownerColors, onClos
                     <span className="text-xs font-mono text-muted-foreground w-8 text-right shrink-0">
                       #{player.rank}
                     </span>
-                    <div className="flex-1 min-w-0">
-                      <span className="font-semibold text-sm text-foreground">
+                    <div className="flex-1 min-w-0 truncate">
+                      <span className="font-semibold text-sm text-foreground truncate">
                         {player.name}
                       </span>
                       {isDrafted && (
