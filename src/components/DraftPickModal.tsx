@@ -167,8 +167,8 @@ export default function DraftPickModal({ cell, draftedNames, ownerColors, onClos
           </div>
         </div>
 
-        {/* Search */}
-        <div className="p-4 border-b border-primary/10">
+        {/* Search — pinned at top */}
+        <div className="px-4 pt-4 pb-2 shrink-0">
           <div className="relative">
             <input
               ref={inputRef}
@@ -185,9 +185,9 @@ export default function DraftPickModal({ cell, draftedNames, ownerColors, onClos
           </div>
         </div>
 
-        {/* Search Results */}
-        <div className="flex-1 overflow-y-auto min-h-0">
-          {filtered.length > 0 && (
+        {/* Search Results — fixed height scrollable area */}
+        <div className="h-[240px] overflow-y-auto border-y border-primary/10 shrink-0">
+          {filtered.length > 0 ? (
             <div className="divide-y divide-border/50">
               {filtered.map((player) => {
                 const isDrafted = draftedNames.has(player.name)
@@ -196,7 +196,7 @@ export default function DraftPickModal({ cell, draftedNames, ownerColors, onClos
                     key={player.rank}
                     onClick={() => handleSelectPlayer(player)}
                     disabled={isDrafted || saving}
-                    className={`w-full text-left px-4 py-2.5 flex items-center gap-3 transition-colors ${
+                    className={`w-full text-left px-4 py-2 flex items-center gap-3 transition-colors ${
                       isDrafted
                         ? 'opacity-40 cursor-not-allowed bg-muted/50'
                         : 'hover:bg-primary/10 cursor-pointer'
@@ -225,67 +225,67 @@ export default function DraftPickModal({ cell, draftedNames, ownerColors, onClos
                 )
               })}
             </div>
-          )}
-
-          {search.length >= 2 && filtered.length === 0 && (
-            <div className="px-4 py-6 text-center text-sm text-muted-foreground">
+          ) : search.length >= 2 ? (
+            <div className="flex items-center justify-center h-full text-sm text-muted-foreground">
               No ECR players found matching &ldquo;{search}&rdquo;
             </div>
+          ) : (
+            <div className="flex items-center justify-center h-full text-sm text-muted-foreground">
+              Type 2+ characters to search...
+            </div>
           )}
+        </div>
 
-          {/* Manual Entry */}
-          <div className="px-4 py-4 border-t border-primary/10">
-            <p className="text-xs font-mono text-muted-foreground mb-3 text-center">
-              -- Or enter manually --
-            </p>
-            <div className="space-y-2">
+        {/* Manual Entry — pinned at bottom */}
+        <div className="px-4 py-3 shrink-0">
+          <p className="text-xs font-mono text-muted-foreground mb-2 text-center">
+            -- Or enter manually --
+          </p>
+          <div className="space-y-2">
+            <input
+              type="text"
+              value={manualName}
+              onChange={(e) => setManualName(e.target.value)}
+              placeholder="Player name"
+              className="w-full px-3 py-1.5 rounded border border-primary/20 bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/40"
+              disabled={saving}
+            />
+            <div className="flex gap-2">
               <input
                 type="text"
-                value={manualName}
-                onChange={(e) => setManualName(e.target.value)}
-                placeholder="Player name"
-                className="w-full px-3 py-1.5 rounded border border-primary/20 bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/40"
+                value={manualPos}
+                onChange={(e) => setManualPos(e.target.value)}
+                placeholder="Pos (e.g. SS)"
+                className="flex-1 px-3 py-1.5 rounded border border-primary/20 bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/40"
                 disabled={saving}
               />
-              <div className="flex gap-2">
-                <input
-                  type="text"
-                  value={manualPos}
-                  onChange={(e) => setManualPos(e.target.value)}
-                  placeholder="Pos (e.g. SS)"
-                  className="flex-1 px-3 py-1.5 rounded border border-primary/20 bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/40"
-                  disabled={saving}
-                />
-                <input
-                  type="text"
-                  value={manualTeam}
-                  onChange={(e) => setManualTeam(e.target.value)}
-                  placeholder="Team (e.g. NYY)"
-                  className="flex-1 px-3 py-1.5 rounded border border-primary/20 bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/40"
-                  disabled={saving}
-                />
-              </div>
-              <button
-                onClick={handleManualAdd}
-                disabled={!manualName.trim() || saving}
-                className="w-full py-2 rounded-lg bg-primary text-primary-foreground font-bold text-sm hover:bg-primary/90 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-              >
-                {saving ? 'Saving...' : isEdit ? 'Update Pick' : 'Add Player'}
-              </button>
+              <input
+                type="text"
+                value={manualTeam}
+                onChange={(e) => setManualTeam(e.target.value)}
+                placeholder="Team (e.g. NYY)"
+                className="flex-1 px-3 py-1.5 rounded border border-primary/20 bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/40"
+                disabled={saving}
+              />
             </div>
+            <button
+              onClick={handleManualAdd}
+              disabled={!manualName.trim() || saving}
+              className="w-full py-2 rounded-lg bg-primary text-primary-foreground font-bold text-sm hover:bg-primary/90 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+            >
+              {saving ? 'Saving...' : isEdit ? 'Update Pick' : 'Add Player'}
+            </button>
           </div>
 
           {/* Delete button in edit mode */}
           {isEdit && (
-            <div className="px-4 pb-4">
-              <button
-                onClick={handleDelete}
-                disabled={saving}
-                className="w-full py-2 rounded-lg bg-red-600 text-white font-bold text-sm hover:bg-red-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-              >
-                {saving ? 'Removing...' : 'Remove Pick'}
-              </button>
-            </div>
+            <button
+              onClick={handleDelete}
+              disabled={saving}
+              className="w-full mt-2 py-2 rounded-lg bg-red-600 text-white font-bold text-sm hover:bg-red-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+            >
+              {saving ? 'Removing...' : 'Remove Pick'}
+            </button>
           )}
         </div>
       </div>

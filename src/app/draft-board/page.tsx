@@ -1015,43 +1015,43 @@ export default function DraftBoardPage() {
                                 <div className="flex-1 flex flex-col items-center justify-center">
                                   {keeper ? (
                                     <>
-                                      <div className="font-bold text-black dark:text-white text-center leading-tight" style={{ fontSize: `${Math.max(fontSize * 0.75, 0.48)}rem` }}>
+                                      <div className="font-bold text-black text-center leading-tight" style={{ fontSize: `${Math.max(fontSize * 0.75, 0.48)}rem` }}>
                                         {keeper.first}
                                       </div>
-                                      <div className="font-bold text-black dark:text-white text-center leading-tight" style={{ fontSize: `${Math.max(fontSize * 0.75, 0.48)}rem` }}>
+                                      <div className="font-bold text-black text-center leading-tight" style={{ fontSize: `${Math.max(fontSize * 0.75, 0.48)}rem` }}>
                                         {keeper.last}
                                       </div>
-                                      <div className="text-center text-black/40 dark:text-white/40" style={{ fontSize: `${Math.max(fontSize * 0.4, 0.28)}rem`, lineHeight: 1 }}>
+                                      <div className="text-center text-black/40" style={{ fontSize: `${Math.max(fontSize * 0.4, 0.28)}rem`, lineHeight: 1 }}>
                                         {keeper.isNA ? '(NA)' : keeper.is7th ? '(7th)' : '(K)'}
                                       </div>
                                     </>
                                   ) : draftPick && pickNameParts ? (
                                     <>
-                                      <div className="font-bold text-black dark:text-white text-center leading-tight" style={{ fontSize: `${Math.max(fontSize * 0.75, 0.48)}rem` }}>
+                                      <div className="font-bold text-black text-center leading-tight" style={{ fontSize: `${Math.max(fontSize * 0.75, 0.48)}rem` }}>
                                         {pickNameParts.first}
                                       </div>
-                                      <div className="font-bold text-black dark:text-white text-center leading-tight" style={{ fontSize: `${Math.max(fontSize * 0.75, 0.48)}rem` }}>
+                                      <div className="font-bold text-black text-center leading-tight" style={{ fontSize: `${Math.max(fontSize * 0.75, 0.48)}rem` }}>
                                         {pickNameParts.last}
                                       </div>
-                                      <div className="text-center text-black/40 dark:text-white/40" style={{ fontSize: `${Math.max(fontSize * 0.4, 0.28)}rem`, lineHeight: 1 }}>
+                                      <div className="text-center text-black/40" style={{ fontSize: `${Math.max(fontSize * 0.4, 0.28)}rem`, lineHeight: 1 }}>
                                         {draftPick.player_position?.split(',')[0] ?? ''} {draftPick.player_team ?? ''}
                                       </div>
                                     </>
                                   ) : round > 23 ? (
-                                    <div className="font-mono font-bold text-black/40 dark:text-white/40 text-center" style={{ fontSize: `${Math.max(fontSize * 0.85, 0.55)}rem` }}>
+                                    <div className="font-mono font-bold text-black/40 text-center" style={{ fontSize: `${Math.max(fontSize * 0.85, 0.55)}rem` }}>
                                       {round}.{pickNum}
                                     </div>
                                   ) : isTraded ? (
                                     <>
-                                      <div className="font-mono font-bold text-black dark:text-white text-center" style={{ fontSize: `${Math.max(fontSize * 0.85, 0.55)}rem` }}>
+                                      <div className="font-mono font-bold text-black text-center" style={{ fontSize: `${Math.max(fontSize * 0.85, 0.55)}rem` }}>
                                         {round}.{pickNum}
                                       </div>
-                                      <div className="font-mono font-bold text-black dark:text-white text-center" style={{ fontSize: `${Math.max(fontSize * 0.55, 0.38)}rem` }}>
+                                      <div className="font-mono font-bold text-black text-center" style={{ fontSize: `${Math.max(fontSize * 0.55, 0.38)}rem` }}>
                                         ← {originalOwner}
                                       </div>
                                     </>
                                   ) : (
-                                    <div className="font-mono font-bold text-black dark:text-white text-center" style={{ fontSize: `${Math.max(fontSize * 0.85, 0.55)}rem` }}>
+                                    <div className="font-mono font-bold text-black text-center" style={{ fontSize: `${Math.max(fontSize * 0.85, 0.55)}rem` }}>
                                       {round}.{pickNum}
                                     </div>
                                   )}
