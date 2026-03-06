@@ -43,6 +43,7 @@ type DraftPickRecord = {
   player_position?: string
   player_team?: string
   ecr_rank?: number
+  created_at?: string
 }
 
 const TEAM_COLORS: Record<string, { bg: string; border: string; text: string; dot: string }> = {
@@ -539,6 +540,8 @@ export default function DraftBoardPage() {
   const [draftPicks, setDraftPicks] = useState<Map<string, DraftPickRecord>>(new Map())
   const [selectedCell, setSelectedCell] = useState<CellInfo | null>(null)
   const [isCommissioner, setIsCommissioner] = useState(false)
+  const [newPickKeys, setNewPickKeys] = useState<Set<string>>(new Set())
+  const [initialLoadDone, setInitialLoadDone] = useState(false)
   const onTheClockRef = useRef<HTMLTableRowElement>(null)
   const data = draftBoardData as DraftBoard
 
@@ -553,6 +556,7 @@ export default function DraftBoardPage() {
           pickMap.set(`${pick.round}-${pick.slot_index}`, pick)
         }
         setDraftPicks(pickMap)
+        setInitialLoadDone(true)
       }
     } catch (error) {
       console.error('Failed to fetch draft picks:', error)
@@ -671,11 +675,21 @@ export default function DraftBoardPage() {
       .on('postgres_changes', { event: '*', schema: 'public', table: 'draft_picks' }, (payload) => {
         if (payload.eventType === 'INSERT' || payload.eventType === 'UPDATE') {
           const row = payload.new as DraftPickRecord
+          const key = `${row.round}-${row.slot_index}`
           setDraftPicks(prev => {
             const next = new Map(prev)
-            next.set(`${row.round}-${row.slot_index}`, row)
+            next.set(key, row)
             return next
           })
+          // Trigger fade-in animation
+          setNewPickKeys(prev => new Set(prev).add(key))
+          setTimeout(() => {
+            setNewPickKeys(prev => {
+              const next = new Set(prev)
+              next.delete(key)
+              return next
+            })
+          }, 1500)
         } else if (payload.eventType === 'DELETE') {
           const row = payload.old as DraftPickRecord
           setDraftPicks(prev => {
@@ -732,12 +746,18 @@ export default function DraftBoardPage() {
       throw new Error(err.error)
     }
     const saved: DraftPickRecord = await res.json()
+    const key = `${saved.round}-${saved.slot_index}`
     // Optimistic update (realtime will also fire)
     setDraftPicks(prev => {
       const next = new Map(prev)
-      next.set(`${saved.round}-${saved.slot_index}`, saved)
+      next.set(key, saved)
       return next
     })
+    // Trigger fade-in animation
+    setNewPickKeys(prev => new Set(prev).add(key))
+    setTimeout(() => {
+      setNewPickKeys(prev => { const next = new Set(prev); next.delete(key); return next })
+    }, 1500)
     toast.success(`${pick.player_name} drafted by ${pick.owner}`)
   }
 
@@ -854,11 +874,30 @@ export default function DraftBoardPage() {
           </div>
         </div>
 
+        {/* Recent Picks Ticker */}
+        {(() => {
+          const recentPicks = [...draftPicks.values()]
+            .sort((a, b) => new Date(b.created_at ?? 0).getTime() - new Date(a.created_at ?? 0).getTime())
+            .slice(0, 5)
+          if (recentPicks.length === 0) return null
+          return (
+            <div className="rounded-lg border border-primary/10 bg-card/50 px-4 py-2 flex items-center gap-3 overflow-x-auto">
+              <span className="text-xs font-bold text-muted-foreground shrink-0 uppercase tracking-wide">Recent:</span>
+              {recentPicks.map((pick) => (
+                <span key={pick.id} className="shrink-0 text-xs font-mono bg-primary/10 text-foreground rounded px-2 py-0.5 border border-primary/10">
+                  <span className="font-bold">{pick.player_name}</span>
+                  <span className="text-muted-foreground ml-1">R{pick.round} → {pick.owner}</span>
+                </span>
+              ))}
+            </div>
+          )
+        })()}
+
         {/* On the Clock Banner */}
         {onTheClock && (
-          <div className={`rounded-lg border-2 border-amber-400 bg-amber-50 dark:bg-amber-900/30 px-4 py-2.5 flex items-center justify-between animate-pulse`}>
+          <div className="rounded-lg border-2 border-amber-400 bg-amber-50 dark:bg-amber-900/30 px-4 py-2.5 flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <span className="text-lg">🎯</span>
+              <span className="text-lg animate-pulse">🎯</span>
               <div>
                 <span className="font-bold text-amber-800 dark:text-amber-200 text-sm">ON THE CLOCK:</span>
                 <span className="ml-2 font-bold text-foreground text-sm">{onTheClock.owner}</span>
@@ -999,9 +1038,10 @@ export default function DraftBoardPage() {
                               onClick={handleCellClick}
                             >
                               <div
-                                className={`rounded border ${colors?.bg ?? 'bg-muted'} ${colors?.border ?? 'border-border'} h-[60px] min-h-[60px] max-h-[60px] flex flex-col overflow-hidden ${
+                                className={`rounded border ${colors?.bg ?? 'bg-muted'} ${colors?.border ?? 'border-border'} h-[60px] min-h-[60px] max-h-[60px] flex flex-col overflow-hidden transition-all ${
                                   isOnTheClock ? 'ring-2 ring-amber-400 ring-offset-1' : ''
-                                } ${canClick && isEmpty ? 'hover:ring-2 hover:ring-primary/40 hover:shadow-lg hover:shadow-primary/20 hover:brightness-110 transition-all' : ''} ${canClick && draftPick ? 'hover:ring-2 hover:ring-blue-400/40 hover:shadow-lg hover:shadow-blue-400/20 hover:brightness-110 transition-all' : ''}`}
+                                } ${newPickKeys.has(`${round}-${slotIdx}`) ? 'animate-[fadeInScale_0.5s_ease-out]' : ''
+                                } ${canClick && isEmpty ? 'hover:ring-2 hover:ring-primary/40 hover:shadow-lg hover:shadow-primary/20 hover:brightness-110' : ''} ${canClick && draftPick ? 'hover:ring-2 hover:ring-blue-400/40 hover:shadow-lg hover:shadow-blue-400/20 hover:brightness-110' : ''}`}
                                 style={{ opacity: 0.9 }}
                               >
                                 {/* Row 1: Owner name */}
@@ -1015,14 +1055,16 @@ export default function DraftBoardPage() {
                                 <div className="flex-1 flex flex-col items-center justify-center">
                                   {keeper ? (
                                     <>
-                                      <div className="font-bold text-black text-center leading-tight" style={{ fontSize: `${Math.max(fontSize * 0.75, 0.48)}rem` }}>
+                                      <div className="font-bold text-black text-center leading-tight drop-shadow-[0_0_2px_rgba(255,255,255,0.8)]" style={{ fontSize: `${Math.max(fontSize * 0.75, 0.48)}rem` }}>
                                         {keeper.first}
                                       </div>
-                                      <div className="font-bold text-black text-center leading-tight" style={{ fontSize: `${Math.max(fontSize * 0.75, 0.48)}rem` }}>
+                                      <div className="font-bold text-black text-center leading-tight drop-shadow-[0_0_2px_rgba(255,255,255,0.8)]" style={{ fontSize: `${Math.max(fontSize * 0.75, 0.48)}rem` }}>
                                         {keeper.last}
                                       </div>
-                                      <div className="text-center text-black/40" style={{ fontSize: `${Math.max(fontSize * 0.4, 0.28)}rem`, lineHeight: 1 }}>
-                                        {keeper.isNA ? '(NA)' : keeper.is7th ? '(7th)' : '(K)'}
+                                      <div className="text-center" style={{ fontSize: `${Math.max(fontSize * 0.42, 0.3)}rem`, lineHeight: 1 }}>
+                                        <span className={`font-bold px-0.5 rounded ${keeper.isNA ? 'text-purple-700 bg-purple-200/60' : keeper.is7th ? 'text-amber-700 bg-amber-200/60' : 'text-emerald-700 bg-emerald-200/60'}`}>
+                                          {keeper.isNA ? 'NA' : keeper.is7th ? '7th' : 'KEEPER'}
+                                        </span>
                                       </div>
                                     </>
                                   ) : draftPick && pickNameParts ? (
@@ -1033,7 +1075,7 @@ export default function DraftBoardPage() {
                                       <div className="font-bold text-black text-center leading-tight" style={{ fontSize: `${Math.max(fontSize * 0.75, 0.48)}rem` }}>
                                         {pickNameParts.last}
                                       </div>
-                                      <div className="text-center text-black/40" style={{ fontSize: `${Math.max(fontSize * 0.4, 0.28)}rem`, lineHeight: 1 }}>
+                                      <div className="text-center text-black/50" style={{ fontSize: `${Math.max(fontSize * 0.4, 0.28)}rem`, lineHeight: 1 }}>
                                         {draftPick.player_position?.split(',')[0] ?? ''} {draftPick.player_team ?? ''}
                                       </div>
                                     </>
