@@ -1,9 +1,12 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { Calendar, Users } from 'lucide-react'
+import { useState, useEffect, useRef, useCallback } from 'react'
+import { Calendar, Users, RefreshCw } from 'lucide-react'
+import { toast } from 'sonner'
 import draftBoardData from '@/data/draft-board.json'
-import { MANAGERS } from '@/data/managers'
+import { MANAGERS, getManagerByEmail } from '@/data/managers'
+import { createClient } from '@/lib/supabase/client'
+import DraftPickModal, { type CellInfo } from '@/components/DraftPickModal'
 
 type DraftPick = {
   slot: number
@@ -29,6 +32,19 @@ type KeeperInfo = {
   stackedFrom: number | null
 }
 
+type DraftPickRecord = {
+  id: string
+  round: number
+  pick_number: number
+  slot_index: number
+  owner: string
+  original_owner?: string
+  player_name: string
+  player_position?: string
+  player_team?: string
+  ecr_rank?: number
+}
+
 const TEAM_COLORS: Record<string, { bg: string; border: string; text: string; dot: string }> = {
   Pudge:  { bg: 'bg-red-100',      border: 'border-red-400',      text: 'text-red-800',      dot: 'bg-red-500' },
   Nick:   { bg: 'bg-blue-100',     border: 'border-blue-400',     text: 'text-blue-800',     dot: 'bg-blue-500' },
@@ -39,7 +55,7 @@ const TEAM_COLORS: Record<string, { bg: string; border: string; text: string; do
   Chris:  { bg: 'bg-amber-100',    border: 'border-amber-400',    text: 'text-amber-800',    dot: 'bg-amber-500' },
   Alex:   { bg: 'bg-orange-100',   border: 'border-orange-400',   text: 'text-orange-800',   dot: 'bg-orange-500' },
   Greasy: { bg: 'bg-cyan-100',     border: 'border-cyan-400',     text: 'text-cyan-800',     dot: 'bg-cyan-500' },
-  Bob:    { bg: 'bg-slate-200',    border: 'border-slate-400',    text: 'text-slate-600 dark:text-slate-300',    dot: 'bg-slate-500' },
+  Bob:    { bg: 'bg-slate-200',    border: 'border-slate-400',    text: 'text-slate-700 dark:text-slate-200',    dot: 'bg-slate-500' },
   Mike:   { bg: 'bg-fuchsia-100',  border: 'border-fuchsia-400',  text: 'text-fuchsia-800',  dot: 'bg-fuchsia-500' },
   Sean:   { bg: 'bg-emerald-100',  border: 'border-emerald-400',  text: 'text-emerald-800',  dot: 'bg-emerald-500' },
 }
@@ -520,7 +536,47 @@ export default function DraftBoardPage() {
   const [fontSize, setFontSize] = useState(1.0)
   const [keepers, setKeepers] = useState<Map<string, Map<number, KeeperInfo>>>(new Map())
   const [, setKeepersLoading] = useState(true)
+  const [draftPicks, setDraftPicks] = useState<Map<string, DraftPickRecord>>(new Map())
+  const [selectedCell, setSelectedCell] = useState<CellInfo | null>(null)
+  const [isCommissioner, setIsCommissioner] = useState(false)
+  const onTheClockRef = useRef<HTMLTableRowElement>(null)
   const data = draftBoardData as DraftBoard
+
+  // Fetch draft picks
+  const fetchDraftPicks = useCallback(async () => {
+    try {
+      const response = await fetch('/api/draft-picks')
+      if (response.ok) {
+        const picks: DraftPickRecord[] = await response.json()
+        const pickMap = new Map<string, DraftPickRecord>()
+        for (const pick of picks) {
+          pickMap.set(`${pick.round}-${pick.slot_index}`, pick)
+        }
+        setDraftPicks(pickMap)
+      }
+    } catch (error) {
+      console.error('Failed to fetch draft picks:', error)
+    }
+  }, [])
+
+  // Check if current user is commissioner
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const supabase = createClient()
+        const { data: { user } } = await supabase.auth.getUser()
+        if (user?.email) {
+          const manager = getManagerByEmail(user.email)
+          if (manager?.role === 'commissioner') {
+            setIsCommissioner(true)
+          }
+        }
+      } catch {
+        // Not logged in — view-only
+      }
+    }
+    checkAuth()
+  }, [])
 
   // Fetch keeper data on mount
   useEffect(() => {
@@ -529,25 +585,25 @@ export default function DraftBoardPage() {
         const response = await fetch('/api/keepers')
         if (response.ok) {
           const keeperRows = await response.json()
-          
+
           // Build lookup map: displayName → round → KeeperInfo
           // NA keepers go into NA rounds (24-27), not their cost round
           const keeperMap = new Map<string, Map<number, KeeperInfo>>()
-          
+
           // Track NA keeper assignments per owner (rounds 24-27)
           const naCounters = new Map<string, number>()
-          
+
           // First pass: regular + 7th keepers (they use their effective round)
           for (const row of keeperRows) {
             if (!row.keeper_cost_round) continue
             if (!['keeping', 'keeping-7th'].includes(row.keeper_status)) continue
-            
+
             const manager = MANAGERS.find(m => m.yahooTeamKey === row.yahoo_team_key)
             if (!manager) continue
-            
+
             const displayName = manager.displayName
             const effectiveRound = row.stacking?.effective_round ?? row.keeper_cost_round
-            
+
             const keeperInfo: KeeperInfo = {
               playerName: row.players?.full_name ?? 'Unknown Player',
               keeperStatus: row.keeper_status,
@@ -555,29 +611,29 @@ export default function DraftBoardPage() {
               effectiveRound,
               stackedFrom: row.stacking?.stacked_from ?? null
             }
-            
+
             if (!keeperMap.has(displayName)) {
               keeperMap.set(displayName, new Map())
             }
-            
+
             const ownerMap = keeperMap.get(displayName)!
             ownerMap.set(effectiveRound, keeperInfo)
           }
-          
+
           // Second pass: NA keepers → assign to rounds 24-27 sequentially
           for (const row of keeperRows) {
             if (row.keeper_status !== 'keeping-na') continue
-            
+
             const manager = MANAGERS.find(m => m.yahooTeamKey === row.yahoo_team_key)
             if (!manager) continue
-            
+
             const displayName = manager.displayName
             const naIdx = naCounters.get(displayName) ?? 0
             const naRound = 24 + naIdx // NA rounds: 24, 25, 26, 27
             naCounters.set(displayName, naIdx + 1)
-            
+
             if (naRound > 27) continue // Max 4 NA slots
-            
+
             const keeperInfo: KeeperInfo = {
               playerName: row.players?.full_name ?? 'Unknown Player',
               keeperStatus: 'keeping-na',
@@ -585,27 +641,171 @@ export default function DraftBoardPage() {
               effectiveRound: naRound,
               stackedFrom: null
             }
-            
+
             if (!keeperMap.has(displayName)) {
               keeperMap.set(displayName, new Map())
             }
-            
+
             const ownerMap = keeperMap.get(displayName)!
             ownerMap.set(naRound, keeperInfo)
           }
-          
+
           setKeepers(keeperMap)
         }
       } catch (error) {
         console.error('Failed to fetch keepers:', error)
-        // Graceful fallback - just show board without keepers
       } finally {
         setKeepersLoading(false)
       }
     }
-    
+
     fetchKeepers()
-  }, [])
+    fetchDraftPicks()
+  }, [fetchDraftPicks])
+
+  // Supabase Realtime subscription for draft picks
+  useEffect(() => {
+    const supabase = createClient()
+    const channel = supabase
+      .channel('draft_picks_changes')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'draft_picks' }, (payload) => {
+        if (payload.eventType === 'INSERT' || payload.eventType === 'UPDATE') {
+          const row = payload.new as DraftPickRecord
+          setDraftPicks(prev => {
+            const next = new Map(prev)
+            next.set(`${row.round}-${row.slot_index}`, row)
+            return next
+          })
+        } else if (payload.eventType === 'DELETE') {
+          const row = payload.old as DraftPickRecord
+          setDraftPicks(prev => {
+            const next = new Map(prev)
+            next.delete(`${row.round}-${row.slot_index}`)
+            return next
+          })
+        }
+      })
+      .subscribe((status) => {
+        // Re-fetch all picks on reconnect to avoid missed events
+        if (status === 'SUBSCRIBED') {
+          fetchDraftPicks()
+        }
+      })
+
+    return () => { supabase.removeChannel(channel) }
+  }, [fetchDraftPicks])
+
+  // Auto-scroll to on-the-clock row after picks load
+  useEffect(() => {
+    if (onTheClockRef.current) {
+      onTheClockRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    }
+  }, [draftPicks])
+
+  // Build "already drafted" set from keepers + draft picks
+  const draftedNames = new Set<string>()
+  for (const [, keeperList] of Object.entries(SNAKE_KEEPERS)) {
+    for (const k of keeperList) {
+      draftedNames.add(`${k.first} ${k.last}`)
+    }
+  }
+  for (const [, pick] of draftPicks) {
+    draftedNames.add(pick.player_name)
+  }
+
+  // Save / delete handlers for modal
+  const handleSavePick = async (pick: {
+    round: number; pick_number: number; slot_index: number; owner: string;
+    original_owner?: string; player_name: string; player_position?: string;
+    player_team?: string; ecr_rank?: number; id?: string
+  }) => {
+    const isEdit = !!pick.id
+    const method = isEdit ? 'PATCH' : 'POST'
+    const res = await fetch('/api/draft-picks', {
+      method,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(pick),
+    })
+    if (!res.ok) {
+      const err = await res.json()
+      toast.error(err.error || 'Failed to save pick')
+      throw new Error(err.error)
+    }
+    const saved: DraftPickRecord = await res.json()
+    // Optimistic update (realtime will also fire)
+    setDraftPicks(prev => {
+      const next = new Map(prev)
+      next.set(`${saved.round}-${saved.slot_index}`, saved)
+      return next
+    })
+    toast.success(`${pick.player_name} drafted by ${pick.owner}`)
+  }
+
+  const handleDeletePick = async (id: string) => {
+    const res = await fetch('/api/draft-picks', {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id }),
+    })
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({ error: 'Failed to delete' }))
+      toast.error(err.error || 'Failed to delete pick')
+      throw new Error(err.error)
+    }
+    // Optimistic removal — find and remove by id
+    setDraftPicks(prev => {
+      const next = new Map(prev)
+      for (const [key, pick] of next) {
+        if (pick.id === id) { next.delete(key); break }
+      }
+      return next
+    })
+    toast.success('Pick removed')
+  }
+
+  // Compute on-the-clock
+  const computeOnTheClock = () => {
+    const draftOrder = data.draftOrder
+    const teamCount = draftOrder.length
+    const tradeMap = buildTradeMap(draftOrder)
+    // Build keeper placements (same logic as render)
+    const keeperPlacements = new Map<string, boolean>()
+    for (const [ownerName, keeperList] of Object.entries(SNAKE_KEEPERS)) {
+      for (const keeper of keeperList) {
+        const ownerSlots: number[] = []
+        for (let s = 0; s < teamCount; s++) {
+          const tradeOverride = tradeMap.get(keeper.round)?.get(s)
+          const cellOwner = tradeOverride ? tradeOverride.newOwner : draftOrder[s]
+          if (cellOwner === ownerName) ownerSlots.push(s)
+        }
+        if (ownerSlots.length > 0) {
+          const slot = ownerSlots.find(s => !keeperPlacements.has(`${keeper.round}-${s}`)) ?? ownerSlots[0]
+          keeperPlacements.set(`${keeper.round}-${slot}`, true)
+        }
+      }
+    }
+
+    for (let round = 1; round <= 23; round++) {
+      const isOdd = round % 2 === 1
+      for (let colIdx = 0; colIdx < teamCount; colIdx++) {
+        const slotIdx = isOdd ? colIdx : (teamCount - 1 - colIdx)
+        const key = `${round}-${slotIdx}`
+        if (keeperPlacements.has(key)) continue
+        if (draftPicks.has(key)) continue
+        // This is the next empty pick
+        const tradeOverride = tradeMap.get(round)?.get(slotIdx)
+        const owner = tradeOverride ? tradeOverride.newOwner : draftOrder[slotIdx]
+        return { round, colIdx, slotIdx, owner, pickNumber: colIdx + 1 }
+      }
+    }
+    return null // All picks made
+  }
+  const onTheClock = computeOnTheClock()
+
+  // Count picks made
+  const totalKeeperSlots = Object.values(SNAKE_KEEPERS).reduce((acc, list) => acc + list.filter(k => !k.isNA).length, 0)
+  const totalDraftable = 23 * 12 - totalKeeperSlots
+  const picksMade = draftPicks.size
 
   return (
     <main className="min-h-screen bg-background">
@@ -619,6 +819,14 @@ export default function DraftBoardPage() {
             <div className="flex items-center gap-4 text-xs font-mono text-muted-foreground">
               <span className="flex items-center gap-1.5"><Calendar className="h-3.5 w-3.5" /> March 6, 2026</span>
               <span className="flex items-center gap-1.5"><Users className="h-3.5 w-3.5" /> 12 Teams • 27 Rounds</span>
+              <span className="font-bold text-foreground">{picksMade}/{totalDraftable} picks</span>
+              <button
+                onClick={fetchDraftPicks}
+                className="p-1 rounded hover:bg-primary/10 transition-colors"
+                title="Refresh picks"
+              >
+                <RefreshCw className="h-3.5 w-3.5" />
+              </button>
             </div>
           </div>
         </div>
@@ -645,6 +853,34 @@ export default function DraftBoardPage() {
             </button>
           </div>
         </div>
+
+        {/* On the Clock Banner */}
+        {onTheClock && (
+          <div className={`rounded-lg border-2 border-amber-400 bg-amber-50 dark:bg-amber-900/30 px-4 py-2.5 flex items-center justify-between animate-pulse`}>
+            <div className="flex items-center gap-3">
+              <span className="text-lg">🎯</span>
+              <div>
+                <span className="font-bold text-amber-800 dark:text-amber-200 text-sm">ON THE CLOCK:</span>
+                <span className="ml-2 font-bold text-foreground text-sm">{onTheClock.owner}</span>
+                <span className="ml-2 text-xs font-mono text-muted-foreground">
+                  Round {onTheClock.round}, Pick {onTheClock.pickNumber}
+                </span>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Draft Pick Modal */}
+        {selectedCell && (
+          <DraftPickModal
+            cell={selectedCell}
+            draftedNames={draftedNames}
+            ownerColors={TEAM_COLORS[selectedCell.owner] ?? { bg: 'bg-muted', border: 'border-border', text: 'text-foreground' }}
+            onClose={() => setSelectedCell(null)}
+            onSave={handleSavePick}
+            onDelete={handleDeletePick}
+          />
+        )}
 
         {/* Snake View — snake-order draft board with trade overrides */}
         {(() => {
@@ -694,8 +930,10 @@ export default function DraftBoardPage() {
                     const isOdd = round % 2 === 1
                     const roundTrades = tradeMap.get(round)
 
+                    const isOnTheClockRound = onTheClock?.round === round
+
                     return (
-                      <tr key={round} className="hover:bg-primary/5 transition-colors">
+                      <tr key={round} ref={isOnTheClockRound ? onTheClockRef : undefined} className="hover:bg-primary/5 transition-colors">
                         <td className={`sticky left-0 z-[5] p-2 text-center font-mono font-bold border-r border-primary/20 ${
                           isOdd ? 'bg-background' : 'bg-card/90'
                         }`} style={{ fontSize: `${fontSize * 1.1}rem` }}>
@@ -717,23 +955,56 @@ export default function DraftBoardPage() {
                           const originalOwner = tradeOverride?.originalOwner ?? ''
                           const colors = TEAM_COLORS[owner]
                           const keeper = keeperPlacements.get(`${round}-${slotIdx}`)
+                          const draftPick = draftPicks.get(`${round}-${slotIdx}`)
+                          const isOnTheClock = onTheClock?.round === round && onTheClock?.slotIdx === slotIdx
+                          const isEmpty = !keeper && !draftPick && round <= 23
+                          const canClick = isCommissioner && round <= 23 && !keeper
+
+                          const handleCellClick = () => {
+                            if (!canClick) return
+                            setSelectedCell({
+                              round,
+                              pickNumber: pickNum,
+                              slotIndex: slotIdx,
+                              owner,
+                              originalOwner: isTraded ? originalOwner : undefined,
+                              existingPick: draftPick ? {
+                                id: draftPick.id,
+                                player_name: draftPick.player_name,
+                                player_position: draftPick.player_position,
+                                player_team: draftPick.player_team,
+                                ecr_rank: draftPick.ecr_rank,
+                              } : undefined,
+                            })
+                          }
+
+                          // Split draft pick name into first/last for display
+                          const pickNameParts = draftPick ? (() => {
+                            const parts = draftPick.player_name.split(' ')
+                            return { first: parts[0], last: parts.slice(1).join(' ') }
+                          })() : null
 
                           return (
                             <td
                               key={colIdx}
-                              className="p-0.5 text-center border border-border/10"
+                              className={`p-0.5 text-center border border-border/10 ${canClick && isEmpty ? 'cursor-pointer' : ''}`}
                               title={keeper
                                 ? `${keeper.first} ${keeper.last} (${keeper.pos}, ${keeper.team}) — ${owner}, Round ${round}`
-                                : isTraded
-                                  ? `Round ${round}, Pick ${pickNum} — ${owner} (from ${originalOwner})`
-                                  : `Round ${round}, Pick ${pickNum} — ${owner}`
+                                : draftPick
+                                  ? `${draftPick.player_name} (${draftPick.player_position ?? '??'}, ${draftPick.player_team ?? '??'}) — ${owner}, Round ${round}`
+                                  : isTraded
+                                    ? `Round ${round}, Pick ${pickNum} — ${owner} (from ${originalOwner})`
+                                    : `Round ${round}, Pick ${pickNum} — ${owner}`
                               }
+                              onClick={handleCellClick}
                             >
                               <div
-                                className={`rounded border ${colors?.bg ?? 'bg-muted'} ${colors?.border ?? 'border-border'} h-[60px] min-h-[60px] max-h-[60px] flex flex-col overflow-hidden`}
+                                className={`rounded border ${colors?.bg ?? 'bg-muted'} ${colors?.border ?? 'border-border'} h-[60px] min-h-[60px] max-h-[60px] flex flex-col overflow-hidden ${
+                                  isOnTheClock ? 'ring-2 ring-amber-400 ring-offset-1' : ''
+                                } ${canClick && isEmpty ? 'hover:ring-2 hover:ring-primary/40' : ''} ${canClick && draftPick ? 'hover:ring-2 hover:ring-blue-400/40' : ''}`}
                                 style={{ opacity: 0.9 }}
                               >
-                                {/* Row 1: Owner name — always present, always the same */}
+                                {/* Row 1: Owner name */}
                                 <div
                                   className={`text-center font-bold border-b border-black/10 shrink-0 ${colors?.text ?? 'text-foreground'}`}
                                   style={{ fontSize: `${Math.max(fontSize * 0.72, 0.46)}rem`, lineHeight: 1.4 }}
@@ -744,31 +1015,43 @@ export default function DraftBoardPage() {
                                 <div className="flex-1 flex flex-col items-center justify-center">
                                   {keeper ? (
                                     <>
-                                      <div className="font-bold text-black text-center leading-tight" style={{ fontSize: `${Math.max(fontSize * 0.75, 0.48)}rem` }}>
+                                      <div className="font-bold text-black dark:text-white text-center leading-tight" style={{ fontSize: `${Math.max(fontSize * 0.75, 0.48)}rem` }}>
                                         {keeper.first}
                                       </div>
-                                      <div className="font-bold text-black text-center leading-tight" style={{ fontSize: `${Math.max(fontSize * 0.75, 0.48)}rem` }}>
+                                      <div className="font-bold text-black dark:text-white text-center leading-tight" style={{ fontSize: `${Math.max(fontSize * 0.75, 0.48)}rem` }}>
                                         {keeper.last}
                                       </div>
-                                      <div className="text-center text-black/40" style={{ fontSize: `${Math.max(fontSize * 0.4, 0.28)}rem`, lineHeight: 1 }}>
+                                      <div className="text-center text-black/40 dark:text-white/40" style={{ fontSize: `${Math.max(fontSize * 0.4, 0.28)}rem`, lineHeight: 1 }}>
                                         {keeper.isNA ? '(NA)' : keeper.is7th ? '(7th)' : '(K)'}
                                       </div>
                                     </>
+                                  ) : draftPick && pickNameParts ? (
+                                    <>
+                                      <div className="font-bold text-black dark:text-white text-center leading-tight" style={{ fontSize: `${Math.max(fontSize * 0.75, 0.48)}rem` }}>
+                                        {pickNameParts.first}
+                                      </div>
+                                      <div className="font-bold text-black dark:text-white text-center leading-tight" style={{ fontSize: `${Math.max(fontSize * 0.75, 0.48)}rem` }}>
+                                        {pickNameParts.last}
+                                      </div>
+                                      <div className="text-center text-black/40 dark:text-white/40" style={{ fontSize: `${Math.max(fontSize * 0.4, 0.28)}rem`, lineHeight: 1 }}>
+                                        {draftPick.player_position?.split(',')[0] ?? ''} {draftPick.player_team ?? ''}
+                                      </div>
+                                    </>
                                   ) : round > 23 ? (
-                                    <div className="font-mono font-bold text-black/40 text-center" style={{ fontSize: `${Math.max(fontSize * 0.85, 0.55)}rem` }}>
+                                    <div className="font-mono font-bold text-black/40 dark:text-white/40 text-center" style={{ fontSize: `${Math.max(fontSize * 0.85, 0.55)}rem` }}>
                                       {round}.{pickNum}
                                     </div>
                                   ) : isTraded ? (
                                     <>
-                                      <div className="font-mono font-bold text-black text-center" style={{ fontSize: `${Math.max(fontSize * 0.85, 0.55)}rem` }}>
+                                      <div className="font-mono font-bold text-black dark:text-white text-center" style={{ fontSize: `${Math.max(fontSize * 0.85, 0.55)}rem` }}>
                                         {round}.{pickNum}
                                       </div>
-                                      <div className="font-mono font-bold text-black text-center" style={{ fontSize: `${Math.max(fontSize * 0.55, 0.38)}rem` }}>
+                                      <div className="font-mono font-bold text-black dark:text-white text-center" style={{ fontSize: `${Math.max(fontSize * 0.55, 0.38)}rem` }}>
                                         ← {originalOwner}
                                       </div>
                                     </>
                                   ) : (
-                                    <div className="font-mono font-bold text-black text-center" style={{ fontSize: `${Math.max(fontSize * 0.85, 0.55)}rem` }}>
+                                    <div className="font-mono font-bold text-black dark:text-white text-center" style={{ fontSize: `${Math.max(fontSize * 0.85, 0.55)}rem` }}>
                                       {round}.{pickNum}
                                     </div>
                                   )}
