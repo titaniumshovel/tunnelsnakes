@@ -56,7 +56,7 @@ const TEAM_COLORS: Record<string, { bg: string; border: string; text: string; do
   Chris:  { bg: 'bg-amber-100',    border: 'border-amber-400',    text: 'text-amber-800',    dot: 'bg-amber-500' },
   Alex:   { bg: 'bg-orange-100',   border: 'border-orange-400',   text: 'text-orange-800',   dot: 'bg-orange-500' },
   Greasy: { bg: 'bg-cyan-100',     border: 'border-cyan-400',     text: 'text-cyan-800',     dot: 'bg-cyan-500' },
-  Bob:    { bg: 'bg-slate-200',    border: 'border-slate-400',    text: 'text-slate-700 dark:text-slate-200',    dot: 'bg-slate-500' },
+  Bob:    { bg: 'bg-slate-200',    border: 'border-slate-400',    text: 'text-slate-700',    dot: 'bg-slate-500' },
   Mike:   { bg: 'bg-fuchsia-100',  border: 'border-fuchsia-400',  text: 'text-fuchsia-800',  dot: 'bg-fuchsia-500' },
   Sean:   { bg: 'bg-emerald-100',  border: 'border-emerald-400',  text: 'text-emerald-800',  dot: 'bg-emerald-500' },
 }
