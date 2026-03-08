@@ -61,6 +61,22 @@ const TEAM_COLORS: Record<string, { bg: string; border: string; text: string; do
   Sean:   { bg: 'bg-emerald-100',  border: 'border-emerald-400',  text: 'text-emerald-800',  dot: 'bg-emerald-500' },
 }
 
+const POS_COLORS: Record<string, { bg: string; border: string; text: string; dot: string }> = {
+  SP:  { bg: 'bg-blue-200 dark:bg-blue-900/60',       border: 'border-blue-400 dark:border-blue-600',       text: 'text-blue-900 dark:text-blue-200',       dot: 'bg-blue-500' },
+  RP:  { bg: 'bg-sky-200 dark:bg-sky-900/60',         border: 'border-sky-400 dark:border-sky-600',         text: 'text-sky-900 dark:text-sky-200',         dot: 'bg-sky-500' },
+  C:   { bg: 'bg-orange-200 dark:bg-orange-900/60',   border: 'border-orange-400 dark:border-orange-600',   text: 'text-orange-900 dark:text-orange-200',   dot: 'bg-orange-500' },
+  '1B': { bg: 'bg-red-200 dark:bg-red-900/60',        border: 'border-red-400 dark:border-red-600',         text: 'text-red-900 dark:text-red-200',         dot: 'bg-red-500' },
+  '2B': { bg: 'bg-green-200 dark:bg-green-900/60',    border: 'border-green-400 dark:border-green-600',     text: 'text-green-900 dark:text-green-200',     dot: 'bg-green-500' },
+  '3B': { bg: 'bg-purple-200 dark:bg-purple-900/60',  border: 'border-purple-400 dark:border-purple-600',   text: 'text-purple-900 dark:text-purple-200',   dot: 'bg-purple-500' },
+  SS:  { bg: 'bg-indigo-200 dark:bg-indigo-900/60',   border: 'border-indigo-400 dark:border-indigo-600',   text: 'text-indigo-900 dark:text-indigo-200',   dot: 'bg-indigo-500' },
+  OF:  { bg: 'bg-teal-200 dark:bg-teal-900/60',       border: 'border-teal-400 dark:border-teal-600',       text: 'text-teal-900 dark:text-teal-200',       dot: 'bg-teal-500' },
+  CF:  { bg: 'bg-teal-200 dark:bg-teal-900/60',       border: 'border-teal-400 dark:border-teal-600',       text: 'text-teal-900 dark:text-teal-200',       dot: 'bg-teal-500' },
+  LF:  { bg: 'bg-teal-200 dark:bg-teal-900/60',       border: 'border-teal-400 dark:border-teal-600',       text: 'text-teal-900 dark:text-teal-200',       dot: 'bg-teal-500' },
+  RF:  { bg: 'bg-teal-200 dark:bg-teal-900/60',       border: 'border-teal-400 dark:border-teal-600',       text: 'text-teal-900 dark:text-teal-200',       dot: 'bg-teal-500' },
+  DH:  { bg: 'bg-gray-200 dark:bg-gray-800/60',       border: 'border-gray-400 dark:border-gray-600',       text: 'text-gray-900 dark:text-gray-200',       dot: 'bg-gray-500' },
+  UT:  { bg: 'bg-stone-200 dark:bg-stone-800/60',     border: 'border-stone-400 dark:border-stone-600',     text: 'text-stone-900 dark:text-stone-200',     dot: 'bg-stone-500' },
+}
+
 /**
  * Snake-adjust a draft-order slot to the pick-in-round number.
  * In odd rounds, slot N picks Nth. In even rounds, slot N picks (13-N)th.
@@ -535,6 +551,7 @@ function buildTradeMap(draftOrder: string[]): Map<number, Map<number, { newOwner
 
 export default function DraftBoardPage() {
   const [fontSize, setFontSize] = useState(1.0)
+  const [colorMode, setColorMode] = useState<'team' | 'position'>('team')
   const [keepers, setKeepers] = useState<Map<string, Map<number, KeeperInfo>>>(new Map())
   const [, setKeepersLoading] = useState(true)
   const [draftPicks, setDraftPicks] = useState<Map<string, DraftPickRecord>>(new Map())
@@ -858,8 +875,30 @@ export default function DraftBoardPage() {
           <span className="font-bold text-emerald-800 dark:text-emerald-200 text-lg font-mono tracking-wide">Draft Complete</span>
         </div>
 
-        {/* Font Size Controls */}
-        <div className="flex items-center justify-end">
+        {/* Controls: Color Mode Toggle + Font Size */}
+        <div className="flex items-center justify-end gap-2">
+          <div className="flex items-center gap-0.5 bg-card rounded-lg border border-primary/20 p-0.5">
+            <button
+              onClick={() => setColorMode('team')}
+              className={`px-2 py-1 rounded text-xs font-mono font-bold transition-colors ${
+                colorMode === 'team'
+                  ? 'bg-primary text-primary-foreground'
+                  : 'text-muted-foreground hover:text-foreground hover:bg-primary/10'
+              }`}
+            >
+              Team
+            </button>
+            <button
+              onClick={() => setColorMode('position')}
+              className={`px-2 py-1 rounded text-xs font-mono font-bold transition-colors ${
+                colorMode === 'position'
+                  ? 'bg-primary text-primary-foreground'
+                  : 'text-muted-foreground hover:text-foreground hover:bg-primary/10'
+              }`}
+            >
+              Pos
+            </button>
+          </div>
           <div className="flex items-center gap-1 bg-card rounded-lg border border-primary/20 p-0.5">
             <button
               onClick={() => setFontSize(prev => Math.max(0.55, prev - 0.05))}
@@ -995,9 +1034,12 @@ export default function DraftBoardPage() {
                           const owner = tradeOverride ? tradeOverride.newOwner : draftOrder[slotIdx]
                           const isTraded = !!tradeOverride
                           const originalOwner = tradeOverride?.originalOwner ?? ''
-                          const colors = TEAM_COLORS[owner]
                           const keeper = keeperPlacements.get(`${round}-${slotIdx}`)
                           const draftPick = draftPicks.get(`${round}-${slotIdx}`)
+                          const cellPosition = keeper ? keeper.pos : draftPick?.player_position?.split(',')[0]
+                          const colors = colorMode === 'position' && cellPosition
+                            ? POS_COLORS[cellPosition] ?? POS_COLORS['UT']
+                            : TEAM_COLORS[owner]
                           const isOnTheClock = onTheClock?.round === round && onTheClock?.slotIdx === slotIdx
                           const isEmpty = !keeper && !draftPick && round <= 23
                           const canClick = isCommissioner && round <= 23 && !keeper
