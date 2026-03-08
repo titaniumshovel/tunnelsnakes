@@ -986,8 +986,8 @@ export default function DraftBoardPage() {
                           </div>
                         </td>
                         {Array.from({ length: teamCount }, (_, colIdx) => {
+                          const slotIdx = colIdx
                           const pickNum = isOdd ? (colIdx + 1) : (teamCount - colIdx)
-                          const slotIdx = isOdd ? colIdx : (teamCount - 1 - colIdx)
                           const tradeOverride = roundTrades?.get(slotIdx)
                           const owner = tradeOverride ? tradeOverride.newOwner : draftOrder[slotIdx]
                           const isTraded = !!tradeOverride
