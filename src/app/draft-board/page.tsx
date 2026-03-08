@@ -918,8 +918,20 @@ export default function DraftBoardPage() {
           </div>
         </div>
 
+        {/* Loading skeleton */}
+        {!initialLoadDone && (
+          <div className="space-y-3">
+            <div className="h-10 rounded-lg bg-muted animate-pulse" />
+            <div className="grid grid-cols-12 gap-1">
+              {Array.from({ length: 12 * 8 }, (_, i) => (
+                <div key={i} className="h-[60px] rounded bg-muted animate-pulse" />
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* Recent Picks Ticker */}
-        {(() => {
+        {initialLoadDone && (() => {
           const recentPicks = [...draftPicks.values()]
             .sort((a, b) => new Date(b.created_at ?? 0).getTime() - new Date(a.created_at ?? 0).getTime())
             .slice(0, 5)
@@ -938,7 +950,7 @@ export default function DraftBoardPage() {
         })()}
 
         {/* On the Clock Banner */}
-        {onTheClock && (
+        {initialLoadDone && onTheClock && (
           <div className="rounded-lg border-2 border-amber-400 bg-amber-50 dark:bg-amber-900/30 px-4 py-2.5 flex items-center justify-between">
             <div className="flex items-center gap-3">
               <span className="text-lg animate-pulse">🎯</span>
@@ -966,7 +978,7 @@ export default function DraftBoardPage() {
         )}
 
         {/* Snake View — snake-order draft board with trade overrides */}
-        {(() => {
+        {initialLoadDone && (() => {
           const draftOrder = data.draftOrder
           const totalRounds = 27
           const teamCount = draftOrder.length // 12
