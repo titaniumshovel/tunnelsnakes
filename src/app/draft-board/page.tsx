@@ -853,6 +853,11 @@ export default function DraftBoardPage() {
       </div>
 
       <div className="mx-auto max-w-[1400px] p-4 space-y-4">
+        {/* Draft Complete Banner */}
+        <div className="bg-emerald-100 dark:bg-emerald-900/40 border border-emerald-300 dark:border-emerald-600/50 rounded-lg p-3 text-center">
+          <span className="font-bold text-emerald-800 dark:text-emerald-200 text-lg font-mono tracking-wide">Draft Complete</span>
+        </div>
+
         {/* Font Size Controls */}
         <div className="flex items-center justify-end">
           <div className="flex items-center gap-1 bg-card rounded-lg border border-primary/20 p-0.5">
