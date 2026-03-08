@@ -1,7 +1,7 @@
 -- Draft picks table for live draft board
 CREATE TABLE IF NOT EXISTS public.draft_picks (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-  round INTEGER NOT NULL CHECK (round BETWEEN 1 AND 23),
+  round INTEGER NOT NULL CHECK (round BETWEEN 1 AND 27),
   pick_number INTEGER NOT NULL CHECK (pick_number BETWEEN 1 AND 12),
   slot_index INTEGER NOT NULL CHECK (slot_index BETWEEN 0 AND 11),
   owner TEXT NOT NULL,

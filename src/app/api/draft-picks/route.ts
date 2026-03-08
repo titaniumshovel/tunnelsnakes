@@ -44,8 +44,8 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
   }
 
-  if (round < 1 || round > 23) {
-    return NextResponse.json({ error: 'Round must be between 1 and 23' }, { status: 400 })
+  if (round < 1 || round > 27) {
+    return NextResponse.json({ error: 'Round must be between 1 and 27' }, { status: 400 })
   }
 
   const { data, error: dbError } = await supabase!
