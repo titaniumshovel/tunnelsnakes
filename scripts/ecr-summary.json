@@ -1,31 +1,35 @@
 {
   "total_supabase": 287,
-  "total_fp": 1597,
-  "matched": 281,
-  "unmatched_count": 6,
+  "total_fp": 1557,
+  "matched": 277,
+  "unmatched_count": 10,
   "unmatched_names": [
     "Clayton Kershaw",
     "Druw Jones",
-    "George Lombard Jr.",
+    "Ethan Salas",
+    "Josue De Paula",
+    "Jurickson Profar",
     "Jurrangelo Cijntje",
+    "Lazaro Montes",
     "Luis Pe\u00f1a",
+    "Pablo L\u00f3pez",
     "Zyhir Hope"
   ],
   "top10": [
     [
-      "Shohei Ohtani (Pitcher)",
+      "Aaron Judge",
       1,
-      "DH1"
+      "OF1"
     ],
     [
       "Shohei Ohtani (Batter)",
-      1,
+      2,
       "DH1"
     ],
     [
-      "Aaron Judge",
+      "Shohei Ohtani (Pitcher)",
       2,
-      "OF1"
+      "DH1"
     ],
     [
       "Bobby Witt Jr.",
@@ -48,24 +52,24 @@
       "OF3"
     ],
     [
-      "Tarik Skubal",
+      "Julio Rodr\u00edguez",
       7,
+      "OF4"
+    ],
+    [
+      "Tarik Skubal",
+      8,
       "SP1"
     ],
     [
       "Elly De La Cruz",
-      8,
-      "SS2"
-    ],
-    [
-      "Julio Rodr\u00edguez",
       9,
-      "OF4"
+      "SS2"
     ]
   ],
   "chase_burns": [
     "Chase Burns",
-    121,
+    120,
     "SP,RP1"
   ]
 }
