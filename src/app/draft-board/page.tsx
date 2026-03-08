@@ -977,12 +977,10 @@ export default function DraftBoardPage() {
                           isOdd ? 'bg-background' : 'bg-card/90'
                         }`} style={{ fontSize: `${fontSize * 1.1}rem` }}>
                           <div className="flex items-center justify-center gap-1">
-                            <span>{round > 23 ? 'NA' : round}</span>
-                            {round <= 23 && (
-                              <span className="text-muted-foreground" style={{ fontSize: `${fontSize * 0.75}rem` }}>
-                                {isOdd ? '→' : '←'}
-                              </span>
-                            )}
+                            <span>{round}</span>
+                            <span className="text-muted-foreground" style={{ fontSize: `${fontSize * 0.75}rem` }}>
+                              {isOdd ? '→' : '←'}
+                            </span>
                           </div>
                         </td>
                         {Array.from({ length: teamCount }, (_, colIdx) => {
